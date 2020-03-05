@@ -52,7 +52,8 @@ public class DiceSet {
     while (dices.hasNext()) {
       Dice aDice = dices.next();
       Integer nextValue = aDice.roll();
-      isDouble = (lastValue.equals(nextValue));
+      isDouble = isDouble && (lastValue.equals(nextValue));
+      lastValue = nextValue;
       value += nextValue;
     }
 

@@ -69,6 +69,40 @@ class DiceTest {
   }
 
   @Test
+  void checkTriple5() {
+
+    DiceSet diceSet = new DiceSet(6, 3, new LoadedDiceFactory(5, 5, 5));
+    DiceResult result = diceSet.roll();
+
+    Assertions.assertEquals(15, result.getValue());
+    Assertions.assertTrue(result.areAllTheSame());
+
+  }
+
+  @Test
+  void checkFiveOnes() {
+
+    DiceSet diceSet = new DiceSet(6, 5, new LoadedDiceFactory(1, 1, 1, 1, 1));
+    DiceResult result = diceSet.roll();
+
+    Assertions.assertEquals(5, result.getValue());
+    Assertions.assertTrue(result.areAllTheSame());
+
+  }
+
+  @Test
+  void checkFiveOnesAndATwoReturnNotAllTheSame() {
+
+    DiceSet diceSet = new DiceSet(6, 6, new LoadedDiceFactory(1, 1, 1, 2, 1, 1));
+    DiceResult result = diceSet.roll();
+
+    Assertions.assertEquals(7, result.getValue());
+    Assertions.assertFalse(result.areAllTheSame());
+
+  }
+
+
+  @Test
   void rollPair() {
 
     Integer max = 0, min = 100;
