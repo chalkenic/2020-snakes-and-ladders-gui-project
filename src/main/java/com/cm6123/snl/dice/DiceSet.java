@@ -40,6 +40,11 @@ public class DiceSet {
    * @return a DiceResult object
    */
   public DiceResult roll() {
+
+    if (dice.size() == 1) {
+      return new DiceResult(dice.get(0).roll(), Boolean.FALSE);
+    }
+
     Boolean isDouble = true;
     Integer value = 0;
     Integer lastValue = 0;

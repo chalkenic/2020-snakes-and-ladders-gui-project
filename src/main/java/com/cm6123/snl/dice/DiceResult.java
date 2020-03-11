@@ -1,5 +1,6 @@
 package com.cm6123.snl.dice;
 
+
 public class DiceResult {
 
   /**

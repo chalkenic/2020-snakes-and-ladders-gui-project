@@ -101,6 +101,16 @@ class DiceTest {
 
   }
 
+  @Test
+  void checkASetOfOneReturnsNotAllTheSame() {
+
+    DiceSet diceSet = new DiceSet(6, 1, new LoadedDiceFactory(6));
+    DiceResult result = diceSet.roll();
+
+    Assertions.assertEquals(6, result.getValue());
+    Assertions.assertFalse(result.areAllTheSame());
+
+  }
 
   @Test
   void rollPair() {
