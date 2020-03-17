@@ -3,6 +3,7 @@ plugins {
     id 'jacoco'
     id 'checkstyle'
     id 'idea'
+    id 'application'
 }
 
 group 'com.nsa.cm6123-6623'
@@ -18,6 +19,8 @@ dependencies {
     testImplementation ('org.junit.jupiter:junit-jupiter:5.6.0')
 }
 
+//test configuration
+
 test{
     useJUnitPlatform()
     testLogging {
@@ -25,15 +28,25 @@ test{
     }
 }
 
+//application configuration
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.cm6123.snl.Application'
+    }
+}
+
+application {
+    mainClassName = 'com.cm6123.snl.Application'
+}
+
+
+//tool configuration
 
 checkstyle {
     toolVersion = 8.25
     checkstyleTest.enabled = false
 }
-
-
-
-
 
 jacocoTestReport {
 
@@ -43,9 +56,6 @@ jacocoTestReport {
         html.destination file("${buildDir}/jacocoHtml")
     }
 }
-
-
-
 
 jacocoTestCoverageVerification {
     violationRules {
@@ -57,7 +67,9 @@ jacocoTestCoverageVerification {
     }
 }
 
-check.dependsOn jacocoTestCoverageVerification
+//check.dependsOn jacocoTestCoverageVerification
+
+// create combined task
 
 task buildAndReport {
     dependsOn build, jacocoTestReport
