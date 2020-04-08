@@ -97,11 +97,11 @@ class FeatureWinningSquareTest {
 
         Assertions.assertTrue(winningGame.getCurrentPlayer().getinsideBoardArea());
 
-        winningGame.moveCurrentPlayer(6);
+        winningGame.moveCurrentPlayer(7);
+
 
         Assertions.assertFalse(winningGame.getCurrentPlayer().getinsideBoardArea());
     }
 
 
-//    @Test
 }

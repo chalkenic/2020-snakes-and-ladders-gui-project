@@ -66,14 +66,14 @@ public final class Game {
       //change this to asking the board to provide the destination and then move the player there.
       Player currentPlayer = getCurrentPlayer();
 
-      //Add diceroll into Current game roll for determining whether player has passed winning position.
-      currentPlayerRoll = squares;
-      Position newPosition = board.move(currentPlayer.getPosition(), squares);
-      if (newPosition.get() > numberOfSquares()) {
-          System.out.println("WARNING: PLAYER ROLL EXCEEDS BOARD.");
-        }
-      currentPlayer.moveTo(newPosition);
+      if (checkPosition(currentPlayer, squares)) {
 
+        //Add diceroll into Current game roll for determining whether player has passed winning position.
+        Position newPosition = board.move(currentPlayer.getPosition(), squares);
+        currentPlayer.moveTo(newPosition);
+
+
+      }
       if (gameContinues()) {
         players.next();
       }
@@ -128,6 +128,22 @@ public final class Game {
     } else {
       throw new IllegalStateException("The Game isn't over.");
     }
+  }
+
+  /**
+   * Checks position of player on board to confirm whether roll leaves them inside boundaries or not.
+    * @param player - current player making a roll on Board.
+   * @param roll - the value of player's roll.
+   * @return
+   */
+  public Boolean checkPosition(final Player player, final Integer roll) {
+    if ((player.getPosition().get() + roll) > numberOfSquares()) {
+      System.out.println("WARNING: PLAYER ROLL EXCEEDS BOARD.");
+      player.setinsideBoardArea(false);
+    } else {
+      player.setinsideBoardArea(true);
+    }
+    return player.getinsideBoardArea();
   }
 
   /**
