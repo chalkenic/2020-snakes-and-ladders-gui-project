@@ -25,7 +25,6 @@ public final class Game {
   }
 
 
-
   /**
    * Stores player's roll when taking an action in moveCurrentPlayer roll.
    */
@@ -70,11 +69,16 @@ public final class Game {
       //Add diceroll into Current game roll for determining whether player has passed winning position.
       currentPlayerRoll = squares;
       Position newPosition = board.move(currentPlayer.getPosition(), squares);
+      if (newPosition.get() > numberOfSquares()) {
+          System.out.println("WARNING: PLAYER ROLL EXCEEDS BOARD.");
+        }
       currentPlayer.moveTo(newPosition);
 
 
       if (gameContinues()) {
         players.next();
+      } else {
+          System.out.println("Player has won!");
       }
     }
   }

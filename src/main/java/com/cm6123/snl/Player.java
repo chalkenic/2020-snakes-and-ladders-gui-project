@@ -11,6 +11,7 @@ public final class Player {
    */
   private Position position;
 
+
   /**
    * Make a player with a colour and place them at a start position.
    *
