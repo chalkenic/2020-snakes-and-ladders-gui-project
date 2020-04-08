@@ -26,7 +26,18 @@ public final class Game {
 
 
 
+  /**
+   * Stores player's roll when taking an action in moveCurrentPlayer roll.
+   */
+  private Integer currentPlayerRoll;
 
+  /**
+   * get the current roll saved in the game.
+   * @return Current integer.
+   */
+  public Integer getCurrentPlayerRoll() {
+    return currentPlayerRoll;
+  }
 
   Integer numberOfSquares() {
     return board.size();
@@ -55,12 +66,26 @@ public final class Game {
     } else {
       //change this to asking the board to provide the destination and then move the player there.
       Player currentPlayer = getCurrentPlayer();
+
+      //Add diceroll into Current game roll for determining whether player has passed winning position.
+      currentPlayerRoll = squares;
       Position newPosition = board.move(currentPlayer.getPosition(), squares);
       currentPlayer.moveTo(newPosition);
+
+
       if (gameContinues()) {
         players.next();
       }
     }
+  }
+
+  /**
+   * Returns player's roll for testing.
+   * @param roll - player's roll on turn
+   * @return value of roll.
+   */
+  public Integer getRoll(final Integer roll) {
+    return roll;
   }
 
   /**
