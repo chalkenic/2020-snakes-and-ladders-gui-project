@@ -74,11 +74,8 @@ public final class Game {
         }
       currentPlayer.moveTo(newPosition);
 
-
       if (gameContinues()) {
         players.next();
-      } else {
-          System.out.println("Player has won!");
       }
     }
   }
