@@ -65,6 +65,7 @@ public final class Game {
     } else {
       //change this to asking the board to provide the destination and then move the player there.
       Player currentPlayer = getCurrentPlayer();
+      currentPlayerRoll = squares;
 
       if (checkPosition(currentPlayer, squares)) {
 

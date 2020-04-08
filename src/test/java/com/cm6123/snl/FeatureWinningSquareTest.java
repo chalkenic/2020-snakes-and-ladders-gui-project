@@ -71,6 +71,7 @@ class FeatureWinningSquareTest {
         }
     }
 
+    //Issue #13
     @Test
     void check_if_player_boundary_is_true_when_inside_board_area() {
         Game winningGame = new GameBuilder()
@@ -79,10 +80,16 @@ class FeatureWinningSquareTest {
                 .build();
 
         winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(4);
+
 
         Assertions.assertTrue(winningGame.getCurrentPlayer().getinsideBoardArea());
     }
 
+    //Issue #13
     @Test
     void check_if_player_boundary_changes_to_false_when_outside_board_area() {
         Game winningGame = new GameBuilder()
@@ -97,7 +104,7 @@ class FeatureWinningSquareTest {
 
         Assertions.assertTrue(winningGame.getCurrentPlayer().getinsideBoardArea());
 
-        winningGame.moveCurrentPlayer(7);
+        winningGame.moveCurrentPlayer(6);
 
 
         Assertions.assertFalse(winningGame.getCurrentPlayer().getinsideBoardArea());
