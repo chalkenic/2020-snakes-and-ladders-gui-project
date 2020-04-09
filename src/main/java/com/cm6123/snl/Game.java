@@ -13,6 +13,13 @@ public final class Game {
    */
   private PlayerList players;
 
+
+
+  /**
+   * Confirmation of whether winning square is switched on in game.
+   */
+  private Boolean winningSquareOn = false;
+
   Game(final Integer playerCount,
        final Integer width,
        final Integer[] snakes,
@@ -23,6 +30,20 @@ public final class Game {
     players = new PlayerList(playerCount, board.start());
 
   }
+
+  Game(final Integer playerCount,
+       final Integer width,
+       final Integer[] snakes,
+       final Integer[] ladders,
+       final Boolean winningSquareOnly
+  ) {
+
+    board = new Board(width, snakes, ladders);
+    players = new PlayerList(playerCount, board.start());
+    winningSquareOn = winningSquareOnly;
+
+  }
+
 
 
   /**
@@ -65,15 +86,17 @@ public final class Game {
     } else {
       //change this to asking the board to provide the destination and then move the player there.
       Player currentPlayer = getCurrentPlayer();
-      currentPlayerRoll = squares;
 
-      if (checkPosition(currentPlayer, squares)) {
+      if (winningSquareOn) {
+        currentPlayerRoll = squares;
+        if (!checkPosition(currentPlayer, squares)) {
+          players.next();
+      } else {
+          //Add diceroll into Current game roll for determining whether player has passed winning position.
+          Position newPosition = board.move(currentPlayer.getPosition(), squares);
+          currentPlayer.moveTo(newPosition);
 
-        //Add diceroll into Current game roll for determining whether player has passed winning position.
-        Position newPosition = board.move(currentPlayer.getPosition(), squares);
-        currentPlayer.moveTo(newPosition);
-
-
+        }
       }
       if (gameContinues()) {
         players.next();
@@ -164,5 +187,12 @@ public final class Game {
     return !isGameOver();
   }
 
+  /**
+   * Gets confirmation of whether WinningSquareOnly feature turned on
+   * @return true if winning square on.
+   */
+  public Boolean isWinningSquareOn() {
+    return winningSquareOn;
+  }
 
 }
