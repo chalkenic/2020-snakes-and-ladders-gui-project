@@ -165,7 +165,9 @@ public final class Game {
    */
   private Boolean checkIfLegalPosition(final Player player, final Integer roll) {
     if ((player.getPosition().get() + roll) > numberOfSquares()) {
-      System.out.println("WARNING: PLAYER ROLL EXCEEDS BOARD.");
+      System.out.print("WARNING: PLAYER ROLL (" + roll + ") "
+             + "EXCEEDS BOARD SIZE (" + board.size() + "). "
+             + "RETURNING TO ORIGINAL POSITION (" + getCurrentPlayer().getPosition().get() + ")");
       player.setinsideBoardArea(false);
     } else {
       player.setinsideBoardArea(true);
@@ -211,3 +213,4 @@ public final class Game {
   }
 
 }
+
