@@ -46,7 +46,7 @@ public final class GameBuilder {
   /**
    * Temporary variable that defaults winning Square Only feature as false until game is built.
    */
-  private Boolean winningSquareOnly = false;
+  private Boolean winningSquareOnly = true;
   /**
    * Initialise the Game building process.
    */
@@ -72,8 +72,8 @@ public final class GameBuilder {
    * @return configured game object with board, snakes, ladders, players & winning square.
    */
   public Game buildWithWinningSquare() {
-    Game theGame = new Game(tempPlayers, tempBoardSize, snakes, ladders, winningSquareOnly);
-    return theGame;
+    Game theWinningSquareGame = new Game(tempPlayers, tempBoardSize, snakes, ladders, winningSquareOnly);
+    return theWinningSquareGame;
   }
 
   /**
@@ -138,15 +138,6 @@ public final class GameBuilder {
     } else {
       this.ladders = someLadders;
     }
-    return this;
-  }
-
-  /**
-   * Optional setter to determine whether to use winning square.
-   * @return configured GameBuilder
-   */
-  public GameBuilder withWinningSquareOn() {
-    winningSquareOnly = true;
     return this;
   }
 
