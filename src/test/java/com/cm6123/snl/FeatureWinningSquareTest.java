@@ -58,7 +58,7 @@ class FeatureWinningSquareTest {
         Game winningGame = new GameBuilder()
                 .withPlayers(1)
                 .withBoardSize(5)
-                .buildWithWinningSquare();
+                .build();
 
         winningGame.moveCurrentPlayer(5);
         winningGame.moveCurrentPlayer(5);
@@ -77,7 +77,7 @@ class FeatureWinningSquareTest {
         Game winningGame = new GameBuilder()
                 .withPlayers(1)
                 .withBoardSize(5)
-                .buildWithWinningSquare();
+                .build();
 
         winningGame.moveCurrentPlayer(5);
         winningGame.moveCurrentPlayer(5);
@@ -95,7 +95,7 @@ class FeatureWinningSquareTest {
         Game winningGame = new GameBuilder()
                 .withPlayers(1)
                 .withBoardSize(5)
-                .buildWithWinningSquare();
+                .build();
 
         winningGame.moveCurrentPlayer(5);
         winningGame.moveCurrentPlayer(5);
@@ -116,7 +116,7 @@ class FeatureWinningSquareTest {
         Game winningGame = new GameBuilder()
                 .withPlayers(1)
                 .withBoardSize(5)
-                .buildWithWinningSquare();
+                .build();
 
         winningGame.moveCurrentPlayer(5);
         winningGame.moveCurrentPlayer(5);
@@ -125,8 +125,7 @@ class FeatureWinningSquareTest {
         winningGame.moveCurrentPlayer(6);
 
         Assertions.assertThrows(IllegalStateException.class,
-                () -> {
-                    winningGame.getWinningPlayer();
+                () -> { winningGame.getWinningPlayer();
                 });
     }
 
@@ -136,7 +135,7 @@ class FeatureWinningSquareTest {
         Game winningGame = new GameBuilder()
                 .withPlayers(1)
                 .withBoardSize(5)
-                .buildWithWinningSquare();
+                .build();
 
         winningGame.moveCurrentPlayer(5);
         winningGame.moveCurrentPlayer(5);
@@ -155,7 +154,7 @@ class FeatureWinningSquareTest {
         Game winningGame = new GameBuilder()
                 .withPlayers(1)
                 .withBoardSize(5)
-                .buildWithWinningSquare();
+                .build();
 
         winningGame.moveCurrentPlayer(5);
         winningGame.moveCurrentPlayer(5);
@@ -176,23 +175,19 @@ class FeatureWinningSquareTest {
         Game winningGame = new GameBuilder()
                 .withPlayers(1)
                 .withBoardSize(5)
-                .buildWithWinningSquare();
+                .build();
 
         winningGame.moveCurrentPlayer(5);
         winningGame.moveCurrentPlayer(5);
-        System.out.println(winningGame.getCurrentPlayer().getPosition().get());
         winningGame.moveCurrentPlayer(5);
-        System.out.println(winningGame.getCurrentPlayer().getPosition().get());
         winningGame.moveCurrentPlayer(5);
-        System.out.println(winningGame.getCurrentPlayer().getPosition().get());
         winningGame.moveCurrentPlayer(3);
-        System.out.println(winningGame.getCurrentPlayer().getPosition().get());
 
         for (int i = 7; i < 99; i++) {
             winningGame.moveCurrentPlayer(i);
 
             //If game continues, do not increment player win count
-            if (! winningGame.gameContinues()) {
+            if(!winningGame.gameContinues()) {
                 playerWinCount++;
             }
         }
@@ -200,7 +195,29 @@ class FeatureWinningSquareTest {
 
     }
 
+    //Issue #21
 
+    @Test
+    void check_if_player_begins_turn_after_illegal_move_at_original_position() {
+        Game winningGame = new GameBuilder()
+                .withPlayers(1)
+                .withBoardSize(5)
+                .build();
+
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(3);
+
+        Assertions.assertEquals(23, winningGame.getCurrentPlayer().getPosition().get());
+
+        winningGame.moveCurrentPlayer(5);
+
+
+        Assertions.assertEquals(23, winningGame.getCurrentPlayer().getPosition().get());
+
+    }
 
     @Test
     void initialise_game_with_winning_square_feature_switched_on() {
@@ -223,6 +240,7 @@ class FeatureWinningSquareTest {
 
         Assertions.assertFalse(winningGame.isWinningSquareOn());
     }
+
 
 
 }
