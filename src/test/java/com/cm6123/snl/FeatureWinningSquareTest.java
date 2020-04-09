@@ -194,6 +194,22 @@ class FeatureWinningSquareTest {
         Assertions.assertEquals(0, playerWinCount);
 
     }
+    @Test
+    void check_if_game_has_winningSquareOnly_feature_turned_on() {
+        Game winningGame = new GameBuilder()
+                .withPlayers(1)
+                .withBoardSize(5)
+                .withWinningSquareOn()
+                .build();
+
+    }
+
+    void check_if_game_has_winningSquareOnly_feature_turned_off() {
+        Game winningGame = new GameBuilder()
+                .withPlayers(1)
+                .withBoardSize(5)
+                .build();
+    }
 
 
 }
