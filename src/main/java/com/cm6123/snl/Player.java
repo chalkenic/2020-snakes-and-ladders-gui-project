@@ -12,6 +12,12 @@ public final class Player {
   private Position position;
 
   /**
+   * Determines whether Player still resides inside board limits.
+   */
+  private Boolean insideBoardArea = true;
+
+
+  /**
    * Make a player with a colour and place them at a start position.
    *
    * @param aColour the colour of the player's counter
@@ -47,6 +53,21 @@ public final class Player {
     return position;
   }
 
+  /**
+   * Returns whether player remains in board limits.
+   * @return Boolean of result.
+   */
+  public Boolean getinsideBoardArea() {
+    return insideBoardArea;
+  }
+
+  /**
+   * Changes player to be outside boundaries for the current move.
+   * @param playerPosition = whether player is inside or outside board boundaries.
+   */
+  public void setinsideBoardArea(final Boolean playerPosition) {
+    this.insideBoardArea = playerPosition;
+  }
 
   /**
    * Get the String representation of the object.

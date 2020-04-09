@@ -25,8 +25,18 @@ public final class Game {
   }
 
 
+  /**
+   * Stores player's roll when taking an action in moveCurrentPlayer roll.
+   */
+  private Integer currentPlayerRoll;
 
-
+  /**
+   * get the current roll saved in the game.
+   * @return Current integer.
+   */
+  public Integer getCurrentPlayerRoll() {
+    return currentPlayerRoll;
+  }
 
   Integer numberOfSquares() {
     return board.size();
@@ -55,12 +65,29 @@ public final class Game {
     } else {
       //change this to asking the board to provide the destination and then move the player there.
       Player currentPlayer = getCurrentPlayer();
-      Position newPosition = board.move(currentPlayer.getPosition(), squares);
-      currentPlayer.moveTo(newPosition);
+      currentPlayerRoll = squares;
+
+      if (checkPosition(currentPlayer, squares)) {
+
+        //Add diceroll into Current game roll for determining whether player has passed winning position.
+        Position newPosition = board.move(currentPlayer.getPosition(), squares);
+        currentPlayer.moveTo(newPosition);
+
+
+      }
       if (gameContinues()) {
         players.next();
       }
     }
+  }
+
+  /**
+   * Returns player's roll for testing.
+   * @param roll - player's roll on turn
+   * @return value of roll.
+   */
+  public Integer getRoll(final Integer roll) {
+    return roll;
   }
 
   /**
@@ -105,6 +132,22 @@ public final class Game {
   }
 
   /**
+   * Checks position of player on board to confirm whether roll leaves them inside boundaries or not.
+    * @param player - current player making a roll on Board.
+   * @param roll - the value of player's roll.
+   * @return
+   */
+  public Boolean checkPosition(final Player player, final Integer roll) {
+    if ((player.getPosition().get() + roll) > numberOfSquares()) {
+      System.out.println("WARNING: PLAYER ROLL EXCEEDS BOARD.");
+      player.setinsideBoardArea(false);
+    } else {
+      player.setinsideBoardArea(true);
+    }
+    return player.getinsideBoardArea();
+  }
+
+  /**
    * Get the board being played on.
    * MAYBE THIS SHOULD BE A READ-ONLY REPRESENTATION?
    * @return the board
@@ -117,7 +160,7 @@ public final class Game {
    * shoudl the game carry on?
    * @return true if the game is not over.
    */
-  private Boolean gameContinues() {
+  Boolean gameContinues() {
     return !isGameOver();
   }
 
