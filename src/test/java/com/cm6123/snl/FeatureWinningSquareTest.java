@@ -195,6 +195,27 @@ class FeatureWinningSquareTest {
 
     }
 
+    @Test
+    void check_if_player_begins_turn_after_illegal_move_at_original_position() {
+        Game winningGame = new GameBuilder()
+                .withPlayers(1)
+                .withBoardSize(5)
+                .build();
+
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(3);
+
+        Assertions.assertEquals(23, winningGame.getCurrentPlayer().getPosition().get());
+
+        winningGame.moveCurrentPlayer(5);
+
+        Assertions.assertEquals(23, winningGame.getCurrentPlayer().getPosition().get());
+
+    }
+
 
 }
 
