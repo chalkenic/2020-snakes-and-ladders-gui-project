@@ -5,7 +5,7 @@ import com.cm6123.snl.dice.LoadedDiceFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class FeatureWinningSquareTest {
+class FeatureWinningSquareOnlyTest {
 
     //Issue #11
     @Test
@@ -58,7 +58,7 @@ class FeatureWinningSquareTest {
         Game winningGame = new GameBuilder()
                 .withPlayers(1)
                 .withBoardSize(5)
-                .build();
+                .buildWithWinningSquare();
 
         winningGame.moveCurrentPlayer(5);
         winningGame.moveCurrentPlayer(5);
@@ -77,7 +77,7 @@ class FeatureWinningSquareTest {
         Game winningGame = new GameBuilder()
                 .withPlayers(1)
                 .withBoardSize(5)
-                .build();
+                .buildWithWinningSquare();
 
         winningGame.moveCurrentPlayer(5);
         winningGame.moveCurrentPlayer(5);
@@ -95,7 +95,7 @@ class FeatureWinningSquareTest {
         Game winningGame = new GameBuilder()
                 .withPlayers(1)
                 .withBoardSize(5)
-                .build();
+                .buildWithWinningSquare();
 
         winningGame.moveCurrentPlayer(5);
         winningGame.moveCurrentPlayer(5);
@@ -116,7 +116,7 @@ class FeatureWinningSquareTest {
         Game winningGame = new GameBuilder()
                 .withPlayers(1)
                 .withBoardSize(5)
-                .build();
+                .buildWithWinningSquare();
 
         winningGame.moveCurrentPlayer(5);
         winningGame.moveCurrentPlayer(5);
@@ -135,7 +135,7 @@ class FeatureWinningSquareTest {
         Game winningGame = new GameBuilder()
                 .withPlayers(1)
                 .withBoardSize(5)
-                .build();
+                .buildWithWinningSquare();
 
         winningGame.moveCurrentPlayer(5);
         winningGame.moveCurrentPlayer(5);
@@ -154,7 +154,7 @@ class FeatureWinningSquareTest {
         Game winningGame = new GameBuilder()
                 .withPlayers(1)
                 .withBoardSize(5)
-                .build();
+                .buildWithWinningSquare();
 
         winningGame.moveCurrentPlayer(5);
         winningGame.moveCurrentPlayer(5);
@@ -175,7 +175,7 @@ class FeatureWinningSquareTest {
         Game winningGame = new GameBuilder()
                 .withPlayers(1)
                 .withBoardSize(5)
-                .build();
+                .buildWithWinningSquare();
 
         winningGame.moveCurrentPlayer(5);
         winningGame.moveCurrentPlayer(5);
@@ -195,12 +195,14 @@ class FeatureWinningSquareTest {
 
     }
 
+    //Issue #21
+
     @Test
     void check_if_player_begins_turn_after_illegal_move_at_original_position() {
         Game winningGame = new GameBuilder()
                 .withPlayers(1)
                 .withBoardSize(5)
-                .build();
+                .buildWithWinningSquare();
 
         winningGame.moveCurrentPlayer(5);
         winningGame.moveCurrentPlayer(5);
@@ -212,9 +214,33 @@ class FeatureWinningSquareTest {
 
         winningGame.moveCurrentPlayer(5);
 
+
         Assertions.assertEquals(23, winningGame.getCurrentPlayer().getPosition().get());
 
     }
+
+    @Test
+    void initialise_game_with_winning_square_feature_switched_on() {
+        Game winningGame = new GameBuilder()
+                .withPlayers(1)
+                .withBoardSize(5)
+                .buildWithWinningSquare();
+
+        Assertions.assertTrue(winningGame.isWinningSquareOn());
+
+
+    }
+
+    @Test
+    void check_if_game_has_winningSquareOnly_feature_turned_off() {
+        Game winningGame = new GameBuilder()
+                .withPlayers(1)
+                .withBoardSize(5)
+                .build();
+
+        Assertions.assertFalse(winningGame.isWinningSquareOn());
+    }
+
 
 
 }
