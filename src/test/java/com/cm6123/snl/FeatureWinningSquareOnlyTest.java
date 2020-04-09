@@ -255,7 +255,7 @@ class FeatureWinningSquareOnlyTest {
     }
 
 
-    //Issue #15
+
 
     //Code adapted from le-rag - SystemOutTest.Java via github
     //Available at: https://gist.github.com/le-rag/28dad2f3346ae11e6a6b
@@ -270,6 +270,7 @@ class FeatureWinningSquareOnlyTest {
     void emptyStream() {
         System.setOut(null);
     }
+    //Issue #15 (amended to #16 after changes)
     @Test
     void player_receives_message_about_illegal_move() {
 
@@ -285,10 +286,12 @@ class FeatureWinningSquareOnlyTest {
         winningGame.moveCurrentPlayer(3);
 
         winningGame.moveCurrentPlayer(5);
-        Assertions.assertEquals("WARNING: PLAYER ROLL EXCEEDS BOARD. RETURNING TO ORIGINAL POSITION",
+        Assertions.assertEquals("WARNING: PLAYER ROLL (5) " +
+                        "EXCEEDS BOARD SIZE (25). " +
+                        "RETURNING TO ORIGINAL POSITION (23)",
                 output.toString());
     }
-
+    //Issue #16
     @Test
     void player_informed_info_about_illegal_move_and_original_position() {
         Game winningGame = new GameBuilder()
@@ -303,7 +306,9 @@ class FeatureWinningSquareOnlyTest {
         winningGame.moveCurrentPlayer(3);
 
         winningGame.moveCurrentPlayer(5);
-        Assertions.assertEquals("WARNING: PLAYER ROLL (5) EXCEEDS BOARD (25). RETURNING TO ORIGINAL POSITION (23)",
+        Assertions.assertEquals("WARNING: PLAYER ROLL (5) " +
+                        "EXCEEDS BOARD SIZE (25). " +
+                        "RETURNING TO ORIGINAL POSITION (23)",
                 output.toString());
     }
 }
