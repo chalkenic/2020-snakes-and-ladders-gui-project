@@ -20,7 +20,7 @@ class FeatureWinningSquareTest {
         winningGame.moveCurrentPlayer(4);
 
         //Check's player 1's position on board.
-        Assertions.assertEquals(5,winningGame.getCurrentPlayer().getPosition().get());
+        Assertions.assertEquals(5, winningGame.getCurrentPlayer().getPosition().get());
     }
 
     //Issue #12
@@ -54,7 +54,7 @@ class FeatureWinningSquareTest {
 
     //Issue #13
     @Test
-    void check_if_player_position_goes_higher_than_winning_square () {
+    void check_if_player_position_goes_higher_than_winning_square() {
         Game winningGame = new GameBuilder()
                 .withPlayers(1)
                 .withBoardSize(5)
@@ -66,7 +66,7 @@ class FeatureWinningSquareTest {
         winningGame.moveCurrentPlayer(5);
         winningGame.moveCurrentPlayer(6);
 
-        if(winningGame.getCurrentPlayer().getPosition().get() == 26) {
+        if (winningGame.getCurrentPlayer().getPosition().get() == 26) {
             Assertions.assertEquals(26, winningGame.getCurrentPlayer().getPosition().get());
         }
     }
@@ -110,5 +110,23 @@ class FeatureWinningSquareTest {
         Assertions.assertFalse(winningGame.getCurrentPlayer().getinsideBoardArea());
     }
 
+    //Issue #19
+    @Test
+    void check_if_game_has_not_ended_when_player_rolls_outside_board_size() throws Exception {
+        Game winningGame = new GameBuilder()
+                .withPlayers(1)
+                .withBoardSize(5)
+                .build();
 
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(6);
+
+        Assertions.assertThrows(IllegalStateException.class,
+                () -> { winningGame.getWinningPlayer();
+        });
+    }
 }
+
