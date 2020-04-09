@@ -126,7 +126,75 @@ class FeatureWinningSquareTest {
 
         Assertions.assertThrows(IllegalStateException.class,
                 () -> { winningGame.getWinningPlayer();
-        });
+                });
     }
+
+    //Issue #14
+    @Test
+    void check_if_2_past_final_square_is_illegal() {
+        Game winningGame = new GameBuilder()
+                .withPlayers(1)
+                .withBoardSize(5)
+                .build();
+
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(3);
+
+        winningGame.moveCurrentPlayer(4);
+        Assertions.assertFalse(winningGame.isGameOver());
+
+    }
+
+    //Issue #14
+    @Test
+    void check_if_3_past_final_square_is_illegal() {
+        Game winningGame = new GameBuilder()
+                .withPlayers(1)
+                .withBoardSize(5)
+                .build();
+
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(3);
+
+        winningGame.moveCurrentPlayer(5);
+        Assertions.assertFalse(winningGame.isGameOver());
+
+
+    }
+
+    //Issue #14
+    @Test
+    void check_if_any_roll_above_6_past_final_square_is_illegal() {
+        Integer playerWinCount = 0;
+        Game winningGame = new GameBuilder()
+                .withPlayers(1)
+                .withBoardSize(5)
+                .build();
+
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(3);
+
+        for (int i = 7; i < 99; i++) {
+            winningGame.moveCurrentPlayer(i);
+
+            //If game continues, do not increment player win count
+            if(!winningGame.gameContinues()) {
+                playerWinCount++;
+            }
+        }
+        Assertions.assertEquals(0, playerWinCount);
+
+    }
+
+
 }
 

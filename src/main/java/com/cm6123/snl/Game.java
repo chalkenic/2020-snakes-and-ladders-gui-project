@@ -160,7 +160,7 @@ public final class Game {
    * shoudl the game carry on?
    * @return true if the game is not over.
    */
-  private Boolean gameContinues() {
+  Boolean gameContinues() {
     return !isGameOver();
   }
 
