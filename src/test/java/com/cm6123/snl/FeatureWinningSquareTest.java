@@ -58,7 +58,7 @@ class FeatureWinningSquareTest {
         Game winningGame = new GameBuilder()
                 .withPlayers(1)
                 .withBoardSize(5)
-                .buildWithWinningSquare();
+                .build();
 
         winningGame.moveCurrentPlayer(5);
         winningGame.moveCurrentPlayer(5);
@@ -77,7 +77,7 @@ class FeatureWinningSquareTest {
         Game winningGame = new GameBuilder()
                 .withPlayers(1)
                 .withBoardSize(5)
-                .buildWithWinningSquare();
+                .build();
 
         winningGame.moveCurrentPlayer(5);
         winningGame.moveCurrentPlayer(5);
@@ -95,7 +95,7 @@ class FeatureWinningSquareTest {
         Game winningGame = new GameBuilder()
                 .withPlayers(1)
                 .withBoardSize(5)
-                .buildWithWinningSquare();
+                .build();
 
         winningGame.moveCurrentPlayer(5);
         winningGame.moveCurrentPlayer(5);
@@ -116,7 +116,7 @@ class FeatureWinningSquareTest {
         Game winningGame = new GameBuilder()
                 .withPlayers(1)
                 .withBoardSize(5)
-                .buildWithWinningSquare();
+                .build();
 
         winningGame.moveCurrentPlayer(5);
         winningGame.moveCurrentPlayer(5);
@@ -125,8 +125,7 @@ class FeatureWinningSquareTest {
         winningGame.moveCurrentPlayer(6);
 
         Assertions.assertThrows(IllegalStateException.class,
-                () -> {
-                    winningGame.getWinningPlayer();
+                () -> { winningGame.getWinningPlayer();
                 });
     }
 
@@ -136,7 +135,7 @@ class FeatureWinningSquareTest {
         Game winningGame = new GameBuilder()
                 .withPlayers(1)
                 .withBoardSize(5)
-                .buildWithWinningSquare();
+                .build();
 
         winningGame.moveCurrentPlayer(5);
         winningGame.moveCurrentPlayer(5);
@@ -155,7 +154,7 @@ class FeatureWinningSquareTest {
         Game winningGame = new GameBuilder()
                 .withPlayers(1)
                 .withBoardSize(5)
-                .buildWithWinningSquare();
+                .build();
 
         winningGame.moveCurrentPlayer(5);
         winningGame.moveCurrentPlayer(5);
@@ -176,23 +175,19 @@ class FeatureWinningSquareTest {
         Game winningGame = new GameBuilder()
                 .withPlayers(1)
                 .withBoardSize(5)
-                .buildWithWinningSquare();
+                .build();
 
         winningGame.moveCurrentPlayer(5);
         winningGame.moveCurrentPlayer(5);
-        System.out.println(winningGame.getCurrentPlayer().getPosition().get());
         winningGame.moveCurrentPlayer(5);
-        System.out.println(winningGame.getCurrentPlayer().getPosition().get());
         winningGame.moveCurrentPlayer(5);
-        System.out.println(winningGame.getCurrentPlayer().getPosition().get());
         winningGame.moveCurrentPlayer(3);
-        System.out.println(winningGame.getCurrentPlayer().getPosition().get());
 
         for (int i = 7; i < 99; i++) {
             winningGame.moveCurrentPlayer(i);
 
             //If game continues, do not increment player win count
-            if (! winningGame.gameContinues()) {
+            if(!winningGame.gameContinues()) {
                 playerWinCount++;
             }
         }
@@ -219,30 +214,6 @@ class FeatureWinningSquareTest {
 
         Assertions.assertEquals(23, winningGame.getCurrentPlayer().getPosition().get());
 
-    }
-
-
-
-    @Test
-    void initialise_game_with_winning_square_feature_switched_on() {
-        Game winningGame = new GameBuilder()
-                .withPlayers(1)
-                .withBoardSize(5)
-                .buildWithWinningSquare();
-
-        Assertions.assertTrue(winningGame.isWinningSquareOn());
-
-
-    }
-
-    @Test
-    void check_if_game_has_winningSquareOnly_feature_turned_off() {
-        Game winningGame = new GameBuilder()
-                .withPlayers(1)
-                .withBoardSize(5)
-                .build();
-
-        Assertions.assertFalse(winningGame.isWinningSquareOn());
     }
 
 
