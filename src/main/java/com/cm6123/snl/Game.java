@@ -13,6 +13,13 @@ public final class Game {
    */
   private PlayerList players;
 
+
+
+  /**
+   * Confirmation of whether winning square is switched on in game.
+   */
+  private Boolean winningSquareOn = false;
+
   Game(final Integer playerCount,
        final Integer width,
        final Integer[] snakes,
@@ -21,8 +28,21 @@ public final class Game {
 
     board = new Board(width, snakes, ladders);
     players = new PlayerList(playerCount, board.start());
+  }
+
+  Game(final Integer playerCount,
+       final Integer width,
+       final Integer[] snakes,
+       final Integer[] ladders,
+       final Boolean winningSquareOnly
+  ) {
+
+    board = new Board(width, snakes, ladders);
+    players = new PlayerList(playerCount, board.start());
+    winningSquareOn = winningSquareOnly;
 
   }
+
 
 
   /**
@@ -60,21 +80,27 @@ public final class Game {
    * @param squares the number of squares to move by - typically the value of the roll of the dice.
    */
   public void moveCurrentPlayer(final Integer squares) {
+      currentPlayerRoll = squares;
     if (isGameOver()) {
       throw new IllegalStateException("Can't move a player once the game is over.");
     } else {
       //change this to asking the board to provide the destination and then move the player there.
       Player currentPlayer = getCurrentPlayer();
-      currentPlayerRoll = squares;
 
-      if (checkPosition(currentPlayer, squares)) {
-
-        //Add diceroll into Current game roll for determining whether player has passed winning position.
-        Position newPosition = board.move(currentPlayer.getPosition(), squares);
-        currentPlayer.moveTo(newPosition);
-
-
+      //If winning Square Only feature switched on, player's position with new roll queried for legality.
+      if (winningSquareOn) {
+        if (checkIfLegalPosition(currentPlayer, squares)) {
+            //Player moves as normal if legal.
+            movePlayerPosition(currentPlayer, squares);
+        } else {
+            //Player does not move on board if illegal; turn ends.
+            players.next();
+        }
+        //Game continues as normal if winning square feature off.
+      } else {
+          movePlayerPosition(currentPlayer, squares);
       }
+
       if (gameContinues()) {
         players.next();
       }
@@ -135,9 +161,9 @@ public final class Game {
    * Checks position of player on board to confirm whether roll leaves them inside boundaries or not.
     * @param player - current player making a roll on Board.
    * @param roll - the value of player's roll.
-   * @return
+   * @return true if player still inside board boundaries.
    */
-  public Boolean checkPosition(final Player player, final Integer roll) {
+  private Boolean checkIfLegalPosition(final Player player, final Integer roll) {
     if ((player.getPosition().get() + roll) > numberOfSquares()) {
       System.out.println("WARNING: PLAYER ROLL EXCEEDS BOARD.");
       player.setinsideBoardArea(false);
@@ -145,6 +171,18 @@ public final class Game {
       player.setinsideBoardArea(true);
     }
     return player.getinsideBoardArea();
+  }
+
+    /**
+     *
+     * @param currentPlayer
+     * @param squares
+     */
+    private void movePlayerPosition(final Player currentPlayer, final Integer squares) {
+
+      //Add diceroll into Current game roll for determining whether player has passed winning position.
+      Position newPosition = board.move(currentPlayer.getPosition(), squares);
+      currentPlayer.moveTo(newPosition);
   }
 
   /**
@@ -164,5 +202,12 @@ public final class Game {
     return !isGameOver();
   }
 
+  /**
+   * Gets confirmation of whether WinningSquareOnly feature turned on.
+   * @return true if winning square on.
+   */
+  public Boolean isWinningSquareOn() {
+    return winningSquareOn;
+  }
 
 }
