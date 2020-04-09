@@ -4,8 +4,17 @@ import com.cm6123.snl.dice.DiceSet;
 import com.cm6123.snl.dice.LoadedDiceFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
-class FeatureWinningSquareTest {
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
+
+
+class FeatureWinningSquareOnlyTest {
+
+
 
     //Issue #11
     @Test
@@ -73,7 +82,7 @@ class FeatureWinningSquareTest {
 
     //Issue #13
     @Test
-    void check_if_player_boundary_is_true_when_inside_board_area() {
+    void player_boundary_is_true_when_inside_board_area() {
         Game winningGame = new GameBuilder()
                 .withPlayers(1)
                 .withBoardSize(5)
@@ -91,7 +100,7 @@ class FeatureWinningSquareTest {
 
     //Issue #13
     @Test
-    void check_if_player_boundary_changes_to_false_when_outside_board_area() {
+    void player_boundary_changes_to_false_when_outside_board_area() {
         Game winningGame = new GameBuilder()
                 .withPlayers(1)
                 .withBoardSize(5)
@@ -112,7 +121,7 @@ class FeatureWinningSquareTest {
 
     //Issue #19
     @Test
-    void check_if_game_has_not_ended_when_player_rolls_outside_board_size() throws Exception {
+    void check_game_has_not_ended_when_player_rolls_outside_board_size() throws Exception {
         Game winningGame = new GameBuilder()
                 .withPlayers(1)
                 .withBoardSize(5)
@@ -171,7 +180,7 @@ class FeatureWinningSquareTest {
 
     //Issue #14
     @Test
-    void check_if_any_roll_above_6_past_final_square_is_illegal() {
+    void any_roll_above_6_past_final_square_is_illegal() {
         Integer playerWinCount = 0;
         Game winningGame = new GameBuilder()
                 .withPlayers(1)
@@ -199,7 +208,7 @@ class FeatureWinningSquareTest {
         Assertions.assertEquals(0, playerWinCount);
 
     }
-
+    //Issue #17
     @Test
     void check_if_player_begins_turn_after_illegal_move_at_original_position() {
         Game winningGame = new GameBuilder()
@@ -222,7 +231,7 @@ class FeatureWinningSquareTest {
 
     }
 
-
+    //Issue #21
     @Test
     void initialise_game_with_winning_square_feature_switched_on() {
         Game winningGame = new GameBuilder()
@@ -234,9 +243,9 @@ class FeatureWinningSquareTest {
 
 
     }
-
+    //Issue #21
     @Test
-    void check_if_game_has_winningSquareOnly_feature_turned_off() {
+    void check_game_has_winningSquareOnly_feature_turned_off() {
         Game winningGame = new GameBuilder()
                 .withPlayers(1)
                 .withBoardSize(5)
@@ -246,6 +255,62 @@ class FeatureWinningSquareTest {
     }
 
 
+
+
+    //Code adapted from le-rag - SystemOutTest.Java via github
+    //Available at: https://gist.github.com/le-rag/28dad2f3346ae11e6a6b
+    private final ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+    @BeforeEach
+    void newStream() {
+        System.setOut(new PrintStream(output));
+    }
+
+    @AfterEach
+    void emptyStream() {
+        System.setOut(null);
+    }
+    //Issue #15 (amended to #16 after changes)
+    @Test
+    void player_receives_message_about_illegal_move() {
+
+        Game winningGame = new GameBuilder()
+                .withPlayers(1)
+                .withBoardSize(5)
+                .buildWithWinningSquare();
+
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(3);
+
+        winningGame.moveCurrentPlayer(5);
+        Assertions.assertEquals("WARNING: PLAYER ROLL (5) " +
+                        "EXCEEDS BOARD SIZE (25). " +
+                        "RETURNING TO ORIGINAL POSITION (23)",
+                output.toString());
+    }
+    //Issue #16
+    @Test
+    void player_informed_info_about_illegal_move_and_original_position() {
+        Game winningGame = new GameBuilder()
+                .withPlayers(1)
+                .withBoardSize(5)
+                .buildWithWinningSquare();
+
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(5);
+        winningGame.moveCurrentPlayer(3);
+
+        winningGame.moveCurrentPlayer(5);
+        Assertions.assertEquals("WARNING: PLAYER ROLL (5) " +
+                        "EXCEEDS BOARD SIZE (25). " +
+                        "RETURNING TO ORIGINAL POSITION (23)",
+                output.toString());
+    }
 }
 
 
