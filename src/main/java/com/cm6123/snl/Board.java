@@ -19,6 +19,11 @@ public final class Board {
    */
   private final Set<Integer> specials;
 
+    /**
+     * States default dice size for determining boost squares.
+     */
+  private final Integer standardDieSize = 6;
+
   /**
    * @param aWidth - the width of the board (remember it is square)
    * @param snakes - the snakes in pairs (head, tail, head, tail)
@@ -166,7 +171,10 @@ public final class Board {
 
   private void addBoosts(final Integer[] boosts) {
     for (Integer boost = 0; boost < boosts.length; boost++) {
-      this.addBoost(boosts[boost]);
+        if (boosts[boost] < squares.size() - 6) {
+            this.addBoost(boosts[boost]);
+        }
+
     }
   }
 

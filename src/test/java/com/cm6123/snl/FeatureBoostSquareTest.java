@@ -117,4 +117,20 @@ class FeatureBoostSquareTest {
                     Board boostBoard = new Board(5, new Integer[]{}, new Integer[]{11, 15}, new Integer[]{15});
                 });
     }
+
+    @Test
+    void boost_cannot_exist_within_6_squares_of_winning_square() {
+        Assertions.assertThrows(IllegalStateException.class,
+                () -> {
+                    Board boostBoard = new Board(5, new Integer[]{}, new Integer[]{}, new Integer[]{18});
+                });
+    }
+
+    @Test
+    void boost_cannot_exist_on_and_beyond_winning_square() {
+        Assertions.assertThrows(IllegalStateException.class,
+                () -> {
+                    Board boostBoard = new Board(5, new Integer[]{}, new Integer[]{}, new Integer[]{26});
+                });
+    }
 }
