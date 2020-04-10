@@ -101,7 +101,7 @@ public final class Board {
    * @param aPosition - a position of a player
    * @return true if the passed position is a winning position.
    */
-  public boolean isWinningPosition(final Position aPosition) {
+  boolean isWinningPosition(final Position aPosition) {
     return squares.get(aPosition.get()).isWinningSquare();
   }
 
@@ -167,6 +167,9 @@ public final class Board {
     Square topSquare = squares.get(top);
     Square ladder = new LadderSquare(this, foot, topSquare);
     this.setSquareAt(foot, ladder);
+
+  }
+  private void showAllSpecials() {
 
   }
 
