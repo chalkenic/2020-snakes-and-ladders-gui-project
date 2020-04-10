@@ -67,6 +67,12 @@ public final class Board {
   }
 
   /**
+   * @return specials - all interactive squares.
+   */
+  Set<Integer> specials() {
+    return specials;
+  }
+  /**
    * @return returns the starting square.
    */
   public Position start() {
@@ -124,6 +130,25 @@ public final class Board {
     }
   }
 
+  private void addBoosts(final Integer[] boosts) {
+    for (Integer boost = 0; boost <= boosts.length; boost++) {
+      this.addBoost(boosts[boost]);
+    }
+  }
+
+  private void addBoost(final Integer boost) {
+    if (specials.contains(boost)) {
+      throw new IllegalStateException("Boost cannot clash with other interactive squares");
+    }
+
+    specials.add(boost);
+
+    Square boostSquare = squares.get(boost);
+
+    BoostSquare newBoost = new BoostSquare(this, boost);
+    this.setSquareAt(boost, boostSquare);
+  }
+
 
   private void addSnake(final Integer head, final Integer tail) {
     if (specials.contains(head) || specials.contains(tail)) {
@@ -169,11 +194,10 @@ public final class Board {
     this.setSquareAt(foot, ladder);
 
   }
-  private void showAllSpecials() {
-
-  }
 
   private void setSquareAt(final Integer index, final Square newSquare) {
     squares.set(index, newSquare);
   }
+
+
 }

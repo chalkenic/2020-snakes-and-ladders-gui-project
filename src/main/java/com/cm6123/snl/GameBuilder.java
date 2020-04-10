@@ -35,6 +35,11 @@ public final class GameBuilder {
   private Integer[] snakes;
 
   /**
+   * An array of integers that specify boost locations on Board.
+   */
+  private Integer[] boosts;
+
+  /**
    * A temporary variable that holds the board size until the game is built.
    */
   private Integer tempBoardSize;
@@ -55,6 +60,7 @@ public final class GameBuilder {
     tempBoardSize = STANDARD_BOARD_WIDTH;
     snakes = new Integer[0];
     ladders = new Integer[0];
+    boosts = new Integer[0];
   }
 
   /**
@@ -63,8 +69,13 @@ public final class GameBuilder {
    * @return a Game object configured which board, snakes, ladders and players.
    */
   public Game build() {
-    Game theGame = new Game(tempPlayers, tempBoardSize, snakes, ladders);
-    return theGame;
+    if (boosts.length < 1) {
+      Game theGame = new Game(tempPlayers, tempBoardSize, snakes, ladders);
+      return theGame;
+    } else {
+      Game boostGame = new Game(tempPlayers, tempBoardSize, snakes, ladders, boosts);
+      return boostGame;
+    }
   }
 
   /**
@@ -72,7 +83,8 @@ public final class GameBuilder {
    * @return configured game object with board, snakes, ladders, players & winning square.
    */
   public Game buildWithWinningSquare() {
-    Game theWinningSquareGame = new Game(tempPlayers, tempBoardSize, snakes, ladders, winningSquareOnly);
+    Game theWinningSquareGame = new Game(tempPlayers, tempBoardSize, snakes, ladders);
+    theWinningSquareGame.setWinningSquareOnly();
     return theWinningSquareGame;
   }
 
@@ -138,6 +150,16 @@ public final class GameBuilder {
     } else {
       this.ladders = someLadders;
     }
+    return this;
+  }
+
+  /**
+   * Set the Boost squares.
+   * @param someBoosts - Each boost doubles the original roll.
+   * @return the configured GameBuilder
+   */
+  public GameBuilder withBoosts(final Integer... someBoosts) {
+    this.boosts = someBoosts;
     return this;
   }
 
