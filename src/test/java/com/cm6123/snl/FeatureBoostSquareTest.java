@@ -1,4 +1,4 @@
-package com.cm6123.snl.dice;
+package com.cm6123.snl;
 
 import com.cm6123.snl.*;
 import org.junit.jupiter.api.Assertions;
@@ -36,8 +36,13 @@ class FeatureBoostSquareTest {
                 .withBoardSize(5)
                 .withSnakes(11, 5)
                 .withLadders(13, 18)
-//                .withBoosts(6)
+                .withBoosts(6)
                 .build();
+
+        System.out.println(boostGame.getSpecials());
+        Assertions.assertEquals(1, boostGame.numberOfPlayers());
+        Assertions.assertEquals(25, boostGame.numberOfSquares());
+//        Assertions.assertTrue(boostGame.getSpecials().contains(6));
     }
 
     @Test
