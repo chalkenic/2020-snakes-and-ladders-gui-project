@@ -43,8 +43,33 @@ public final class Board {
 
 
     addSnakesAndLadders(snakes, ladders);
+  }
 
+  /**
+   * Create Board with additional Boost squares.
+   * @param aWidth - Width of the board.
+   * @param snakes - the snakes in pairs (head, tail, head, tail)
+   * @param ladders - the ladders in pairs (foot, top, foot, top)
+   * @param boosts - boosts as separate squares.
+   */
+  public Board(
+          final Integer aWidth,
+          final Integer[] snakes,
+          final Integer[] ladders,
+          final Integer[] boosts) {
 
+    this.width = aWidth;
+    squares = new ArrayList<>();
+    for (int w = 0; w < aWidth; w++) {
+      for (int h = 0; h < aWidth; h++) {
+        squares.add(new Square(this, (w * aWidth) + h));
+      }
+    }
+
+    setLastSquareAsWinner();
+
+    specials = new HashSet<>();
+    addInteractiveSquares(snakes, ladders, boosts);
   }
 
   /**
@@ -55,7 +80,6 @@ public final class Board {
   public Board(final Integer aWidth) {
 
     this(aWidth, new Integer[0], new Integer[0]);
-
 
   }
 
@@ -118,6 +142,16 @@ public final class Board {
     addLadders(ladders);
   }
 
+  private void addInteractiveSquares(
+          final Integer[] snakes,
+          final Integer[] ladders,
+          final Integer[] boosts) {
+    addSnakes(snakes);
+    addLadders(ladders);
+    addBoosts(boosts);
+  }
+
+
   private void addLadders(final Integer[] ladders) {
     for (Integer ladder = 0; ladder <= ladders.length - 1; ladder += 2) {
       this.addLadder(ladders[ladder], ladders[ladder + 1]);
@@ -131,7 +165,7 @@ public final class Board {
   }
 
   private void addBoosts(final Integer[] boosts) {
-    for (Integer boost = 0; boost <= boosts.length; boost++) {
+    for (Integer boost = 0; boost < boosts.length; boost++) {
       this.addBoost(boosts[boost]);
     }
   }

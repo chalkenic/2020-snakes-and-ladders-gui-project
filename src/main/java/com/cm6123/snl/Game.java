@@ -38,7 +38,7 @@ public final class Game {
        final Integer[] boosts
   ) {
 
-    board = new Board(width, snakes, ladders);
+    board = new Board(width, snakes, ladders, boosts);
     players = new PlayerList(playerCount, board.start());
 
   }
@@ -58,6 +58,10 @@ public final class Game {
     return currentPlayerRoll;
   }
 
+  /**
+   * get the size of the board.
+   * @return the board size.
+   */
   public Integer numberOfSquares() {
     return board.size();
   }
@@ -224,7 +228,7 @@ public final class Game {
   /**
    * Changes game to WinningSquareOnly feature.
    */
-  public void setWinningSquareOnly() {
+  void setWinningSquareOnly() {
     winningSquareOn = true;
   }
 
