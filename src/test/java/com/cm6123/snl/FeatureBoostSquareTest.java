@@ -165,4 +165,28 @@ class FeatureBoostSquareTest {
 
     }
 
+    @Test
+    void player_moves_to_doubled_roll_location_upon_landing_on_boost_square() {
+        Game boostGame = new GameBuilder()
+                .withPlayers(1)
+                .withBoosts(4)
+                .build();
+
+        boostGame.moveCurrentPlayer(4);
+
+        Assertions.assertEquals(8, boostGame.getCurrentPlayer().getPosition().get());
+    }
+
+    @Test
+    void player_moves_to_triple_of_roll_location_upon_landing_on_cumulative_boost_squares() {
+        Game boostGame = new GameBuilder()
+                .withPlayers(1)
+                .withBoosts(4, 7)
+                .build();
+
+        boostGame.moveCurrentPlayer(1);
+        boostGame.moveCurrentPlayer(3);
+
+        Assertions.assertEquals(10, boostGame.getCurrentPlayer().getPosition().get());
+    }
 }
