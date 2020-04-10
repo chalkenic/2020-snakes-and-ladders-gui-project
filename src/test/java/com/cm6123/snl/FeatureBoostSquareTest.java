@@ -167,8 +167,20 @@ class FeatureBoostSquareTest {
         boostGame.moveCurrentPlayer(4);
 
         Assertions.assertEquals(8, boostGame.getAccumulatedPlayerRoll());
+    }
 
+    //Issue #33 - addition after merge.
+    @Test
+    void player_2_roll_is_doubled_when_landing_on_boost_square() {
+        Game boostGame = new GameBuilder()
+                .withPlayers(2)
+                .withBoosts(4)
+                .build();
 
+        boostGame.moveCurrentPlayer(4);
+        boostGame.moveCurrentPlayer(9);
+
+        Assertions.assertEquals(9, boostGame.getAccumulatedPlayerRoll());
     }
 
     //Issue #34
@@ -300,7 +312,7 @@ class FeatureBoostSquareTest {
 
         boostGame.moveCurrentPlayer(5);
 
-        Assertions.assertEquals("Your total movement this turn: 5", output.toString());
+        Assertions.assertTrue(output.toString().contains("Your total movement this turn: 5"));
 
     }
 
@@ -315,7 +327,7 @@ class FeatureBoostSquareTest {
 
         boostGame.moveCurrentPlayer(4);
 
-        Assertions.assertEquals("Your total movement this turn: 8", output.toString());
+        Assertions.assertTrue(output.toString().contains("Your total movement " + "this turn: 8"));
     }
 
     @Test
@@ -329,7 +341,7 @@ class FeatureBoostSquareTest {
 
         boostGame.moveCurrentPlayer(4);
 
-        Assertions.assertEquals("Your total movement this turn: 3", output.toString());
+        Assertions.assertTrue(output.toString().contains("Your total movement this turn: 3"));
     }
 
     @Test
@@ -343,7 +355,7 @@ class FeatureBoostSquareTest {
 
         boostGame.moveCurrentPlayer(4);
 
-        Assertions.assertEquals("Your total movement this turn: 12", output.toString());
+        Assertions.assertTrue(output.toString().contains("Your total movement this turn: 12"));
     }
 
 

@@ -120,6 +120,8 @@ public final class Game {
           movePlayerPosition(currentPlayer, squares);
       }
 
+
+
       if (gameContinues()) {
         players.next();
       }
@@ -205,6 +207,7 @@ public final class Game {
         Position newPosition = board.move(currentPlayer.getPosition(), squares);
 
         accumulatedPlayerRoll = newPosition.get() - currentPlayer.getPosition().get();
+        System.out.print("Your total movement this turn: " + accumulatedPlayerRoll);
         currentPlayer.moveTo(newPosition);
 
   }
