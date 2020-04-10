@@ -251,5 +251,20 @@ class FeatureBoostSquareTest {
 
         Assertions.assertEquals(18, boostGame.getCurrentPlayer().getPosition().get());
     }
+
     //Issue #24
+    @Test
+    void player_moves_to_ladder_top_after_boosting_twice_to_ladder_bottom() {
+        Game boostGame = new GameBuilder()
+                .withPlayers(1)
+                .withLadders(12, 20)
+                .withBoosts(6, 9)
+                .withBoardSize(5)
+                .build();
+
+        boostGame.moveCurrentPlayer(3);
+        boostGame.moveCurrentPlayer(3);
+
+        Assertions.assertEquals(20, boostGame.getCurrentPlayer().getPosition().get());
+    }
 }
