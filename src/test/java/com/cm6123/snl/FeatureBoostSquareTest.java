@@ -87,4 +87,19 @@ class FeatureBoostSquareTest {
                 boostBoard.specials().contains(12)));
 
     }
+
+    @Test
+    void snake_head_and_boosts_cannot_clash() {
+        Assertions.assertThrows(IllegalStateException.class,
+                () -> {
+                    Board boostBoard = new Board(5, new Integer[]{9, 3}, new Integer[]{}, new Integer[]{9});
+                });
+    }
+    @Test
+    void snake_tail_and_boosts_cannot_clash() {
+        Assertions.assertThrows(IllegalStateException.class,
+                () -> {
+                    Board boostBoard = new Board(5, new Integer[]{9, 3}, new Integer[]{}, new Integer[]{3});
+                });
+    }
 }
