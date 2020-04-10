@@ -39,14 +39,13 @@ class FeatureBoostSquareTest {
                 .withBoosts(6)
                 .build();
 
-        System.out.println(boostGame.getSpecials());
         Assertions.assertEquals(1, boostGame.numberOfPlayers());
         Assertions.assertEquals(25, boostGame.numberOfSquares());
-//        Assertions.assertTrue(boostGame.getSpecials().contains(6));
+        Assertions.assertTrue(boostGame.getSpecials().contains(6));
     }
 
     @Test
-    void allow_board_to_still_run_without_boost_squares() {
+    void board_still_runs_without_boost_squares() {
         Game boostGame = new GameBuilder()
                 .withPlayers(1)
                 .withBoardSize(5)
@@ -54,13 +53,23 @@ class FeatureBoostSquareTest {
                 .withSnakes(11, 5)
                 .build();
 
-        boostGame.moveCurrentPlayer(13);
-        System.out.println(boostGame.getPlayerData().getPosition().get());
-
-        System.out.println(boostGame.getSpecials());
         Assertions.assertEquals(1, boostGame.numberOfPlayers());
         Assertions.assertEquals(25, boostGame.numberOfSquares());
-//        Assertions.assertEquals([11, 5 ,13 ,18], boostGame);
 
+    }
+
+    @Test
+    void run_game_with_only_boost_squares() {
+        Game boostGame = new GameBuilder()
+                .withBoosts(6, 7)
+                .build();
+
+        Assertions.assertEquals(2, boostGame.numberOfPlayers());
+        Assertions.assertEquals(100, boostGame.numberOfSquares());
+
+        //Checks that both boost squares have been added into game.
+        Assertions.assertTrue((
+                boostGame.getSpecials().contains(6) &&
+                boostGame.getSpecials().contains(7)));
     }
 }
