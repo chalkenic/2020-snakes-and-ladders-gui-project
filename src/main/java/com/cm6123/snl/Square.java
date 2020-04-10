@@ -17,7 +17,7 @@ public class Square {
   /**
    * Is this a boost square?
    */
-  private Boolean isBoostSquare;
+  private Boolean isBoostSquare = false;
 
   /**
    * Construct a Square.
@@ -25,7 +25,7 @@ public class Square {
    * @param aBoard - the board of the which the square is part
    * @param num - the number of the square
    */
-  public Square(final Board aBoard, final Integer num) {
+  Square(final Board aBoard, final Integer num) {
     board = aBoard;
     number = num;
     isWinningSquare = false;
@@ -34,7 +34,7 @@ public class Square {
   /**
    * Set this square as a winning square.
    */
-  public void setAsWinningSquare() {
+  void setAsWinningSquare() {
     isWinningSquare = true;
   }
 
@@ -68,7 +68,7 @@ public class Square {
    * True if this is a winning square.
    * @return true if this is a winning square.
    */
-  public Boolean isWinningSquare() {
+  Boolean isWinningSquare() {
     return isWinningSquare;
   }
 
@@ -76,7 +76,14 @@ public class Square {
    * True if this is a boost square.
    * @return true if this is a boost square.
    */
-  public Boolean isBoostSquare() {
+  Boolean isBoostSquare() {
     return isBoostSquare;
+  }
+
+  /**
+   * Assigns square as Boost for determining player roll.
+   */
+  void setAsBoostSquare() {
+    isBoostSquare = true;
   }
 }

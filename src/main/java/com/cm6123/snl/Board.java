@@ -125,9 +125,16 @@ public final class Board {
     }
   }
 
-  Position queryPlayerSquare(Position currentPosition, Integer roll) {
-    Integer tempPosition = currentPosition.get();
-    if ((squares.get(tempPosition)) =) {
+  private Position queryPlayerSquare(final Position position, final Integer roll) {
+    Integer currentPosition = position.get();
+
+    if ((squares.get(currentPosition).isBoostSquare())) {
+
+      Integer newPosition = position.get() + roll;
+      Position tempPosition = new Position(squares.get(newPosition).destination().getNumber());
+      return queryPlayerSquare(tempPosition, roll);
+    } else {
+        return position;
 
     }
   }
@@ -200,6 +207,7 @@ public final class Board {
     Square boostSquare = squares.get(boost);
 
     BoostSquare newBoost = new BoostSquare(this, boost);
+    newBoost.setAsBoostSquare();
     this.setSquareAt(boost, boostSquare);
   }
 
