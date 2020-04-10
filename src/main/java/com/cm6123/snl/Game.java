@@ -205,8 +205,6 @@ public final class Game {
         Position newPosition = board.move(currentPlayer.getPosition(), squares);
 
         accumulatedPlayerRoll = newPosition.get() - currentPlayer.getPosition().get();
-        System.out.println(newPosition.get());
-        System.out.println(currentPlayer.getPosition().get());
         currentPlayer.moveTo(newPosition);
 
   }

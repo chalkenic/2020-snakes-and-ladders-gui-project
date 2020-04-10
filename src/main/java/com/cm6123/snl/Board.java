@@ -135,7 +135,6 @@ public final class Board {
     Integer currentPosition = position.get();
 
     if ((squares.get(currentPosition).isBoostSquare())) {
-      System.out.println("Hello?");
 
       Integer newMove = position.get() + roll;
       Position newPosition = new Position(squares.get(newMove).destination().getNumber());
@@ -213,8 +212,9 @@ public final class Board {
 
     Square boostSquare = squares.get(boost);
 
-    BoostSquare newBoost = new BoostSquare(this, boost);
-    newBoost.setAsBoostSquare();
+    Square newBoost = new BoostSquare(this, boost);
+    squares.get(newBoost.getNumber()).setAsBoostSquare();
+//    newBoost.setAsBoostSquare();
     this.setSquareAt(boost, boostSquare);
   }
 

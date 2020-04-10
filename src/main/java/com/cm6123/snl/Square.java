@@ -31,12 +31,7 @@ public class Square {
     isWinningSquare = false;
   }
 
-  /**
-   * Set this square as a winning square.
-   */
-  void setAsWinningSquare() {
-    isWinningSquare = true;
-  }
+
 
   /**
    * Get the number of the square.
@@ -70,6 +65,13 @@ public class Square {
    */
   Boolean isWinningSquare() {
     return isWinningSquare;
+  }
+
+  /**
+   * Set this square as a winning square.
+   */
+  void setAsWinningSquare() {
+    isWinningSquare = true;
   }
 
   /**
