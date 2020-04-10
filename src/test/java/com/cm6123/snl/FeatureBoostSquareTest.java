@@ -297,10 +297,10 @@ class FeatureBoostSquareTest {
         System.setOut(new PrintStream(output));
     }
 
-    @AfterEach
-    void emptyStream() {
-        System.setOut(null);
-    }
+//    @AfterEach
+//    void emptyStream() {
+//        System.setOut(null);
+//    }
 
     //Issue #26
     @Test

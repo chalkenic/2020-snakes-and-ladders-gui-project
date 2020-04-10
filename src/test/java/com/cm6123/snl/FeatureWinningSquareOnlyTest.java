@@ -286,10 +286,9 @@ class FeatureWinningSquareOnlyTest {
         winningGame.moveCurrentPlayer(3);
 
         winningGame.moveCurrentPlayer(5);
-        Assertions.assertEquals("WARNING: PLAYER ROLL (5) " +
+        Assertions.assertTrue(output.toString().contains("WARNING: PLAYER ROLL (5) " +
                         "EXCEEDS BOARD SIZE (25). " +
-                        "RETURNING TO ORIGINAL POSITION (23)",
-                output.toString());
+                        "RETURNING TO ORIGINAL POSITION (23)"));
     }
     //Issue #16
     @Test
@@ -306,10 +305,9 @@ class FeatureWinningSquareOnlyTest {
         winningGame.moveCurrentPlayer(3);
 
         winningGame.moveCurrentPlayer(5);
-        Assertions.assertEquals("WARNING: PLAYER ROLL (5) " +
+        Assertions.assertTrue(output.toString().contains("WARNING: PLAYER ROLL (5) " +
                         "EXCEEDS BOARD SIZE (25). " +
-                        "RETURNING TO ORIGINAL POSITION (23)",
-                output.toString());
+                        "RETURNING TO ORIGINAL POSITION (23)"));
     }
 }
 
