@@ -177,6 +177,7 @@ class FeatureBoostSquareTest {
         Assertions.assertEquals(8, boostGame.getCurrentPlayer().getPosition().get());
     }
 
+    //Issue #34
     @Test
     void player_moves_to_triple_of_roll_location_upon_landing_on_cumulative_boost_squares() {
         Game boostGame = new GameBuilder()
@@ -190,6 +191,7 @@ class FeatureBoostSquareTest {
         Assertions.assertEquals(10, boostGame.getCurrentPlayer().getPosition().get());
     }
 
+    //Issue #34
     @Test
     void player_moves_to_position_6_times_of_original_roll() {
         Game boostGame = new GameBuilder()
@@ -202,5 +204,36 @@ class FeatureBoostSquareTest {
 
         Assertions.assertEquals(36, boostGame.getCurrentPlayer().getPosition().get());
 
+    }
+
+    //Issue #25
+    @Test
+    void player_moves_to_snake_tail_after_boosting_to_snake_head() {
+        Game boostGame = new GameBuilder()
+                .withPlayers(1)
+                .withSnakes(16, 11)
+                .withBoosts(12)
+                .withBoardSize(5)
+                .build();
+
+        boostGame.moveCurrentPlayer(8);
+        boostGame.moveCurrentPlayer(4);
+
+        Assertions.assertEquals(11,boostGame.getCurrentPlayer().getPosition().get());
+    }
+
+    //Issue #25
+    @Test
+    void player_moves_to_snake_tail_after_boosting_twice_to_snake_head() {
+        Game boostGame = new GameBuilder()
+                .withPlayers(1)
+                .withSnakes(18, 10)
+                .withBoosts(6, 12)
+                .withBoardSize(5)
+                .build();
+
+        boostGame.moveCurrentPlayer(6);
+
+        Assertions.assertEquals(10,boostGame.getCurrentPlayer().getPosition().get());
     }
 }
