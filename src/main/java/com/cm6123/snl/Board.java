@@ -129,7 +129,7 @@ public final class Board {
    * Check's player's position on board to determine if Boost square.
    * @param position - player's position to be queried.
    * @param roll - player's original roll for possible incrementing
-   * @return function recursively until player no longer resides on boost square.
+   * @return function calls itsel recursively until player no longer on boost square.
    */
   private Position queryPlayerSquare(final Position position, final Integer roll) {
     Integer currentPosition = position.get();
@@ -209,12 +209,11 @@ public final class Board {
     }
 
     specials.add(boost);
-
     Square boostSquare = squares.get(boost);
-
     Square newBoost = new BoostSquare(this, boost);
+
+    //Flags square as Boost for determining movement on board.
     squares.get(newBoost.getNumber()).setAsBoostSquare();
-//    newBoost.setAsBoostSquare();
     this.setSquareAt(boost, boostSquare);
   }
 
