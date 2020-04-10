@@ -164,7 +164,7 @@ class FeatureBoostSquareTest {
 
 
     }
-
+    //Issue #34
     @Test
     void player_moves_to_doubled_roll_location_upon_landing_on_boost_square() {
         Game boostGame = new GameBuilder()
@@ -188,5 +188,19 @@ class FeatureBoostSquareTest {
         boostGame.moveCurrentPlayer(3);
 
         Assertions.assertEquals(10, boostGame.getCurrentPlayer().getPosition().get());
+    }
+
+    @Test
+    void player_moves_to_position_6_times_of_original_roll() {
+        Game boostGame = new GameBuilder()
+                .withPlayers(1)
+                .withBoosts(6, 12, 18, 24, 30)
+                .withBoardSize(10)
+                .build();
+
+        boostGame.moveCurrentPlayer(6);
+
+        Assertions.assertEquals(36, boostGame.getCurrentPlayer().getPosition().get());
+
     }
 }
