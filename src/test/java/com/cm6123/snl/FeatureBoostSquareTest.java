@@ -102,4 +102,19 @@ class FeatureBoostSquareTest {
                     Board boostBoard = new Board(5, new Integer[]{9, 3}, new Integer[]{}, new Integer[]{3});
                 });
     }
+
+    @Test
+    void ladder_foot_and_boosts_cannot_clash() {
+        Assertions.assertThrows(IllegalStateException.class,
+                () -> {
+                    Board boostBoard = new Board(5, new Integer[]{}, new Integer[]{11, 15}, new Integer[]{11});
+                });
+    }
+    @Test
+    void ladder_top_and_boosts_cannot_clash() {
+        Assertions.assertThrows(IllegalStateException.class,
+                () -> {
+                    Board boostBoard = new Board(5, new Integer[]{}, new Integer[]{11, 15}, new Integer[]{15});
+                });
+    }
 }
