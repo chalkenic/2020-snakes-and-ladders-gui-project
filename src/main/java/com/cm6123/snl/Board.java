@@ -125,14 +125,21 @@ public final class Board {
     }
   }
 
+  /**
+   * Check's player's position on board to determine if Boost square.
+   * @param position - player's position to be queried.
+   * @param roll - player's original roll for possible incrementing
+   * @return function recursively until player no longer resides on boost square.
+   */
   private Position queryPlayerSquare(final Position position, final Integer roll) {
     Integer currentPosition = position.get();
 
     if ((squares.get(currentPosition).isBoostSquare())) {
+      System.out.println("Hello?");
 
-      Integer newPosition = position.get() + roll;
-      Position tempPosition = new Position(squares.get(newPosition).destination().getNumber());
-      return queryPlayerSquare(tempPosition, roll);
+      Integer newMove = position.get() + roll;
+      Position newPosition = new Position(squares.get(newMove).destination().getNumber());
+      return queryPlayerSquare(newPosition, roll);
     } else {
         return position;
 

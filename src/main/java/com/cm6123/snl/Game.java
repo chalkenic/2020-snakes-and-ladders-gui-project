@@ -54,7 +54,7 @@ public final class Game {
   /**
    * Stores accumulated player roll when using Boost Square feature.
    */
-  private Integer accumulatedPlayerRoll;
+  private Integer accumulatedPlayerRoll = 0;
 
   /**
    * get the current roll saved in the game.
@@ -201,13 +201,14 @@ public final class Game {
      */
     private void movePlayerPosition(final Player currentPlayer, final Integer squares) {
 
-      if (boostSquareOn) {
-
-      } else {
         //Add diceroll into Current game roll for determining whether player has passed winning position.
         Position newPosition = board.move(currentPlayer.getPosition(), squares);
+
+        accumulatedPlayerRoll = newPosition.get() - currentPlayer.getPosition().get();
+        System.out.println(newPosition.get());
+        System.out.println(currentPlayer.getPosition().get());
         currentPlayer.moveTo(newPosition);
-      }
+
   }
 
   /**

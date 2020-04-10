@@ -157,9 +157,9 @@ class FeatureBoostSquareTest {
                 .withBoosts(4)
                 .build();
 
-        boostGame.moveCurrentPlayer(4 );
+        boostGame.moveCurrentPlayer(4);
 
-//        Assertions.assertEquals(8, boostGame.getAccumulatedPlayerRoll());
+        Assertions.assertEquals(8, boostGame.getAccumulatedPlayerRoll());
 
 
 
