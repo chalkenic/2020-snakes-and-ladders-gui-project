@@ -300,7 +300,7 @@ class FeatureBoostSquareTest {
 
         boostGame.moveCurrentPlayer(5);
 
-        Assertions.assertEquals("You have rolled a total of 5 squares this turn", output.toString());
+        Assertions.assertEquals("Your total movement this turn: 5", output.toString());
 
     }
 
@@ -315,7 +315,35 @@ class FeatureBoostSquareTest {
 
         boostGame.moveCurrentPlayer(4);
 
-        Assertions.assertEquals("You have rolled a total of 5 squares this turn", output.toString());
+        Assertions.assertEquals("Your total movement this turn: 8", output.toString());
+    }
+
+    @Test
+    void provide_total_roll_made_by_player_to_UI_with_boost_and_snake() {
+        Game boostGame = new GameBuilder()
+                .withPlayers(1)
+                .withBoosts(4)
+                .withSnakes(8, 3)
+                .withBoardSize(5)
+                .build();
+
+        boostGame.moveCurrentPlayer(4);
+
+        Assertions.assertEquals("Your total movement this turn: 3", output.toString());
+    }
+
+    @Test
+    void provide_total_roll_made_by_player_to_UI_with_boost_and_ladder() {
+        Game boostGame = new GameBuilder()
+                .withPlayers(1)
+                .withBoosts(4)
+                .withLadders(8, 12)
+                .withBoardSize(5)
+                .build();
+
+        boostGame.moveCurrentPlayer(4);
+
+        Assertions.assertEquals("Your total movement this turn: 12", output.toString());
     }
 
 
