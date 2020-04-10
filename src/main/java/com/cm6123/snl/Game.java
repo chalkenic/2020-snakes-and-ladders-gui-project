@@ -99,12 +99,13 @@ public final class Game {
    * @param squares the number of squares to move by - typically the value of the roll of the dice.
    */
   public void moveCurrentPlayer(final Integer squares) {
-      currentPlayerRoll = squares;
+    currentPlayerRoll = squares;
     if (isGameOver()) {
       throw new IllegalStateException("Can't move a player once the game is over.");
     } else {
       //change this to asking the board to provide the destination and then move the player there.
       Player currentPlayer = getCurrentPlayer();
+
 
       //If winning Square Only feature switched on, player's position with new roll queried for legality.
       if (winningSquareOn) {
@@ -119,6 +120,8 @@ public final class Game {
       } else {
           movePlayerPosition(currentPlayer, squares);
       }
+
+
 
       if (gameContinues()) {
         players.next();
@@ -203,8 +206,8 @@ public final class Game {
 
         //Add diceroll into Current game roll for determining whether player has passed winning position.
         Position newPosition = board.move(currentPlayer.getPosition(), squares);
-
         accumulatedPlayerRoll = newPosition.get() - currentPlayer.getPosition().get();
+        System.out.println("Your total movement this turn: " + accumulatedPlayerRoll);
         currentPlayer.moveTo(newPosition);
 
   }

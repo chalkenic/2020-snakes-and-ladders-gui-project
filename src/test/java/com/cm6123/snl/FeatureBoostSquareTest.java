@@ -1,9 +1,13 @@
 package com.cm6123.snl;
 
 import com.cm6123.snl.*;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.Set;
 
 class FeatureBoostSquareTest {
@@ -76,7 +80,7 @@ class FeatureBoostSquareTest {
         //Checks that both boost squares have been added into game.
         Assertions.assertTrue((
                 boostGame.getSpecials().contains(6) &&
-                boostGame.getSpecials().contains(7)));
+                        boostGame.getSpecials().contains(7)));
     }
 
     //Issue #28
@@ -96,6 +100,7 @@ class FeatureBoostSquareTest {
                     Board boostBoard = new Board(5, new Integer[]{9, 3}, new Integer[]{}, new Integer[]{9});
                 });
     }
+
     //Issue #32
     @Test
     void snake_tail_and_boosts_cannot_clash() {
@@ -113,6 +118,7 @@ class FeatureBoostSquareTest {
                     Board boostBoard = new Board(5, new Integer[]{}, new Integer[]{11, 15}, new Integer[]{11});
                 });
     }
+
     //Issue #31
     @Test
     void ladder_top_and_boosts_cannot_clash() {
@@ -141,8 +147,9 @@ class FeatureBoostSquareTest {
     void illegal_boost_ignored_and_legal_boost_implemented() {
         Board boostBoard = new Board(5, new Integer[]{}, new Integer[]{}, new Integer[]{26, 5});
         Assertions.assertTrue((boostBoard.specials().contains(5)
-        && !boostBoard.specials().contains(26)));
+                && ! boostBoard.specials().contains(26)));
     }
+
     //Issue #36
     @Test
     void boost_ignored_on_larger_board() {
@@ -160,10 +167,22 @@ class FeatureBoostSquareTest {
         boostGame.moveCurrentPlayer(4);
 
         Assertions.assertEquals(8, boostGame.getAccumulatedPlayerRoll());
-
-
-
     }
+
+    //Issue #33 - addition after merge.
+    @Test
+    void player_2_roll_is_doubled_when_landing_on_boost_square() {
+        Game boostGame = new GameBuilder()
+                .withPlayers(2)
+                .withBoosts(4)
+                .build();
+
+        boostGame.moveCurrentPlayer(4);
+        boostGame.moveCurrentPlayer(9);
+
+        Assertions.assertEquals(9, boostGame.getAccumulatedPlayerRoll());
+    }
+
     //Issue #34
     @Test
     void player_moves_to_doubled_roll_location_upon_landing_on_boost_square() {
@@ -219,7 +238,7 @@ class FeatureBoostSquareTest {
         boostGame.moveCurrentPlayer(8);
         boostGame.moveCurrentPlayer(4);
 
-        Assertions.assertEquals(11,boostGame.getCurrentPlayer().getPosition().get());
+        Assertions.assertEquals(11, boostGame.getCurrentPlayer().getPosition().get());
     }
 
     //Issue #25
@@ -234,7 +253,7 @@ class FeatureBoostSquareTest {
 
         boostGame.moveCurrentPlayer(6);
 
-        Assertions.assertEquals(10,boostGame.getCurrentPlayer().getPosition().get());
+        Assertions.assertEquals(10, boostGame.getCurrentPlayer().getPosition().get());
     }
 
     //Issue #24
@@ -267,4 +286,78 @@ class FeatureBoostSquareTest {
 
         Assertions.assertEquals(20, boostGame.getCurrentPlayer().getPosition().get());
     }
+
+
+    //Code adapted from le-rag - SystemOutTest.Java via github
+    //Available at: https://gist.github.com/le-rag/28dad2f3346ae11e6a6b
+    private final ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+    @BeforeEach
+    void newStream() {
+        System.setOut(new PrintStream(output));
+    }
+
+//    @AfterEach
+//    void emptyStream() {
+//        System.setOut(null);
+//    }
+
+    //Issue #26
+    @Test
+    void provide_total_roll_made_by_player_to_UI_without_boost() {
+        Game boostGame = new GameBuilder()
+                .withPlayers(1)
+                .withBoardSize(5)
+                .build();
+
+        boostGame.moveCurrentPlayer(5);
+
+        Assertions.assertTrue(output.toString().contains("Your total movement this turn: 5"));
+
+    }
+
+    @Test
+    void provide_total_roll_made_by_player_to_UI_with_boost() {
+
+        Game boostGame = new GameBuilder()
+                .withPlayers(1)
+                .withBoosts(4)
+                .withBoardSize(5)
+                .build();
+
+        boostGame.moveCurrentPlayer(4);
+
+        Assertions.assertTrue(output.toString().contains("Your total movement " + "this turn: 8"));
+    }
+
+    @Test
+    void provide_total_roll_made_by_player_to_UI_with_boost_and_snake() {
+        Game boostGame = new GameBuilder()
+                .withPlayers(1)
+                .withBoosts(4)
+                .withSnakes(8, 3)
+                .withBoardSize(5)
+                .build();
+
+        boostGame.moveCurrentPlayer(4);
+
+        Assertions.assertTrue(output.toString().contains("Your total movement this turn: 3"));
+    }
+
+    @Test
+    void provide_total_roll_made_by_player_to_UI_with_boost_and_ladder() {
+        Game boostGame = new GameBuilder()
+                .withPlayers(1)
+                .withBoosts(4)
+                .withLadders(8, 12)
+                .withBoardSize(5)
+                .build();
+
+        boostGame.moveCurrentPlayer(4);
+
+        Assertions.assertTrue(output.toString().contains("Your total movement this turn: 12"));
+    }
+
+
+
 }
