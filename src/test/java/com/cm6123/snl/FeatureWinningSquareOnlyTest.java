@@ -266,10 +266,6 @@ class FeatureWinningSquareOnlyTest {
         System.setOut(new PrintStream(output));
     }
 
-    @AfterEach
-    void emptyStream() {
-        System.setOut(null);
-    }
     //Issue #15 (amended to #16 after changes)
     @Test
     void player_receives_message_about_illegal_move() {
@@ -286,10 +282,9 @@ class FeatureWinningSquareOnlyTest {
         winningGame.moveCurrentPlayer(3);
 
         winningGame.moveCurrentPlayer(5);
-        Assertions.assertEquals("WARNING: PLAYER ROLL (5) " +
+        Assertions.assertTrue(output.toString().contains("WARNING: PLAYER ROLL (5) " +
                         "EXCEEDS BOARD SIZE (25). " +
-                        "RETURNING TO ORIGINAL POSITION (23)",
-                output.toString());
+                        "RETURNING TO ORIGINAL POSITION (23)"));
     }
     //Issue #16
     @Test
@@ -306,10 +301,9 @@ class FeatureWinningSquareOnlyTest {
         winningGame.moveCurrentPlayer(3);
 
         winningGame.moveCurrentPlayer(5);
-        Assertions.assertEquals("WARNING: PLAYER ROLL (5) " +
+        Assertions.assertTrue(output.toString().contains("WARNING: PLAYER ROLL (5) " +
                         "EXCEEDS BOARD SIZE (25). " +
-                        "RETURNING TO ORIGINAL POSITION (23)",
-                output.toString());
+                        "RETURNING TO ORIGINAL POSITION (23)"));
     }
 }
 

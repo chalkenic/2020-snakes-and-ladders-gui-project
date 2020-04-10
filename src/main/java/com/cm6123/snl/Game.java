@@ -1,6 +1,7 @@
 package com.cm6123.snl;
 
 import java.util.List;
+import java.util.Set;
 
 public final class Game {
 
@@ -13,7 +14,11 @@ public final class Game {
    */
   private PlayerList players;
 
+  /**
+   * Confirmation of whether Boost square is switched on in game.
+   */
 
+  private Boolean boostSquareOn = false;
 
   /**
    * Confirmation of whether winning square is switched on in game.
@@ -34,21 +39,22 @@ public final class Game {
        final Integer width,
        final Integer[] snakes,
        final Integer[] ladders,
-       final Boolean winningSquareOnly
+       final Integer[] boosts
   ) {
-
-    board = new Board(width, snakes, ladders);
+    board = new Board(width, snakes, ladders, boosts);
     players = new PlayerList(playerCount, board.start());
-    winningSquareOn = winningSquareOnly;
 
   }
-
-
 
   /**
    * Stores player's roll when taking an action in moveCurrentPlayer roll.
    */
   private Integer currentPlayerRoll;
+
+  /**
+   * Stores accumulated player roll when using Boost Square feature.
+   */
+  private Integer accumulatedPlayerRoll = 0;
 
   /**
    * get the current roll saved in the game.
@@ -58,7 +64,11 @@ public final class Game {
     return currentPlayerRoll;
   }
 
-  Integer numberOfSquares() {
+  /**
+   * get the size of the board.
+   * @return the board size.
+   */
+  public Integer numberOfSquares() {
     return board.size();
   }
 
@@ -76,16 +86,26 @@ public final class Game {
   }
 
   /**
+   * Gets number of special squares in game.
+   * @return All special square locations
+   */
+  public Set<Integer> getSpecials() {
+    return board.specials();
+  }
+
+
+  /**
    * Move the current player by a given number of squares.
    * @param squares the number of squares to move by - typically the value of the roll of the dice.
    */
   public void moveCurrentPlayer(final Integer squares) {
-      currentPlayerRoll = squares;
+    currentPlayerRoll = squares;
     if (isGameOver()) {
       throw new IllegalStateException("Can't move a player once the game is over.");
     } else {
       //change this to asking the board to provide the destination and then move the player there.
       Player currentPlayer = getCurrentPlayer();
+
 
       //If winning Square Only feature switched on, player's position with new roll queried for legality.
       if (winningSquareOn) {
@@ -100,6 +120,8 @@ public final class Game {
       } else {
           movePlayerPosition(currentPlayer, squares);
       }
+
+
 
       if (gameContinues()) {
         players.next();
@@ -182,9 +204,12 @@ public final class Game {
      */
     private void movePlayerPosition(final Player currentPlayer, final Integer squares) {
 
-      //Add diceroll into Current game roll for determining whether player has passed winning position.
-      Position newPosition = board.move(currentPlayer.getPosition(), squares);
-      currentPlayer.moveTo(newPosition);
+        //Add diceroll into Current game roll for determining whether player has passed winning position.
+        Position newPosition = board.move(currentPlayer.getPosition(), squares);
+        accumulatedPlayerRoll = newPosition.get() - currentPlayer.getPosition().get();
+        System.out.println("Turn distance: " + accumulatedPlayerRoll + "| New position: " + newPosition.get());
+        currentPlayer.moveTo(newPosition);
+
   }
 
   /**
@@ -212,5 +237,31 @@ public final class Game {
     return winningSquareOn;
   }
 
+  /**
+   * Changes game to WinningSquareOnly feature.
+   */
+  void setWinningSquareOnlyOn() {
+    winningSquareOn = true;
+  }
+
+  /**
+   * Checm whether boost Square feature switched on.
+   * @return boostSquareOn - true if Boost switched on.
+   */
+  public Boolean getBoostSquareOn() {
+    return boostSquareOn;
+  }
+
+  void setBoostSquareOn() {
+    boostSquareOn = true;
+  }
+
+  /**
+   * Calls player's sum total roll for addition purposes.
+   * @return accumulatedPlayerRoll - total value of roll at present point.
+   */
+  public Integer getAccumulatedPlayerRoll() {
+    return accumulatedPlayerRoll;
+  }
 }
 
