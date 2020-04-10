@@ -88,6 +88,7 @@ class FeatureBoostSquareTest {
 
     }
 
+    //Issue #32
     @Test
     void snake_head_and_boosts_cannot_clash() {
         Assertions.assertThrows(IllegalStateException.class,
@@ -95,6 +96,7 @@ class FeatureBoostSquareTest {
                     Board boostBoard = new Board(5, new Integer[]{9, 3}, new Integer[]{}, new Integer[]{9});
                 });
     }
+    //Issue #32
     @Test
     void snake_tail_and_boosts_cannot_clash() {
         Assertions.assertThrows(IllegalStateException.class,
@@ -103,6 +105,7 @@ class FeatureBoostSquareTest {
                 });
     }
 
+    //Issue #31
     @Test
     void ladder_foot_and_boosts_cannot_clash() {
         Assertions.assertThrows(IllegalStateException.class,
@@ -110,6 +113,7 @@ class FeatureBoostSquareTest {
                     Board boostBoard = new Board(5, new Integer[]{}, new Integer[]{11, 15}, new Integer[]{11});
                 });
     }
+    //Issue #31
     @Test
     void ladder_top_and_boosts_cannot_clash() {
         Assertions.assertThrows(IllegalStateException.class,
@@ -117,4 +121,33 @@ class FeatureBoostSquareTest {
                     Board boostBoard = new Board(5, new Integer[]{}, new Integer[]{11, 15}, new Integer[]{15});
                 });
     }
+
+    //Issue #36
+    @Test
+    void boost_cannot_exist_within_6_squares_of_winning_square() {
+        Board boostBoard = new Board(5, new Integer[]{}, new Integer[]{}, new Integer[]{19});
+        Assertions.assertFalse(boostBoard.specials().contains(19));
+    }
+
+    //Issue #36
+    @Test
+    void boost_cannot_exist_on_and_beyond_winning_square() {
+        Board boostBoard = new Board(5, new Integer[]{}, new Integer[]{}, new Integer[]{26});
+        Assertions.assertFalse(boostBoard.specials().contains(26));
+    }
+
+    //Issue #36
+    @Test
+    void illegal_boost_ignored_and_legal_boost_implemented() {
+        Board boostBoard = new Board(5, new Integer[]{}, new Integer[]{}, new Integer[]{26, 5});
+        Assertions.assertTrue((boostBoard.specials().contains(5)
+        && !boostBoard.specials().contains(26)));
+    }
+    //Issue #36
+    @Test
+    void boost_ignored_on_larger_board() {
+        Board boostBoard = new Board(10, new Integer[]{}, new Integer[]{}, new Integer[]{95, 93});
+        Assertions.assertFalse(boostBoard.specials().contains(95));
+    }
+
 }
