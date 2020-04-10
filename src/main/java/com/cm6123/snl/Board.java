@@ -171,10 +171,13 @@ public final class Board {
 
   private void addBoosts(final Integer[] boosts) {
     for (Integer boost = 0; boost < boosts.length; boost++) {
-        if (boosts[boost] < squares.size() - 6) {
-            this.addBoost(boosts[boost]);
-        }
-
+      if (boosts[boost] < squares.size() - standardDieSize) {
+        this.addBoost(boosts[boost]);
+      } else {
+          System.out.println("Boost square at position " + boosts[boost]
+                  + " cannot be added within final 6 spaces from\nwinning square ("
+                  + squares.size() + ")");
+      }
     }
   }
 
