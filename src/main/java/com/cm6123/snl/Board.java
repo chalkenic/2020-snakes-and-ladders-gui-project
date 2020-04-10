@@ -118,10 +118,19 @@ public final class Board {
     if (tempMove > squares.size() - 1) {
       return new Position((squares.get(size() - 1)).getNumber());
     } else {
-      return new Position(squares.get(tempMove).destination().getNumber());
+      Position currentPosition = new Position(squares.get(tempMove).destination().getNumber());
+//      return new Position(squares.get(tempMove).destination().getNumber());
+      //Check if new position is Boost square in order to move player further.
+      return queryPlayerSquare(currentPosition, roll);
     }
   }
 
+  Position queryPlayerSquare(Position currentPosition, Integer roll) {
+    Integer tempPosition = currentPosition.get();
+    if ((squares.get(tempPosition)) =) {
+
+    }
+  }
   /**
    * set the last square on the board to be the winning square.
    * Landing on this square means that the player has won.

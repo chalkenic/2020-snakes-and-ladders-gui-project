@@ -200,11 +200,10 @@ public final class Game {
      * @param squares
      */
     private void movePlayerPosition(final Player currentPlayer, final Integer squares) {
-      System.out.println("hello?");
-      if (winningSquareOn) {
-        System.out.println("hi");
-      } else {
 
+      if (boostSquareOn) {
+
+      } else {
         //Add diceroll into Current game roll for determining whether player has passed winning position.
         Position newPosition = board.move(currentPlayer.getPosition(), squares);
         currentPlayer.moveTo(newPosition);
@@ -241,6 +240,14 @@ public final class Game {
    */
   void setWinningSquareOnlyOn() {
     winningSquareOn = true;
+  }
+
+  /**
+   * Checm whether boost Square feature switched on.
+   * @return boostSquareOn - true if Boost switched on.
+   */
+  public Boolean getBoostSquareOn() {
+    return boostSquareOn;
   }
 
   void setBoostSquareOn() {

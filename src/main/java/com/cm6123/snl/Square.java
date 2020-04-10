@@ -14,6 +14,10 @@ public class Square {
    * Is this the winning square?
    */
   private Boolean isWinningSquare;
+  /**
+   * Is this a boost square?
+   */
+  private Boolean isBoostSquare;
 
   /**
    * Construct a Square.
@@ -68,5 +72,11 @@ public class Square {
     return isWinningSquare;
   }
 
-
+  /**
+   * True if this is a boost square.
+   * @return true if this is a boost square.
+   */
+  public Boolean isBoostSquare() {
+    return isBoostSquare;
+  }
 }
