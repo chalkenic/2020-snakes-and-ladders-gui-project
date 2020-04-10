@@ -52,6 +52,7 @@ public final class GameBuilder {
    * Temporary variable that defaults winning Square Only feature as false until game is built.
    */
   private Boolean winningSquareOnly = true;
+
   /**
    * Initialise the Game building process.
    */
@@ -74,19 +75,31 @@ public final class GameBuilder {
       return theGame;
     } else {
       Game boostGame = new Game(tempPlayers, tempBoardSize, snakes, ladders, boosts);
+      boostGame.setBoostSquareOn();
       return boostGame;
     }
   }
 
   /**
    * regular build variables with addition of winning Square confirmation to build game.
+   *
    * @return configured game object with board, snakes, ladders, players & winning square.
    */
   public Game buildWithWinningSquare() {
-    Game theWinningSquareGame = new Game(tempPlayers, tempBoardSize, snakes, ladders);
-    theWinningSquareGame.setWinningSquareOnly();
-    return theWinningSquareGame;
+    if (boosts.length < 1) {
+      Game theWinningSquareGame = new Game(tempPlayers, tempBoardSize, snakes, ladders, boosts);
+      theWinningSquareGame.setWinningSquareOnlyOn();
+      theWinningSquareGame.setBoostSquareOn();
+      return theWinningSquareGame;
+    } else {
+      Game theWinningSquareGame = new Game(tempPlayers, tempBoardSize, snakes, ladders);
+      theWinningSquareGame.setWinningSquareOnlyOn();
+      return theWinningSquareGame;
+    }
+
   }
+
+
 
   /**
    * Set the board size (width and height).

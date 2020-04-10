@@ -118,10 +118,32 @@ public final class Board {
     if (tempMove > squares.size() - 1) {
       return new Position((squares.get(size() - 1)).getNumber());
     } else {
-      return new Position(squares.get(tempMove).destination().getNumber());
+      Position currentPosition = new Position(squares.get(tempMove).destination().getNumber());
+//      return new Position(squares.get(tempMove).destination().getNumber());
+      //Check if new position is Boost square in order to move player further.
+      return queryPlayerSquare(currentPosition, roll);
     }
   }
 
+  /**
+   * Check's player's position on board to determine if Boost square.
+   * @param position - player's position to be queried.
+   * @param roll - player's original roll for possible incrementing
+   * @return function recursively until player no longer resides on boost square.
+   */
+  private Position queryPlayerSquare(final Position position, final Integer roll) {
+    Integer currentPosition = position.get();
+
+    if ((squares.get(currentPosition).isBoostSquare())) {
+
+      Integer newMove = position.get() + roll;
+      Position newPosition = new Position(squares.get(newMove).destination().getNumber());
+      return queryPlayerSquare(newPosition, roll);
+    } else {
+        return position;
+
+    }
+  }
   /**
    * set the last square on the board to be the winning square.
    * Landing on this square means that the player has won.
@@ -190,7 +212,9 @@ public final class Board {
 
     Square boostSquare = squares.get(boost);
 
-    BoostSquare newBoost = new BoostSquare(this, boost);
+    Square newBoost = new BoostSquare(this, boost);
+    squares.get(newBoost.getNumber()).setAsBoostSquare();
+//    newBoost.setAsBoostSquare();
     this.setSquareAt(boost, boostSquare);
   }
 

@@ -14,7 +14,11 @@ public final class Game {
    */
   private PlayerList players;
 
+  /**
+   * Confirmation of whether Boost square is switched on in game.
+   */
 
+  private Boolean boostSquareOn = false;
 
   /**
    * Confirmation of whether winning square is switched on in game.
@@ -37,18 +41,20 @@ public final class Game {
        final Integer[] ladders,
        final Integer[] boosts
   ) {
-
     board = new Board(width, snakes, ladders, boosts);
     players = new PlayerList(playerCount, board.start());
 
   }
 
-
-
   /**
    * Stores player's roll when taking an action in moveCurrentPlayer roll.
    */
   private Integer currentPlayerRoll;
+
+  /**
+   * Stores accumulated player roll when using Boost Square feature.
+   */
+  private Integer accumulatedPlayerRoll = 0;
 
   /**
    * get the current roll saved in the game.
@@ -195,9 +201,12 @@ public final class Game {
      */
     private void movePlayerPosition(final Player currentPlayer, final Integer squares) {
 
-      //Add diceroll into Current game roll for determining whether player has passed winning position.
-      Position newPosition = board.move(currentPlayer.getPosition(), squares);
-      currentPlayer.moveTo(newPosition);
+        //Add diceroll into Current game roll for determining whether player has passed winning position.
+        Position newPosition = board.move(currentPlayer.getPosition(), squares);
+
+        accumulatedPlayerRoll = newPosition.get() - currentPlayer.getPosition().get();
+        currentPlayer.moveTo(newPosition);
+
   }
 
   /**
@@ -228,9 +237,28 @@ public final class Game {
   /**
    * Changes game to WinningSquareOnly feature.
    */
-  void setWinningSquareOnly() {
+  void setWinningSquareOnlyOn() {
     winningSquareOn = true;
   }
 
+  /**
+   * Checm whether boost Square feature switched on.
+   * @return boostSquareOn - true if Boost switched on.
+   */
+  public Boolean getBoostSquareOn() {
+    return boostSquareOn;
+  }
+
+  void setBoostSquareOn() {
+    boostSquareOn = true;
+  }
+
+  /**
+   * Calls player's sum total roll for addition purposes.
+   * @return accumulatedPlayerRoll - total value of roll at present point.
+   */
+  public Integer getAccumulatedPlayerRoll() {
+    return accumulatedPlayerRoll;
+  }
 }
 

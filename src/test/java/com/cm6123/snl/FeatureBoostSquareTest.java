@@ -150,4 +150,19 @@ class FeatureBoostSquareTest {
         Assertions.assertFalse(boostBoard.specials().contains(95));
     }
 
+    //Issue #33
+    @Test
+    void player_roll_is_doubled_when_landing_on_boost_square() {
+        Game boostGame = new GameBuilder()
+                .withBoosts(4)
+                .build();
+
+        boostGame.moveCurrentPlayer(4);
+
+        Assertions.assertEquals(8, boostGame.getAccumulatedPlayerRoll());
+
+
+
+    }
+
 }
