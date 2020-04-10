@@ -1,6 +1,7 @@
 package com.cm6123.snl;
 
 import java.util.List;
+import java.util.Set;
 
 public final class Game {
 
@@ -34,12 +35,11 @@ public final class Game {
        final Integer width,
        final Integer[] snakes,
        final Integer[] ladders,
-       final Boolean winningSquareOnly
+       final Integer[] boosts
   ) {
 
     board = new Board(width, snakes, ladders);
     players = new PlayerList(playerCount, board.start());
-    winningSquareOn = winningSquareOnly;
 
   }
 
@@ -58,7 +58,7 @@ public final class Game {
     return currentPlayerRoll;
   }
 
-  Integer numberOfSquares() {
+  public Integer numberOfSquares() {
     return board.size();
   }
 
@@ -74,6 +74,15 @@ public final class Game {
   List<Player> getPlayers() {
     return players.asList();
   }
+
+  /**
+   * Gets number of special squares in game.
+   * @return All special square locations
+   */
+  public Set<Integer> getSpecials() {
+    return board.specials();
+  }
+
 
   /**
    * Move the current player by a given number of squares.
@@ -210,6 +219,13 @@ public final class Game {
    */
   public Boolean isWinningSquareOn() {
     return winningSquareOn;
+  }
+
+  /**
+   * Changes game to WinningSquareOnly feature.
+   */
+  public void setWinningSquareOnly() {
+    winningSquareOn = true;
   }
 
 }
