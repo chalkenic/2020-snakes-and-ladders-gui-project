@@ -312,10 +312,10 @@ class FeatureBoostSquareTest {
 
         boostGame.moveCurrentPlayer(5);
 
-        Assertions.assertTrue(output.toString().contains("Your total movement this turn: 5"));
+        Assertions.assertTrue(output.toString().contains("distance: 5"));
 
     }
-
+    //Issue #26
     @Test
     void provide_total_roll_made_by_player_to_UI_with_boost() {
 
@@ -327,9 +327,9 @@ class FeatureBoostSquareTest {
 
         boostGame.moveCurrentPlayer(4);
 
-        Assertions.assertTrue(output.toString().contains("Your total movement " + "this turn: 8"));
+        Assertions.assertTrue(output.toString().contains("distance: 8"));
     }
-
+    //Issue #26
     @Test
     void provide_total_roll_made_by_player_to_UI_with_boost_and_snake() {
         Game boostGame = new GameBuilder()
@@ -341,9 +341,9 @@ class FeatureBoostSquareTest {
 
         boostGame.moveCurrentPlayer(4);
 
-        Assertions.assertTrue(output.toString().contains("Your total movement this turn: 3"));
+        Assertions.assertTrue(output.toString().contains("distance: 3"));
     }
-
+    //Issue #26
     @Test
     void provide_total_roll_made_by_player_to_UI_with_boost_and_ladder() {
         Game boostGame = new GameBuilder()
@@ -355,9 +355,66 @@ class FeatureBoostSquareTest {
 
         boostGame.moveCurrentPlayer(4);
 
-        Assertions.assertTrue(output.toString().contains("Your total movement this turn: 12"));
+        Assertions.assertTrue(output.toString().contains("distance: 12"));
+    }
+    //Issue #27
+    @Test
+    void provide_new_position_at_turn_end() {
+        Game boostGame = new GameBuilder()
+                .withPlayers(1)
+                .withBoardSize(5)
+                .build();
+
+        boostGame.moveCurrentPlayer(4);
+
+        Assertions.assertTrue(output.toString().contains("position: 4"));
     }
 
+    //Issue #27
+    @Test
+    void provide_new_position_after_boost_movement_at_turn_end() {
+        Game boostGame = new GameBuilder()
+                .withPlayers(1)
+                .withBoosts(5)
+                .withBoardSize(5)
+                .build();
+
+        boostGame.moveCurrentPlayer(5);
+
+        Assertions.assertTrue(output.toString().contains("position: 10"));
+    }
+
+    //Issue #27
+    @Test
+    void provide_new_position_after_boost_and_snake_movement_at_turn_end() {
+        Game boostGame = new GameBuilder()
+                .withPlayers(1)
+                .withBoardSize(5)
+                .withSnakes(9, 3)
+                .withBoosts(5)
+                .build();
+
+        boostGame.moveCurrentPlayer(1);
+        boostGame.moveCurrentPlayer(4);
+
+        Assertions.assertTrue(output.toString().contains("position: 3"));
+    }
+
+    //Issue #27
+    @Test
+    void provide_new_position_after_boost_and_ladder_movement_at_turn_end() {
+        Game boostGame = new GameBuilder()
+                .withPlayers(1)
+                .withBoardSize(5)
+                .withLadders(8, 14)
+                .withBoosts(5)
+                .build();
+
+        boostGame.moveCurrentPlayer(2);
+        boostGame.moveCurrentPlayer(3);
+
+        Assertions.assertTrue(output.toString().contains("position: 14"));
+    }
 
 
 }

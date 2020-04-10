@@ -207,7 +207,7 @@ public final class Game {
         //Add diceroll into Current game roll for determining whether player has passed winning position.
         Position newPosition = board.move(currentPlayer.getPosition(), squares);
         accumulatedPlayerRoll = newPosition.get() - currentPlayer.getPosition().get();
-        System.out.println("Your total movement this turn: " + accumulatedPlayerRoll);
+        System.out.println("Turn distance: " + accumulatedPlayerRoll + "| New position: " + newPosition.get());
         currentPlayer.moveTo(newPosition);
 
   }
