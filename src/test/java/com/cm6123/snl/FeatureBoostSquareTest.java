@@ -295,7 +295,6 @@ class FeatureBoostSquareTest {
     void provide_total_roll_made_by_player_to_UI_without_boost() {
         Game boostGame = new GameBuilder()
                 .withPlayers(1)
-                .withBoosts(4)
                 .withBoardSize(5)
                 .build();
 
@@ -304,5 +303,21 @@ class FeatureBoostSquareTest {
         Assertions.assertEquals("You have rolled a total of 5 squares this turn", output.toString());
 
     }
+
+    @Test
+    void provide_total_roll_made_by_player_to_UI_with_boost() {
+
+        Game boostGame = new GameBuilder()
+                .withPlayers(1)
+                .withBoosts(4)
+                .withBoardSize(5)
+                .build();
+
+        boostGame.moveCurrentPlayer(4);
+
+        Assertions.assertEquals("You have rolled a total of 5 squares this turn", output.toString());
+    }
+
+
 
 }
