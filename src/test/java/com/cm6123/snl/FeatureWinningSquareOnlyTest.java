@@ -266,10 +266,6 @@ class FeatureWinningSquareOnlyTest {
         System.setOut(new PrintStream(output));
     }
 
-    @AfterEach
-    void emptyStream() {
-        System.setOut(null);
-    }
     //Issue #15 (amended to #16 after changes)
     @Test
     void player_receives_message_about_illegal_move() {

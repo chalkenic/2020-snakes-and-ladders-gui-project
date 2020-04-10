@@ -315,7 +315,7 @@ class FeatureBoostSquareTest {
         Assertions.assertTrue(output.toString().contains("Your total movement this turn: 5"));
 
     }
-
+    //Issue #26
     @Test
     void provide_total_roll_made_by_player_to_UI_with_boost() {
 
@@ -329,7 +329,7 @@ class FeatureBoostSquareTest {
 
         Assertions.assertTrue(output.toString().contains("Your total movement " + "this turn: 8"));
     }
-
+    //Issue #26
     @Test
     void provide_total_roll_made_by_player_to_UI_with_boost_and_snake() {
         Game boostGame = new GameBuilder()
@@ -343,7 +343,7 @@ class FeatureBoostSquareTest {
 
         Assertions.assertTrue(output.toString().contains("Your total movement this turn: 3"));
     }
-
+    //Issue #26
     @Test
     void provide_total_roll_made_by_player_to_UI_with_boost_and_ladder() {
         Game boostGame = new GameBuilder()
