@@ -115,9 +115,6 @@ CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`Snakes` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-SELECT MAX(gameID) FROM game;
-
-
 -- -----------------------------------------------------
 -- Procedure passes in snake data from call into table. gameID pulled from last field created. 
 -- -----------------------------------------------------
@@ -130,41 +127,10 @@ BEGIN
 	DECLARE snakeGameID INT;
     SELECT MAX(GameID) INTO snakeGameID from Game;
 
-    
 	INSERT INTO Snakes(snakeHead, snakeTail, Game_gameID)
 	VALUES (newSnakeHead, newSnakeTail, snakeGameID);
 END //
 DELIMITER ;
-
-
--- -----------------------------------------------------
--- AddNewSnake TEST. Adds new snakes & game state to ensure data being added correctly.
--- -----------------------------------------------------
-DROP PROCEDURE IF EXISTS addSnakeTest;
-
-DELIMITER &&
-CREATE PROCEDURE addSnakeTest()
-BEGIN
-
-	CALL AddNewSnake (4,2);
-
-	insert into Game(GameTurn, boardSize, winningSquare, gameHasEnded, boostSquarefeature, winningSquareFeature, Dice_diceID)
-	values (0, 25, 25, false, false, false, 1);
-
-	CALL AddNewSnake (19,12);
-	SELECT * FROM Snakes;
-
-	DELETE FROM Snakes WHERE snakeID = 
-		(SELECT MAX(snakeID) FROM Snakes);
-    DELETE FROM Snakes WHERE snakeID = 
-		(SELECT MAX(snakeID) FROM Snakes);
-	DELETE FROM Game WHERE gameID = 
-        (SELECT MAX(gameID)FROM Game);
-    
-END &&
-DELIMITER ;
-
-CALL addSnakeTest;
 
 -- -----------------------------------------------------
 -- Table `snakesAndLaddersData`.`Ladders`
@@ -185,6 +151,22 @@ CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`Ladders` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Procedure passes in Ladder data from call into table. gameID pulled from last field created. 
+-- -----------------------------------------------------
+DROP PROCEDURE IF EXISTS AddNewLadder;
+
+DELIMITER //
+CREATE PROCEDURE AddNewLadder(IN newLadderFoot int, IN newLadderTop int)
+BEGIN
+
+	DECLARE ladderGameID INT;
+    SELECT MAX(GameID) INTO ladderGameID from Game;
+    
+	INSERT INTO Ladders(ladderFoot, ladderTop, Game_gameID)
+	VALUES (newLadderFoot, newLadderTop, ladderGameID);
+END //
+DELIMITER ;
 
 -- -----------------------------------------------------
 -- Table `snakesAndLaddersData`.`Boosts`
@@ -203,6 +185,23 @@ CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`Boosts` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Procedure passes in Boost data from call into table. gameID pulled from last field created. 
+-- -----------------------------------------------------
+DROP PROCEDURE IF EXISTS AddNewBoost;
+
+DELIMITER //
+CREATE PROCEDURE AddNewBoost (IN boostLocation int)
+BEGIN
+
+	DECLARE boostGameID INT;
+    SELECT MAX(GameID) INTO boostGameID from Game;
+
+	INSERT INTO Boosts(boostLocation, Game_gameID)
+	VALUES (boostLocation, boostGameID);
+END //
+DELIMITER ;
 
 
 -- -----------------------------------------------------
@@ -246,6 +245,102 @@ UPDATE calcMoveRoll SET NEW.moveRoll = moveEnd - moveStart;
 
 -- END //
 -- DELIMITER ;
+
+
+-- ----------------------------------------------------------------------------------
+--
+-- SCRIPT & PROCEDURE TESTS
+-- 
+-- ----------------------------------------------------------------------------------
+
+-- -----------------------------------------------------
+-- #1 AddNewSnake TEST. Adds new snakes & current game ID to ensure data being added correctly.
+-- -----------------------------------------------------
+DROP PROCEDURE IF EXISTS AddSnakeTest;
+
+DELIMITER &&
+CREATE PROCEDURE AddSnakeTest()
+BEGIN
+
+	CALL AddNewSnake (4,2);
+
+	insert into Game(GameTurn, boardSize, winningSquare, gameHasEnded, boostSquarefeature, winningSquareFeature, Dice_diceID)
+	values (0, 25, 25, false, false, false, 1);
+
+	CALL AddNewBoost (19,12);
+	SELECT * FROM Snakes;
+
+	DELETE FROM Snakes WHERE snakeID = 
+		(SELECT MAX(snakeID) FROM Snakes);
+    DELETE FROM Snakes WHERE snakeID = 
+		(SELECT MAX(snakeID) FROM Snakes);
+	DELETE FROM Game WHERE gameID = 
+        (SELECT MAX(gameID)FROM Game);
+    
+END &&
+DELIMITER ;
+
+CALL AddSnakeTest;
+
+-- -----------------------------------------------------
+-- #2 AddNewBoost TEST. Adds new ladders & current game ID to ensure data being added correctly.
+-- -----------------------------------------------------
+DROP PROCEDURE IF EXISTS AddLadderTest;
+
+DELIMITER &&
+CREATE PROCEDURE AddLadderTest()
+BEGIN
+
+	CALL AddNewLadder(9,13);
+
+	insert into Game(GameTurn, boardSize, winningSquare, gameHasEnded, boostSquarefeature, winningSquareFeature, Dice_diceID)
+	values (0, 25, 25, false, false, false, 1);
+
+	CALL AddNewLadder (4,21);
+	SELECT * FROM Ladders;
+
+	DELETE FROM Ladders WHERE ladderID = 
+		(SELECT MAX(ladderID) FROM Ladders);
+    DELETE FROM Ladders WHERE ladderID = 
+		(SELECT MAX(ladderID) FROM Ladders);
+	DELETE FROM Game WHERE ladderID = 
+        (SELECT MAX(gameID)FROM Game);
+    
+END &&
+DELIMITER ;
+
+CALL addLadderTest;
+
+-- -----------------------------------------------------
+-- #3 AddNewBoost TEST. Adds new boost square locations & current game ID to ensure data being added correctly.
+-- -----------------------------------------------------
+DROP PROCEDURE IF EXISTS AddBoostTest;
+
+DELIMITER &&
+CREATE PROCEDURE AddBoostTest()
+BEGIN
+
+	CALL AddNewBoost(14);
+
+	insert into Game(GameTurn, boardSize, winningSquare, gameHasEnded, boostSquarefeature, winningSquareFeature, Dice_diceID)
+	values (0, 25, 25, false, false, false, 1);
+
+	CALL AddNewBoost (19);
+	SELECT * FROM Boosts;
+	
+    -- remove all data from test after confirmation of completion.
+	DELETE FROM Boosts WHERE boostID = 
+		(SELECT MAX(boostID) FROM Ladders);
+    DELETE FROM Boosts WHERE boostID = 
+		(SELECT MAX(boostID) FROM Ladders);
+	DELETE FROM Game WHERE boostID = 
+        (SELECT MAX(gameID)FROM Game);
+    
+END &&
+DELIMITER ;
+
+CALL AddBoostTest;
+
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
