@@ -18,6 +18,15 @@ DROP SCHEMA IF EXISTS `snakesAndLaddersData`;
 CREATE SCHEMA IF NOT EXISTS `snakesAndLaddersData` DEFAULT CHARACTER SET utf8 ;
 USE `snakesAndLaddersData` ;
 
+
+-- ----------------------------------------------------------------------------------
+--
+--
+-- TABLE CREATIONS
+-- 
+--
+-- ----------------------------------------------------------------------------------
+
 -- -----------------------------------------------------
 -- Table `snakesAndLaddersData`.`Dice`
 -- -----------------------------------------------------
@@ -41,37 +50,26 @@ select * from Dice;
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `snakesAndLaddersData`.`Game` ;
 
-
 CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`Game` (
   `gameID` INT NOT NULL AUTO_INCREMENT,
-  `gameTurn` INT NOT NULL,
+  `gameRound` INT NOT NULL,
   `boardSize` INT NOT NULL,
   `winningSquare` INT NULL,
   `gameHasEnded` TINYINT NULL,
   `boostSquareFeature` TINYINT NULL,
-  `winningSquareFeature` TINYINT NULL,
+  `winningSquareOnlyFeature` TINYINT NULL,
   `Dice_diceID` INT NOT NULL,
   PRIMARY KEY (`gameID`),
-  -- INDEX `fk_Game_Dice1_idx` (`Dice_DiceID` ASC) VISIBLE,
-  -- CONSTRAINT `fk_Game_Dice1`
     FOREIGN KEY (`Dice_diceID`)
     REFERENCES `snakesAndLaddersData`.`Dice` (`diceID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-
-
-select * from Game;
-
-insert into Game(GameTurn, boardSize, winningSquare, gameHasEnded, boostSquarefeature, winningSquareFeature, Dice_diceID)
-values (0, 25, 25, false, false, false, 1);
-
-select * from Game where Dice_diceID = "1";
-
-
-
-
+-- -----------------------------------------------------
+-- Table `snakesAndLaddersData`.`Game`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `snakesAndLaddersData`.`Game` ;
 
 -- -----------------------------------------------------
 -- Table `snakesAndLaddersData`.`Players`
@@ -80,22 +78,38 @@ DROP TABLE IF EXISTS `snakesAndLaddersData`.`Players` ;
 
 CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`Players` (
   `playerID` INT NOT NULL AUTO_INCREMENT,
-  `playerName` VARCHAR(45),
+  -- `playerName` VARCHAR(45),
   `playerColour` VARCHAR(45) NOT NULL,
   `playerPosition` INT,
   `playerMovesTaken` INT,
   `playerWonGame` TINYINT DEFAULT false,
   `Game_gameID` INT NOT NULL,
   PRIMARY KEY (`playerID`),
-  -- INDEX `fk_Players_Game1_idx` (`Game_gameID` ASC) VISIBLE,
-  -- CONSTRAINT `fk_Players_Game1`
     FOREIGN KEY (`Game_gameID`)
     REFERENCES `snakesAndLaddersData`.`Game` (`gameID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `snakesAndLaddersData`.`PlayerDetails`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `snakesAndLaddersData`.`PlayerDetails` ;
 
+CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`PlayerDetails` (
+	`playerDetailsID` INT NOT NULL AUTO_INCREMENT,
+    `playerName` VARCHAR(45),
+    `playerWinCount` INT DEFAULT 0,
+    `playerAverageGameMoves` INT,
+    `playerWinRatio` INT,
+    `Players_playerID` INT NOT NULL,
+    PRIMARY KEY (`playerDetailsID`),
+		FOREIGN KEY (`Players_playerID`)
+        REFERENCES `snakesAndLaddersData`.`Players`(`playerID`)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION)
+        ENGINE = InnoDB;
+        
 -- -----------------------------------------------------
 -- Table `snakesAndLaddersData`.`Snakes`
 -- -----------------------------------------------------
@@ -107,13 +121,75 @@ CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`Snakes` (
   `snakeTail` INT NOT NULL,
   `Game_gameID` INT NOT NULL DEFAULT 0,
   PRIMARY KEY (`snakeID`),
-  -- INDEX `fk_Snakes_Game1_idx` (`Game_gameID` ASC) VISIBLE,
-  -- CONSTRAINT `fk_Snakes_Game1`
     FOREIGN KEY (`Game_gameID`)
     REFERENCES `snakesAndLaddersData`.`Game` (`gameID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `snakesAndLaddersData`.`Ladders`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `snakesAndLaddersData`.`Ladders` ;
+
+CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`Ladders` (
+  `ladderID` INT NOT NULL AUTO_INCREMENT,
+  `ladderFoot` INT NOT NULL,
+  `ladderTop` INT NOT NULL,
+  `Game_gameID` INT NOT NULL,
+  PRIMARY KEY (`ladderID`),
+    FOREIGN KEY (`Game_gameID`)
+    REFERENCES `snakesAndLaddersData`.`Game` (`gameID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `snakesAndLaddersData`.`Boosts`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `snakesAndLaddersData`.`Boosts` ;
+
+CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`Boosts` (
+  `boostID` INT NOT NULL AUTO_INCREMENT,
+  `boostLocation` INT NOT NULL,
+  `Game_gameID` INT NOT NULL,
+  PRIMARY KEY (`boostID`),
+    FOREIGN KEY (`Game_gameID`)
+    REFERENCES `snakesAndLaddersData`.`Game` (`gameID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `snakesAndLaddersData`.`Moves`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `snakesAndLaddersData`.`Moves` ;
+
+CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`Moves` (
+  `moveID` INT NOT NULL AUTO_INCREMENT,
+  `moveStart` INT NOT NULL,
+  `moveEnd` INT NOT NULL,
+  `moveRoll` INT,
+  `Players_playerID` INT NOT NULL,
+  `Game_gameID` INT NOT NULL,
+  PRIMARY KEY (`moveID`),
+    FOREIGN KEY (`Players_playerID`)
+    REFERENCES `snakesAndLaddersData`.`Players` (`playerID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+    FOREIGN KEY (`Game_gameID`)
+    REFERENCES `snakesAndLaddersData`.`Game` (`gameID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+-- ----------------------------------------------------------------------------------
+--
+--
+-- GAME PROCEDURES
+-- 
+--
+-- ----------------------------------------------------------------------------------
 
 -- -----------------------------------------------------
 -- Procedure passes in snake data from call into table. gameID pulled from last field created. 
@@ -133,27 +209,9 @@ END //
 DELIMITER ;
 
 -- -----------------------------------------------------
--- Table `snakesAndLaddersData`.`Ladders`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `snakesAndLaddersData`.`Ladders` ;
-
-CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`Ladders` (
-  `ladderID` INT NOT NULL AUTO_INCREMENT,
-  `ladderFoot` INT NOT NULL,
-  `ladderTop` INT NOT NULL,
-  `Game_gameID` INT NOT NULL,
-  PRIMARY KEY (`ladderID`),
-  -- INDEX `fk_Ladders_Game1_idx` (`Game_gameID` ASC) VISIBLE,
-  -- CONSTRAINT `fk_Ladders_Game1`
-    FOREIGN KEY (`Game_gameID`)
-    REFERENCES `snakesAndLaddersData`.`Game` (`gameID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
--- -----------------------------------------------------
 -- Procedure passes in Ladder data from call into table. gameID pulled from last field created. 
 -- -----------------------------------------------------
+
 DROP PROCEDURE IF EXISTS AddNewLadder;
 
 DELIMITER //
@@ -167,24 +225,6 @@ BEGIN
 	VALUES (newLadderFoot, newLadderTop, ladderGameID);
 END //
 DELIMITER ;
-
--- -----------------------------------------------------
--- Table `snakesAndLaddersData`.`Boosts`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `snakesAndLaddersData`.`Boosts` ;
-
-CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`Boosts` (
-  `boostID` INT NOT NULL AUTO_INCREMENT,
-  `boostLocation` INT NOT NULL,
-  `Game_gameID` INT NOT NULL,
-  PRIMARY KEY (`boostID`),
-  -- INDEX `fk_Boosts_Game1_idx` (`Game_gameID` ASC) VISIBLE,
-  -- CONSTRAINT `fk_Boosts_Game1`
-    FOREIGN KEY (`Game_gameID`)
-    REFERENCES `snakesAndLaddersData`.`Game` (`gameID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 -- Procedure passes in Boost data from call into table. gameID pulled from last field created. 
@@ -203,54 +243,29 @@ BEGIN
 END //
 DELIMITER ;
 
-
--- -----------------------------------------------------
--- Table `snakesAndLaddersData`.`Moves`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `snakesAndLaddersData`.`Moves` ;
-
-CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`Moves` (
-  `moveID` INT NOT NULL AUTO_INCREMENT,
-  `moveStart` INT NOT NULL,
-  `moveEnd` INT NOT NULL,
-  `moveRoll` INT,
-  `Players_playerID` INT NOT NULL,
-  `Game_gameID` INT NOT NULL,
-  PRIMARY KEY (`moveID`),
-  -- UNIQUE INDEX `moveStart_UNIQUE`snakesplayersmovesladdersgamediceboosts (`moveStart` ASC) VISIBLE,
-  -- UNIQUE INDEX `moveEnd_UNIQUE` (`moveEnd` ASC) VISIBLE,
-  -- INDEX `fk_Moves_Players1_idx` (`Players_playerID` ASC) VISIBLE,
-  -- INDEX `fk_Moves_Game1_idx` (`Game_gameID` ASC) VISIBLE,
-  -- CONSTRAINT `fk_Moves_Players1`
-    FOREIGN KEY (`Players_playerID`)
-    REFERENCES `snakesAndLaddersData`.`Players` (`playerID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  -- CONSTRAINT `fk_Moves_Game1`
-    FOREIGN KEY (`Game_gameID`)
-    REFERENCES `snakesAndLaddersData`.`Game` (`gameID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+-- ----------------------------------------------------------------------------------
+--
+--
+-- GAME TRIGGERS
+-- 
+--
+-- ----------------------------------------------------------------------------------
 
 -- -----------------------------------------------------
 -- Trigger calculates diceroll into table upon entry of player positions on turn.
 -- -----------------------------------------------------
--- DELIMITER //
 
 CREATE TRIGGER calcMoveRoll AFTER INSERT
 ON Moves
 FOR EACH ROW
 UPDATE calcMoveRoll SET NEW.moveRoll = moveEnd - moveStart;
 
--- END //
--- DELIMITER ;
-
-
 -- ----------------------------------------------------------------------------------
+--
 --
 -- SCRIPT & PROCEDURE TESTS
 -- 
+--
 -- ----------------------------------------------------------------------------------
 
 -- -----------------------------------------------------
@@ -262,12 +277,16 @@ DELIMITER &&
 CREATE PROCEDURE AddSnakeTest()
 BEGIN
 
-	CALL AddNewSnake (4,2);
+	insert into Game(gameRound, boardSize, winningSquare, gameHasEnded, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
+	values (0, 50, 50, false, false, false, 1);
 
-	insert into Game(GameTurn, boardSize, winningSquare, gameHasEnded, boostSquarefeature, winningSquareFeature, Dice_diceID)
+	CALL AddNewSnake (16,8);
+    
+
+	insert into Game(gameRound, boardSize, winningSquare, gameHasEnded, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
 	values (0, 25, 25, false, false, false, 1);
 
-	CALL AddNewBoost (19,12);
+	CALL AddNewSnake (19,12);
 	SELECT * FROM Snakes;
 
 	DELETE FROM Snakes WHERE snakeID = 
@@ -276,6 +295,8 @@ BEGIN
 		(SELECT MAX(snakeID) FROM Snakes);
 	DELETE FROM Game WHERE gameID = 
         (SELECT MAX(gameID)FROM Game);
+	DELETE FROM Game WHERE gameID = 
+		(SELECT MAX(gameID)FROM Game);
     
 END &&
 DELIMITER ;
@@ -291,9 +312,12 @@ DELIMITER &&
 CREATE PROCEDURE AddLadderTest()
 BEGIN
 
+	insert into Game(gameRound, boardSize, winningSquare, gameHasEnded, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
+	values (0, 25, 25, false, false, false, 1);
+
 	CALL AddNewLadder(9,13);
 
-	insert into Game(GameTurn, boardSize, winningSquare, gameHasEnded, boostSquarefeature, winningSquareFeature, Dice_diceID)
+	insert into Game(gameRound, boardSize, winningSquare, gameHasEnded, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
 	values (0, 25, 25, false, false, false, 1);
 
 	CALL AddNewLadder (4,21);
@@ -303,7 +327,7 @@ BEGIN
 		(SELECT MAX(ladderID) FROM Ladders);
     DELETE FROM Ladders WHERE ladderID = 
 		(SELECT MAX(ladderID) FROM Ladders);
-	DELETE FROM Game WHERE ladderID = 
+	DELETE FROM Game WHERE gameID = 
         (SELECT MAX(gameID)FROM Game);
     
 END &&
@@ -320,9 +344,12 @@ DELIMITER &&
 CREATE PROCEDURE AddBoostTest()
 BEGIN
 
+	insert into Game(gameRound, boardSize, winningSquare, gameHasEnded, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
+	values (0, 25, 25, false, false, false, 1);
+
 	CALL AddNewBoost(14);
 
-	insert into Game(GameTurn, boardSize, winningSquare, gameHasEnded, boostSquarefeature, winningSquareFeature, Dice_diceID)
+	insert into Game(gameRound, boardSize, winningSquare, gameHasEnded, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
 	values (0, 25, 25, false, false, false, 1);
 
 	CALL AddNewBoost (19);
@@ -333,7 +360,7 @@ BEGIN
 		(SELECT MAX(boostID) FROM Ladders);
     DELETE FROM Boosts WHERE boostID = 
 		(SELECT MAX(boostID) FROM Ladders);
-	DELETE FROM Game WHERE boostID = 
+	DELETE FROM Game WHERE gameID = 
         (SELECT MAX(gameID)FROM Game);
     
 END &&
