@@ -211,25 +211,7 @@ ENGINE = InnoDB;
 --
 -- ----------------------------------------------------------------------------------
 
--- -----------------------------------------------------
--- Choose game based on ID choice .
--- -----------------------------------------------------
 
-DROP FUNCTION IF EXISTS selectGame;
-
-DELIMITER ££
-CREATE FUNCTION selectGame (gameChoice INT)
-RETURNS INT NOT DETERMINISTIC
-BEGIN
-
-DECLARE gameResult INT;
-
-SET gameResult = (SELECT gameID FROM Game WHERE gameID = gameChoice);
-
-RETURN (gameResult);
-
-END ££
-DELIMITER ;
 
 
 
@@ -370,14 +352,50 @@ DELIMITER ;
 -- Procedure saves a player's move during turn into table.
 -- -----------------------------------------------------
 
-DROP PROCEDURE IF EXISTS savePlayerMove;
+DROP PROCEDURE IF EXISTS addPlayerMove;
 
 DELIMITER //
-CREATE PROCEDURE savePlayerMove (IN playerTurnStart INT, IN playerTurnEnd INT, IN currentPlayer INT, IN currentGame INT)
+CREATE PROCEDURE addPlayerMove (IN playerTurnStart INT, IN playerTurnEnd INT, IN currentPlayer INT, IN currentGame INT)
 BEGIN
 	INSERT INTO Moves (moveStart, moveEnd, players_playerID, game_gameID)
     VALUES (playerTurnStart, playerTurnEnd, currentPlayer, currentGame);
 
+END //
+DELIMITER ;
+
+
+-- -----------------------------------------------------
+-- Choose game based on ID choice .
+-- -----------------------------------------------------
+
+DROP PROCEDURE IF EXISTS selectGame;
+
+DELIMITER ££
+CREATE PROCEDURE selectGame (gameChoice INT, OUT gameNumber INT)
+BEGIN
+
+SELECT * FROM Game WHERE gameID = gameChoice;
+
+SELECT gameID INTO gameNumber
+FROM Game
+where gameID = gameChoice;
+
+END ££
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- grabs player data based on current game choice.
+-- -----------------------------------------------------
+
+DROP PROCEDURE IF EXISTS selectPlayersFromGame;
+
+DELIMITER //
+
+CREATE PROCEDURE selectPlayersFromGame(IN currentgame INT)
+BEGIN
+	SELECT * 
+    FROM players
+    WHERE game_gameID = currentGame;
 END //
 DELIMITER ;
 
@@ -600,19 +618,19 @@ insert into Game(gameRound, boardSize, gameHasEnded, boostSquarefeature, winning
 values (0, 100, false, true, true, 2);
 
 INSERT INTO players(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
-VALUES ('ORANGE', 15, 4, false, 1, 1);
+VALUES ('ORANGE', 15, 4, false, 5, 1);
 INSERT INTO players(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
-VALUES ('GREEN', 12, 3, false, 1, 3);
+VALUES ('GREEN', 12, 3, false, 5, 3);
 INSERT INTO players(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
-VALUES ('BLUE', 17, 3, false, 1, 2);
+VALUES ('BLUE', 17, 3, false, 5, 2);
 INSERT INTO players(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
-VALUES ('ORANGE', 25, 7, false, 2, 1);
+VALUES ('ORANGE', 25, 7, false, 6, 1);
 INSERT INTO players(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
-VALUES ('GREEN', 12, 6, false, 2, 3);
+VALUES ('GREEN', 12, 6, false, 6, 3);
 INSERT INTO players(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
-VALUES ('ORANGE', 62, 9, false, 3, 3);
+VALUES ('ORANGE', 62, 9, false, 7, 3);
 INSERT INTO players(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
-VALUES ('GREEN', 53, 9, false, 3, 2);
+VALUES ('GREEN', 53, 9, false, 7, 2);
 
 
 -- INSERT INTO Moves;
@@ -632,7 +650,9 @@ CALL addLadderTest;
 -- CALL addBoostTest;
 CALL insertTestDummyData;
 
-SELECT * FROM Game;
-SET @gameChoice = (SELECT selectGame(5));
+CALL selectGame(5, @gameChoice);
+
+CALL selectPlayersFromGame(@gameChoice); 
+
 
 
