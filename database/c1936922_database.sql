@@ -93,7 +93,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `snakesAndLaddersData`.`players` ;
 
 CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`players` (
-  `currentPlayerID` INT NOT NULL AUTO_INCREMENT,
+  `playerID` INT NOT NULL AUTO_INCREMENT,
   -- `playerName` VARCHAR(45),
   `playerColour` VARCHAR(45) NOT NULL,
   `playerPosition` INT DEFAULT 0,
@@ -101,7 +101,7 @@ CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`players` (
   `playerWonGame` TINYINT DEFAULT false,
   `game_gameID` INT NOT NULL,
   `pl_PlayerListID`INT NOT NULL,
-  PRIMARY KEY (`currentPlayerID`),
+  PRIMARY KEY (`playerID`),
     FOREIGN KEY (`game_gameID`)
     REFERENCES `snakesAndLaddersData`.`Game` (`gameID`),
     FOREIGN KEY (`pl_PlayerListID`)
@@ -188,11 +188,11 @@ CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`Moves` (
   `landedOnSnake` TINYINT,
   `landedOnLadder`TINYINT,
   `landedOnBoost`TINYINT,
-  `players_currentPlayerID` INT NOT NULL,
+  `players_playerID` INT NOT NULL,
   `game_gameID` INT NOT NULL,
   PRIMARY KEY (`moveID`),
-    FOREIGN KEY (`players_currentPlayerID`)
-    REFERENCES `snakesAndLaddersData`.`players` (`currentPlayerID`)
+    FOREIGN KEY (`players_playerID`)
+    REFERENCES `snakesAndLaddersData`.`players` (`playerID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
     FOREIGN KEY (`game_gameID`)
@@ -210,6 +210,29 @@ ENGINE = InnoDB;
 -- 
 --
 -- ----------------------------------------------------------------------------------
+
+-- -----------------------------------------------------
+-- Choose game based on ID choice .
+-- -----------------------------------------------------
+
+DROP FUNCTION IF EXISTS selectGame;
+
+DELIMITER ££
+CREATE FUNCTION selectGame (gameChoice INT)
+RETURNS INT NOT DETERMINISTIC
+BEGIN
+
+DECLARE gameResult INT;
+
+SET gameResult = (SELECT gameID FROM Game WHERE gameID = gameChoice);
+
+RETURN (gameResult);
+
+END ££
+DELIMITER ;
+
+
+
 
 -- -----------------------------------------------------
 -- Finds total mvoes taken in a game.
@@ -352,7 +375,7 @@ DROP PROCEDURE IF EXISTS savePlayerMove;
 DELIMITER //
 CREATE PROCEDURE savePlayerMove (IN playerTurnStart INT, IN playerTurnEnd INT, IN currentPlayer INT, IN currentGame INT)
 BEGIN
-	INSERT INTO Moves (moveStart, moveEnd, players_currentPlayerID, game_gameID)
+	INSERT INTO Moves (moveStart, moveEnd, players_playerID, game_gameID)
     VALUES (playerTurnStart, playerTurnEnd, currentPlayer, currentGame);
 
 END //
@@ -392,14 +415,14 @@ DELIMITER ;
 DELIMITER ??
 
 CREATE TRIGGER appendPlayerRollTotal AFTER INSERT
-ON PlayerList
+ON Moves
 FOR EACH ROW
 
 BEGIN
 
-UPDATE appendPlayerRollTotal 
+UPDATE PlayerList 
 SET PlayerList.playerTotalMovesMade = playerTotalMovesMade + 1
-WHERE MAX(Moves.players_currentPlayerID) = PlayerList.playerID
+WHERE PlayerList.playerListID = (SELECT MAX(Moves.players_playerID)) 
 LIMIT 1;
 END ??
 
@@ -469,7 +492,7 @@ BEGIN
 END &&
 DELIMITER ;
 
-CALL AddSnakeTest;
+
 
 -- -----------------------------------------------------
 -- #2 AddNewBoost TEST. Adds new ladders & current game ID to ensure data being added correctly.
@@ -497,11 +520,13 @@ BEGIN
 		(SELECT MAX(ladderID) FROM Ladders);
 	DELETE FROM Game WHERE gameID = 
         (SELECT MAX(gameID)FROM Game);
+	DELETE FROM Game WHERE gameID = 
+		(SELECT MAX(gameID)FROM Game);
     
 END &&
 DELIMITER ;
 
-CALL addLadderTest;
+
 
 -- -----------------------------------------------------
 -- #3 AddNewBoost TEST. Adds new boost square locations & current game ID to ensure data being added correctly.
@@ -530,11 +555,13 @@ BEGIN
 		(SELECT MAX(boostID) FROM Ladders);
 	DELETE FROM Game WHERE gameID = 
         (SELECT MAX(gameID)FROM Game);
+	DELETE FROM Game WHERE gameID = 
+        (SELECT MAX(gameID)FROM Game);
     
 END &&
 DELIMITER ;
 
-CALL addBoostTest;
+
 
 
 
@@ -551,41 +578,41 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 --
 -- ----------------------------------------------------------------------------------
 
--- DROP PROCEDURE IF EXISTS insertDummyData;
+DROP PROCEDURE IF EXISTS insertDummyData;
 
--- DELIMITER !!
--- CREATE PROCEDURE insertTestDummyData() 
--- BEGIN
--- INSERT INTO dice (diceCount, diceFaces) VALUES (1, 6);
--- INSERT INTO dice (diceCount, diceFaces) VALUES (2, 6);
--- INSERT INTO dice (diceCount, diceFaces) VALUES (1, 10);
+DELIMITER !!
+CREATE PROCEDURE insertTestDummyData() 
+BEGIN
+INSERT INTO dice (diceCount, diceFaces) VALUES (1, 6);
+INSERT INTO dice (diceCount, diceFaces) VALUES (2, 6);
+INSERT INTO dice (diceCount, diceFaces) VALUES (1, 10);
 
--- INSERT INTO PlayerList (playerName, playerWinCount, playerAverageGameMoves) VALUES ("Harry", 1, 12); 
--- INSERT INTO PlayerList (playerName, playerWinCount, playerAverageGameMoves) VALUES ("Sally", 5, 14); 
--- INSERT INTO PlayerList (playerName, playerWinCount, playerAverageGameMoves) VALUES ("Terry", 3, 9); 
+INSERT INTO PlayerList (playerName, playerWinCount, playerAverageGameMoves) VALUES ("Harry", 1, 12); 
+INSERT INTO PlayerList (playerName, playerWinCount, playerAverageGameMoves) VALUES ("Sally", 5, 14); 
+INSERT INTO PlayerList (playerName, playerWinCount, playerAverageGameMoves) VALUES ("Terry", 3, 9); 
 
 
--- insert into Game(gameRound, boardSize, winningSquare, gameHasEnded, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
--- values (0, 25, 25, false, false, false, 1);
--- insert into Game(gameRound, boardSize, winningSquare, gameHasEnded, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
--- values (0, 36, 36, false, true, false, 1);
--- insert into Game(gameRound, boardSize, winningSquare, gameHasEnded, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
--- values (0, 100, 100, false, true, true, 2);
+insert into Game(gameRound, boardSize, gameHasEnded, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
+values (0, 25, false, false, false, 1);
+insert into Game(gameRound, boardSize, gameHasEnded, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
+values (0, 36,  false, true, false, 1);
+insert into Game(gameRound, boardSize, gameHasEnded, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
+values (0, 100, false, true, true, 2);
 
--- INSERT INTO players(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
--- VALUES ('ORANGE', 15, 4, false, 1, 1);
--- INSERT INTO players(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
--- VALUES ('GREEN', 12, 3, false, 1, 3);
--- INSERT INTO players(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
--- VALUES ('BLUE', 17, 3, false, 1, 2);
--- INSERT INTO players(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
--- VALUES ('ORANGE', 25, 7, false, 2, 1);
--- INSERT INTO players(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
--- VALUES ('GREEN', 12, 6, false, 2, 3);
--- INSERT INTO players(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
--- VALUES ('ORANGE', 62, 9, false, 3, 3);
--- INSERT INTO players(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
--- VALUES ('GREEN', 53, 9, false, 3, 2);
+INSERT INTO players(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
+VALUES ('ORANGE', 15, 4, false, 1, 1);
+INSERT INTO players(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
+VALUES ('GREEN', 12, 3, false, 1, 3);
+INSERT INTO players(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
+VALUES ('BLUE', 17, 3, false, 1, 2);
+INSERT INTO players(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
+VALUES ('ORANGE', 25, 7, false, 2, 1);
+INSERT INTO players(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
+VALUES ('GREEN', 12, 6, false, 2, 3);
+INSERT INTO players(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
+VALUES ('ORANGE', 62, 9, false, 3, 3);
+INSERT INTO players(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
+VALUES ('GREEN', 53, 9, false, 3, 2);
 
 
 -- INSERT INTO Moves;
@@ -596,6 +623,16 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- INSERT INTO Boosts;
 
--- END !!
+END !!
 
--- DELIMITER ;
+DELIMITER ;
+
+CALL AddSnakeTest;
+CALL addLadderTest;
+-- CALL addBoostTest;
+CALL insertTestDummyData;
+
+SELECT * FROM Game;
+SET @gameChoice = (SELECT selectGame(5));
+
+
