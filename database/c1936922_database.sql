@@ -90,9 +90,9 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `snakesAndLaddersData`.`Players`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `snakesAndLaddersData`.`CurrentGamePlayers` ;
+DROP TABLE IF EXISTS `snakesAndLaddersData`.`players` ;
 
-CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`CurrentGamePlayers` (
+CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`players` (
   `currentPlayerID` INT NOT NULL AUTO_INCREMENT,
   -- `playerName` VARCHAR(45),
   `playerColour` VARCHAR(45) NOT NULL,
@@ -185,11 +185,14 @@ CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`Moves` (
   `moveStart` INT NOT NULL,
   `moveEnd` INT NOT NULL,
   `moveRoll` INT,
+  `landedOnSnake` TINYINT,
+  `landedOnLadder`TINYINT,
+  `landedOnBoost`TINYINT,
   `players_currentPlayerID` INT NOT NULL,
   `game_gameID` INT NOT NULL,
   PRIMARY KEY (`moveID`),
     FOREIGN KEY (`players_currentPlayerID`)
-    REFERENCES `snakesAndLaddersData`.`CurrentGamePlayers` (`currentPlayerID`)
+    REFERENCES `snakesAndLaddersData`.`players` (`currentPlayerID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
     FOREIGN KEY (`game_gameID`)
@@ -269,7 +272,7 @@ DROP PROCEDURE IF EXISTS addNewPlayerToGame;
 DELIMITER //
 CREATE PROCEDURE addNewPlayerToGame(IN playerColourChoice VARCHAR(45), IN gameStateChoice INT, IN savedPlayerChoice INT)
 BEGIN
-	INSERT INTO CurrentGamePlayers(playerColour, game_gameID, pl_PlayerListID)
+	INSERT INTO players(playerColour, game_gameID, pl_PlayerListID)
     VALUES(playerColourChoice, gameStateChoice, savedPlayerChoice);
 
 END //
@@ -569,19 +572,19 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- insert into Game(gameRound, boardSize, winningSquare, gameHasEnded, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
 -- values (0, 100, 100, false, true, true, 2);
 
--- INSERT INTO CurrentGamePlayers(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
+-- INSERT INTO players(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
 -- VALUES ('ORANGE', 15, 4, false, 1, 1);
--- INSERT INTO CurrentGamePlayers(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
+-- INSERT INTO players(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
 -- VALUES ('GREEN', 12, 3, false, 1, 3);
--- INSERT INTO CurrentGamePlayers(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
+-- INSERT INTO players(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
 -- VALUES ('BLUE', 17, 3, false, 1, 2);
--- INSERT INTO CurrentGamePlayers(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
+-- INSERT INTO players(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
 -- VALUES ('ORANGE', 25, 7, false, 2, 1);
--- INSERT INTO CurrentGamePlayers(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
+-- INSERT INTO players(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
 -- VALUES ('GREEN', 12, 6, false, 2, 3);
--- INSERT INTO CurrentGamePlayers(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
+-- INSERT INTO players(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
 -- VALUES ('ORANGE', 62, 9, false, 3, 3);
--- INSERT INTO CurrentGamePlayers(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
+-- INSERT INTO players(playerColour, playerPosition, playerMovesTaken, playerWonGame, Game_gameID, PL_PlayerListID) 
 -- VALUES ('GREEN', 53, 9, false, 3, 2);
 
 
