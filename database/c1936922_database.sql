@@ -42,7 +42,6 @@ ENGINE = InnoDB;
 
 INSERT INTO Dice (diceCount, diceFaces) VALUES (1, 6);
 
-select * from Dice;
 
 
 -- -----------------------------------------------------
@@ -52,6 +51,7 @@ DROP TABLE IF EXISTS `snakesAndLaddersData`.`Game` ;
 
 CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`Game` (
   `gameID` INT NOT NULL AUTO_INCREMENT,
+  `playerTurn` INT NOT NULL DEFAULT 1,
   `gameRound` INT NOT NULL DEFAULT 0,
   `boardSize` INT NOT NULL,
 --   `winningSquare` INT NULL,
@@ -232,23 +232,66 @@ END ££
 DELIMITER ;
 
 -- -----------------------------------------------------
--- Finds total mvoes taken in a game.
+-- Counts amount of ladder squares landed on in a game.
 -- -----------------------------------------------------
--- DROP FUNCTION IF EXISTS CalculateTotalFunctions;
+
+DELIMITER ££
+CREATE FUNCTION ladder_count_landed_in_game (gameChoice INT)
+RETURNS INT NOT DETERMINISTIC
+
+BEGIN
+
+	DECLARE ladderCount INT;
+    SET ladderCount = (SELECT COUNT(*) FROM Moves
+					WHERE game_gameID = gameChoice
+                    AND landedOnLadder = 1);
+                    
+	RETURN ladderCount;
+			
+END ££
+DELIMITER ;
 
 
--- DELIMITER ££
--- CREATE FUNCTION  CalculateTotalMovesMade( queriedGame INT) RETURNS INT NOT DETERMINISTIC
--- BEGIN
--- 	DECLARE totalGames INT;
--- 	SELECT DISTINCT COUNT(*) FROM Game AS totalGames;
---     
---     
+-- -----------------------------------------------------
+-- Counts amount of ladder squares landed on in a game.
+-- -----------------------------------------------------
 
--- END ££
+DELIMITER ££
+CREATE FUNCTION boost_count_landed_in_game (gameChoice INT)
+RETURNS INT NOT DETERMINISTIC
 
--- DELIMITER ;
+BEGIN
 
+	DECLARE boostCount INT;
+    SET boostCount = (SELECT COUNT(*) FROM Moves
+					WHERE game_gameID = gameChoice
+                    AND landedOnBoost = 1);
+                    
+	RETURN boostCount;
+			
+END ££
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- Finds total moves taken in a game.
+-- -----------------------------------------------------
+
+DROP FUNCTION IF EXISTS find_longest_game()
+
+DELIMITER ££
+CREATE FUNCTION find_longest_game()
+RETURNS INT NOT DETERMINISTIC
+
+BEGIN
+	DECLARE longestGame INT;
+    SET longestGame = (SELECT COUNT(*) FROM moves
+						GROUP BY game_gameID
+                        ORDER BY COUNT(*) DESC LIMIT 1);
+	
+    RETURN longestGame;
+
+END ££
+DELIMITER ;
 
 -- ----------------------------------------------------------------------------------
 --
@@ -521,13 +564,17 @@ BEGIN
     -- Updates the same player's stats on the game itself.
 	UPDATE Players
     SET playerMovesTaken = playerMovesTaken + 1
-    WHERE (pl_playerListID = (SELECT players_playerID FROM moves
+    WHERE (playerID = (SELECT players_playerID FROM moves
 						ORDER BY moveID DESC LIMIT 1)
 	AND game_gameID = (SELECT game_gameID FROM moves
 						ORDER BY moveID DESC LIMIT 1));
 						
 END ??
 DELIMITER ;
+
+-- -----------------------------------------------------
+-- Trigger a move's final roll position to the specific player for current record purpose.
+-- -----------------------------------------------------
 
 DELIMITER ??
 CREATE TRIGGER assign_move_end_position_to_player_on_players_table AFTER INSERT
@@ -536,16 +583,17 @@ FOR EACH ROW
 
 BEGIN
 
-	@playerRollEnd = (SELECT moveEnd FROM Moves
-	ORDER BY moveID DESC LIMIT 1);
+	DECLARE playerRollEnd INT;
     
-    SELECT @playerRollEnd;
+    SET playerRollEnd = (SELECT moveEnd FROM Moves
+	ORDER BY moveID DESC LIMIT 1);
 
 	UPDATE Players
-	SET playerPosition = @playerRollEnd WHERE playerID IN (SELECT players_playerID FROM Moves
+	SET playerPosition = playerRollEnd WHERE playerID = (SELECT players_playerID FROM Moves
 		ORDER BY moveID DESC LIMIT 1);
 
-
+END ??
+DELIMITER ;
 
 -- -----------------------------------------------------
 -- Trigger notes whether player's roll triggered a special square (snake/ladder/boost) and assigns dedicated value tracker to true if so.
@@ -575,7 +623,7 @@ END ??
 DELIMITER ;
 
 -- -----------------------------------------------------
--- Trigger marks if player won game during turn. Increments player & playerList.
+-- Trigger marks if player won game during turn. Increments player, playerList and marks Game as complete.
 -- -----------------------------------------------------
 
 DELIMITER ??
@@ -595,153 +643,19 @@ BEGIN
         SET players.playerWonGame = players.playerWonGame + 1 WHERE players.playerID = 
 			(SELECT players_playerID FROM moves
 			ORDER BY moveID DESC LIMIT 1);
---         (SELECT players_playerID FROM moves
---         ORDER BY moveID DESC LIMIT 1);
+		UPDATE Game
+        SET game.gameHasEnded = 1 WHERE gameID = (SELECT game_gameID FROM Players WHERE playerWonGame = 1);
+
     
     END IF;
     
 END ??
 DELIMITER ;
 
-
-
--- CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`Moves` (
---   `moveID` INT NOT NULL AUTO_INCREMENT,
---   `moveStart` INT NOT NULL,
---   `moveEnd` INT NOT NULL,
---   `moveRoll` INT,
---   `landedOnSnake` TINYINT DEFAULT 0,
---   `landedOnLadder`TINYINT DEFAULT 0,
---   `landedOnBoost`TINYINT DEFAULT 0,
---   `players_playerID` INT NOT NULL,
---   `game_gameID` INT NOT NULL,
---   PRIMARY KEY (`moveID`),
---     FOREIGN KEY (`players_playerID`)
---     REFERENCES `snakesAndLaddersData`.`players` (`playerID`)
---     ON DELETE NO ACTION
---     ON UPDATE NO ACTION,
---     FOREIGN KEY (`game_gameID`)
---     REFERENCES `snakesAndLaddersData`.`Game` (`gameID`)
---     ON DELETE NO ACTION
---     ON UPDATE NO ACTION)
--- ENGINE = InnoDB;
-
--- ----------------------------------------------------------------------------------
---
---
--- SCRIPT & PROCEDURE TESTS
--- 
---
--- ----------------------------------------------------------------------------------
-
 -- -----------------------------------------------------
--- #1 AddNewSnake TEST. Adds new snakes & current game ID to ensure data being added correctly.
+-- Trigger increments game round if last
 -- -----------------------------------------------------
--- DROP PROCEDURE IF EXISTS add_snake_test;
 
--- DELIMITER &&
--- CREATE PROCEDURE add_snake_test()
--- BEGIN
-
--- 	insert into Game(gameRound, boardSize,  gameHasEnded, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
--- 	values (0, 50,  false, false, false, 1);
-
-
---     
-
--- 	insert into Game(gameRound, boardSize,  gameHasEnded, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
--- 	values (0, 25,  false, false, false, 1);
-
--- 	
--- 	SELECT * FROM Snakes;
-
--- 	DELETE FROM Snakes WHERE snakeID = 
--- 		(SELECT MAX(snakeID) FROM Snakes);
---     DELETE FROM Snakes WHERE snakeID = 
--- 		(SELECT MAX(snakeID) FROM Snakes);
--- 	DELETE FROM Game WHERE gameID = 
---         (SELECT MAX(gameID)FROM Game);
--- 	DELETE FROM Game WHERE gameID = 
--- 		(SELECT MAX(gameID)FROM Game);
---     
--- END &&
--- DELIMITER ;
-
-
-
--- -----------------------------------------------------
--- #2 AddNewBoost TEST. Adds new ladders & current game ID to ensure data being added correctly.
--- -----------------------------------------------------
--- DROP PROCEDURE IF EXISTS add_ladder_test;
-
--- DELIMITER &&
--- CREATE PROCEDURE add_ladder_test()
--- BEGIN
-
--- 	insert into Game(gameRound, boardSize, gameHasEnded, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
--- 	values (0, 25, false, false, false, 1);
-
--- 	
-
--- 	insert into Game(gameRound, boardSize, gameHasEnded, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
--- 	values (0, 25, false, false, false, 1);
-
--- 	SELECT * FROM Ladders;
-
--- 	DELETE FROM Ladders WHERE ladderID = 
--- 		(SELECT MAX(ladderID) FROM Ladders);
---     DELETE FROM Ladders WHERE ladderID = 
--- 		(SELECT MAX(ladderID) FROM Ladders);
--- 	DELETE FROM Game WHERE gameID = 
---         (SELECT MAX(gameID)FROM Game);
--- 	DELETE FROM Game WHERE gameID = 
--- 		(SELECT MAX(gameID)FROM Game);
---     
--- END &&
--- DELIMITER ;
-
-
-
--- -----------------------------------------------------
--- #3 AddNewBoost TEST. Adds new boost square locations & current game ID to ensure data being added correctly.
--- -----------------------------------------------------
--- DROP PROCEDURE IF EXISTS add_boost_test;
-
--- DELIMITER &&
--- CREATE PROCEDURE add_boost_test()
--- BEGIN
-
--- 	insert into Game(gameRound, boardSize, gameHasEnded, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
--- 	values (0, 25, false, false, false, 1);
-
-
-
--- 	insert into Game(gameRound, boardSize, gameHasEnded, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
--- 	values (0, 25, false, false, false, 1);
-
--- 	
--- 	SELECT * FROM Boosts;
--- 	
---     -- remove all data from test after confirmation of completion.
--- 	DELETE FROM Boosts WHERE boostID = 
--- 		(SELECT MAX(boostID) FROM Ladders);
---     DELETE FROM Boosts WHERE boostID = 
--- 		(SELECT MAX(boostID) FROM Ladders);
--- 	DELETE FROM Game WHERE gameID = 
---         (SELECT MAX(gameID)FROM Game);
--- 	DELETE FROM Game WHERE gameID = 
---         (SELECT MAX(gameID)FROM Game);
---     
--- END &&
--- DELIMITER ;
-
-
-
-
-
-SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 
 -- ----------------------------------------------------------------------------------
@@ -814,47 +728,63 @@ CALL add_player_move(0, 4, 1, 1);
 CALL add_player_move(0, 5, 2, 1);
 CALL add_player_move(0, 7, 3, 1);
 CALL add_player_move(4, 10, 1, 1);
-CALL add_player_move(5, 9, 2, 1);
+CALL add_player_move(5, 11, 2, 1);
 CALL add_player_move(7, 11, 3, 1);
 CALL add_player_move(10, 16, 1, 1);
-CALL add_player_move(9, 12, 2, 1);
+CALL add_player_move(11, 14, 2, 1);
 CALL add_player_move(11,17, 3, 1);
-CALL add_player_move(0, 12, 1, 2);
-CALL add_player_move(0, 7, 3, 2);
-CALL add_player_move(12, 14, 1, 2);
-CALL add_player_move(7, 15, 3, 2);
-CALL add_player_move(10, 15, 4, 3);
-CALL add_player_move(10, 15, 3, 3);
+CALL add_player_move(0, 12, 4, 2);
+CALL add_player_move(0, 7, 5, 2);
+CALL add_player_move(12, 14, 4, 2);
+CALL add_player_move(7, 15, 5, 2);
+CALL add_player_move(10, 15, 6, 3);
+CALL add_player_move(10, 15, 7, 3);
 
-CALL add_player_move(10, 100, 3, 3);
+CALL add_player_move(10, 100, 6, 3);
 
 END !!
 
 DELIMITER ;
 
--- CALL add_snake_test;
--- CALL add_ladder_test;
--- CALL addBoostTest;
+
+-- ----------------------------------------------------------------------------------
+--
+--
+--  SCRIPT & PROCEDURE TESTS
+--
+--
+-- ----------------------------------------------------------------------------------
+
 CALL insert_dummy_data;
 
 CALL select_game(1, @gameChoice);
-
-SELECT * FROM players;
 CALL select_players_from_game(@gameChoice); 
 CALL select_dice_choice_from_game(@gameChoice);
 
-CALL select_game_snakes(@gameChoice);
-
+SELECT * FROM players;
 SELECT * FROM playerList;
-
-SELECT * FROM players p
-INNER JOIN playerList l
-ON p.pl_PlayerListID = l.playerListID;
-
-SET @result = snake_count_landed_in_game(1);
-
-SELECT @result;
-
 SELECT * FROM moves;
 SELECT * FROM game;
+
+
+CALL select_game_snakes(@gameChoice);
+
+
+SET @snakeResult = snake_count_landed_in_game(1);
+SET @ladderResult = ladder_count_landed_in_game(1);
+SET @boostResult = boost_count_landed_in_game(1);
+
+SELECT @snakeResult AS 'Snakes count', @ladderResult AS 'Ladders Count', @boostResult AS 'Boosts count';
+
+SET @longestGame = find_longest_game();
+
+SELECT @longestGame AS 'Longest Game (turns)';
+
+
+
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
