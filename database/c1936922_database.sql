@@ -365,7 +365,7 @@ DELIMITER ;
 
 
 -- -----------------------------------------------------
--- Choose game based on ID choice .
+-- grabs game based on ID choice .
 -- -----------------------------------------------------
 
 DROP PROCEDURE IF EXISTS selectGame;
@@ -395,6 +395,71 @@ CREATE PROCEDURE selectPlayersFromGame(IN currentgame INT)
 BEGIN
 	SELECT * 
     FROM players
+    WHERE game_gameID = currentGame;
+END //
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- grabs dice choice based on current game choice.
+-- -----------------------------------------------------
+
+DROP PROCEDURE IF EXISTS selectDiceChoiceFromGame;
+
+DELIMITER //
+
+CREATE PROCEDURE selectDiceChoiceFromGame(IN currentgame INT)
+BEGIN
+	SELECT diceID, diceCount, diceFaces 
+    FROM dice d
+    INNER JOIN game g ON d.diceID = g.dice_diceID
+    WHERE g.gameID = currentGame;
+END //
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- grabs all snakes from current game choice.
+-- -----------------------------------------------------
+
+DROP PROCEDURE IF EXISTS selectGameSnakes;
+
+DELIMITER //
+
+CREATE PROCEDURE selectGameSnakes(IN currentgame INT)
+BEGIN
+	SELECT * 
+    FROM snakes
+    WHERE game_gameID = currentGame;
+END //
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- grabs all ladders from current game choice.
+-- -----------------------------------------------------
+
+DROP PROCEDURE IF EXISTS selectGameLadders;
+
+DELIMITER //
+
+CREATE PROCEDURE selectGameLadders(IN currentgame INT)
+BEGIN
+	SELECT * 
+    FROM ladders
+    WHERE game_gameID = currentGame;
+END //
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- grabs all ladders from current game choice.
+-- -----------------------------------------------------
+
+DROP PROCEDURE IF EXISTS selectGameBoosts;
+
+DELIMITER //
+
+CREATE PROCEDURE selectGameBoosts(IN currentgame INT)
+BEGIN
+	SELECT * 
+    FROM boosts
     WHERE game_gameID = currentGame;
 END //
 DELIMITER ;
@@ -653,6 +718,9 @@ CALL insertTestDummyData;
 CALL selectGame(5, @gameChoice);
 
 CALL selectPlayersFromGame(@gameChoice); 
+CALL selectDiceChoiceFromGame(@gameChoice);
+
+CALL selectGameSnakes(@gameChoice);
 
 
 
