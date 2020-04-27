@@ -252,7 +252,7 @@ END ££
 DELIMITER ;
 
 -- -----------------------------------------------------
--- Finds total moves taken in a game.
+-- Finds longest total moves taken in a game.
 -- -----------------------------------------------------
 
 DROP FUNCTION IF EXISTS find_longest_game()
@@ -271,6 +271,51 @@ BEGIN
 
 END ££
 DELIMITER ;
+
+-- -----------------------------------------------------
+-- Finds lowest total moves taken in a game.
+-- -----------------------------------------------------
+
+DROP FUNCTION IF EXISTS find_shortest_game()
+
+DELIMITER ££
+CREATE FUNCTION find_shortest_game()
+RETURNS INT NOT DETERMINISTIC
+
+BEGIN
+	DECLARE shortestGame INT;
+    SET shortestGame = (SELECT COUNT(*) FROM moves
+						GROUP BY game_gameID
+                        ORDER BY COUNT(*) ASC LIMIT 1);
+	
+    RETURN shortestGame;
+
+END ££
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- Find player with highest win count.
+-- -----------------------------------------------------
+
+DROP FUNCTION IF EXISTS find_highest_win_player()
+
+DELIMITER ££
+CREATE FUNCTION find_highest_win_player()
+RETURNS VARCHAR(45) NOT DETERMINISTIC
+
+BEGIN
+	DECLARE highestWinPlayer VARCHAR(45);
+    SET highestWinPlayer = (SELECT playerName FROM playerList
+						ORDER BY playerWinCount DESC LIMIT 1);
+	
+    RETURN highestWinPlayer;
+                       
+                   
+	
+END ££
+
+DELIMITER ;
+
 
 -- ----------------------------------------------------------------------------------
 --
@@ -798,6 +843,13 @@ SELECT @snakeResult AS 'Snakes count', @ladderResult AS 'Ladders Count', @boostR
 
 SET @longestGame = find_longest_game();
 SELECT @longestGame AS 'Longest Game (turns)';
+
+
+SET @shortestGame = find_shortest_game();
+SELECT @shortestGame AS 'Shortest Game (turns)';
+
+SET @highestPlayerWins = find_highest_win_player();
+SELECT @highestPlayerWins AS 'Highest Win Count';
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
