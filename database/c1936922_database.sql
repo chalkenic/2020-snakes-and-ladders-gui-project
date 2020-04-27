@@ -51,8 +51,8 @@ DROP TABLE IF EXISTS `snakesAndLaddersData`.`Game` ;
 
 CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`Game` (
   `gameID` INT NOT NULL AUTO_INCREMENT,
-  `playerTurn` INT NOT NULL DEFAULT 1,
-  `gameRound` INT NOT NULL DEFAULT 0,
+  `gamePlayerTurn` INT NOT NULL DEFAULT 1,
+  `gameRound` INT NOT NULL DEFAULT 1,
   `boardSize` INT NOT NULL,
 --   `winningSquare` INT NULL,
   `gameHasEnded` TINYINT NULL DEFAULT false,
@@ -65,27 +65,6 @@ CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`Game` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
--- -----------------------------------------------------
--- Table `snakesAndLaddersData`.`GameStatistics`
--- -----------------------------------------------------
--- DROP TABLE IF EXISTS `snakesAndLaddersData`.`GameStatistics` ;
-
--- CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`GameStatistics` (
---   `gameStatisticID` INT NOT NULL AUTO_INCREMENT,
---   `gamePlayerCount` INT NOT NULL,
---   `gameTotalMovesMade` INT NOT NULL,
---   `gameSnakesHit` INT NULL DEFAULT 0,
---   `gameLaddersHit` INT NULL DEFAULT 0,
---   `gameBoostsHit` INT NULL DEFAULT 0,
---   `gameWinningPlayer` VARCHAR(45),
---   `Game_gameID` INT NOT NULL,
---   PRIMARY KEY (`gameStatisticID`),
--- 	FOREIGN KEY (`Game_gameID`)
---     REFERENCES `snakesAndLaddersData`.`Game` (`gameID`)
---     ON DELETE NO ACTION
---     ON UPDATE NO ACTION)
--- ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 -- Table `snakesAndLaddersData`.`Players`
@@ -535,7 +514,7 @@ DELIMITER ;
 -- -----------------------------------------------------
 
 DELIMITER ??
-CREATE TRIGGER calc_move_roll BEFORE INSERT
+CREATE TRIGGER calculate_move_roll_from_entries BEFORE INSERT
 ON Moves
 FOR EACH ROW
 
@@ -653,9 +632,49 @@ END ??
 DELIMITER ;
 
 -- -----------------------------------------------------
--- Trigger increments game round if last
+-- Trigger increments game turn when move entry made.
+-- -----------------------------------------------------
+DELIMITER ??
+CREATE TRIGGER increment_game_turn_count AFTER INSERT
+ON Moves
+FOR EACH ROW
+
+BEGIN
+
+	UPDATE game
+	SET gamePlayerTurn = gamePlayerTurn + 1
+	 WHERE gameID = (SELECT game_gameID FROM moves	
+					ORDER BY moveID DESC LIMIT 1);
+						
+
+END ??
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- Trigger increments game round when turns reach player count. game turns reset to 1.
 -- -----------------------------------------------------
 
+DELIMITER ??
+CREATE TRIGGER increment_new_game_round AFTER INSERT
+ON Moves
+FOR EACH ROW
+
+BEGIN
+
+	SET @currentGame = (SELECT game_gameID FROM moves ORDER BY moveID DESC LIMIT 1);
+	SET @currentTurn = (SELECT gamePlayerTurn FROM game WHERE gameID = @currentGame);
+	SET @currentPlayers = (SELECT COUNT(*) FROM players WHERE game_gameID = @currentGame);
+                    
+	IF @currentTurn = @currentPlayers + 1
+	THEN
+	UPDATE Game
+		SET gameRound = gameRound + 1, gamePlayerTurn = 1 WHERE gameID = @currentGame;
+
+	END IF;
+						
+
+END ??
+DELIMITER ;
 
 
 -- ----------------------------------------------------------------------------------
@@ -677,12 +696,12 @@ INSERT INTO dice (diceCount, diceFaces) VALUES (1, 10);
 
 
 
-insert into Game(gameRound, boardSize, gameHasEnded, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
-values (0, 25, false, false, false, 1);
-insert into Game(gameRound, boardSize, gameHasEnded, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
-values (0, 36,  false, true, false, 1);
-insert into Game(gameRound, boardSize, gameHasEnded, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
-values (0, 100, false, true, true, 2);
+insert into Game(boardSize, gameHasEnded, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
+values ( 25, false, false, false, 1);
+insert into Game(boardSize, gameHasEnded, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
+values (36,  false, true, false, 1);
+insert into Game(boardSize, gameHasEnded, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
+values (100, false, true, true, 2);
 
 CALL add_new_game(50, 5);
 
@@ -723,6 +742,7 @@ CALL add_new_player_to_game('ORANGE', 2, 1);
 CALL add_new_player_to_game('GREEN', 2, 3);
 CALL add_new_player_to_game('ORANGE', 3, 4);
 CALL add_new_player_to_game('GREEN', 3, 3);
+
 
 CALL add_player_move(0, 4, 1, 1);
 CALL add_player_move(0, 5, 2, 1);
@@ -777,12 +797,7 @@ SET @boostResult = boost_count_landed_in_game(1);
 SELECT @snakeResult AS 'Snakes count', @ladderResult AS 'Ladders Count', @boostResult AS 'Boosts count';
 
 SET @longestGame = find_longest_game();
-
 SELECT @longestGame AS 'Longest Game (turns)';
-
-
-
-
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
