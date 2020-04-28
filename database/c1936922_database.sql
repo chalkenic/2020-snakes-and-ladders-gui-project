@@ -394,77 +394,40 @@ END ££
 DELIMITER ;
 
 -- -----------------------------------------------------
--- Find average moves during game for specific player.
--- -----------------------------------------------------
--- DROP FUNCTION IF EXISTS best_player_move_average()
-
--- DELIMITER ££
--- CREATE FUNCTION best_player_move_average ()
--- RETURNS VARCHAR(45) NOT DETERMINISTIC
-
--- BEGIN
--- 	DECLARE totalPlayerMoves INT;
---     DECLARE winningPlayer VARCHAR(45);
--- --     DECLARE totalGameInvolvement INT;
--- --     DECLARE averagePlayerGameMoves DECIMAL (4, 2);
---     
---     SET totalPlayerMoves = (SELECT COUNT(*) FROM moves m
--- 							INNER JOIN players p ON m.players_playerID = p.playerID
---                             WHERE p.pl_PlayerListID = playerID
---                             GROUP BY p.pl_PlayerListID
---                             ORDER BY p.pl_PlayerListID DESC LIMIT 1);
---                             
--- 	SET winningPlayer = (SELECT playerName FROM playerList WHERE playerListID = totalPlayerMoves);
--- --     WHERE pl_PlayerListID = playerChoice));
---     
--- --     SET totalGameInvolvement = (SELECT COUNT(game_gameID) FROM players
--- -- 							WHERE pl_playerListID = playerChoice); 
--- -- 	
--- --     SET averagePlayerGameMoves = totalPlayerMoves / totalGameInvolvement;
---     
---     RETURN winningPlayer;
-
--- END ££
-
--- DELIMITER ;
-
--- -----------------------------------------------------
--- Find the best player in terms of move average.
+-- sources best player move average (lowest)
 -- -----------------------------------------------------
 
-DROP PROCEDURE IF EXISTS best_player_move_average;
+DROP FUNCTION IF EXISTS best_player_move_average;
 DELIMITER //
-CREATE PROCEDURE best_player_move_average(OUT bestPlayer VARCHAR(45))
+CREATE FUNCTION best_player_move_average()
+RETURNS VARCHAR(45) NOT DETERMINISTIC
 BEGIN
 
-DECLARE totalPlayerIDS INT DEFAULT 0;
-DECLARE counter INT;
-DECLARE playerGamesInvolved INT;
-DECLARE bestPlayer VARCHAR(45);
+	DECLARE totalPlayerIDS INT DEFAULT 0;
+	DECLARE counter INT;
+	DECLARE playerGamesInvolved INT;
 
-SELECT COUNT(*) FROM playerList INTO totalPlayerIDS;
-SET counter = 1;
-WHILE counter < totalPlayerIDS + 1 DO
-	
-    SET playerGamesInvolved = (SELECT COUNT(*) FROM players WHERE pl_playerListID = counter);
-    
-    IF playerGamesInvolved > 0 THEN
-			
-		UPDATE playerList
-			SET playerAverageGameMoves = playerTotalMovesMade /  playerGamesInvolved WHERE playerListID = counter;
-			
-	
-	ELSE
-		UPDATE playerList
-			SET playerAverageGameMoves = 0 WHERE playerListID = counter;
-	END IF;
-    
-	SET counter = counter + 1;
-	
-END WHILE;
+	SELECT COUNT(*) FROM playerList INTO totalPlayerIDS;
+	SET counter = 1;
+	WHILE counter < totalPlayerIDS + 1 DO
+		
+		SET playerGamesInvolved = (SELECT COUNT(*) FROM players WHERE pl_playerListID = counter);
+		IF playerGamesInvolved > 0 THEN
+			UPDATE playerList
+				SET playerAverageGameMoves = playerTotalMovesMade /  playerGamesInvolved WHERE playerListID = counter;
+				
+		ELSE
+			UPDATE playerList
+				SET playerAverageGameMoves = 0 WHERE playerListID = counter;
+		END IF;
+		SET counter = counter + 1;
+		
+	END WHILE;
 
-SET bestPlayer = (SELECT playerAverageGameMoves FROM playerList
-				ORDER BY playerAverageGameMoves ASC LIMIT 1);
+	SET @bestPlayer = (SELECT playerName FROM playerList WHERE NOT playerAverageGameMoves  = 0
+					ORDER BY playerAverageGameMoves ASC LIMIT 1);
+					
+	RETURN @bestPlayer;
 	
 
 END //
@@ -700,6 +663,7 @@ BEGIN
 END //
 DELIMITER ;
 
+
 -- ----------------------------------------------------------------------------------
 --
 --
@@ -805,7 +769,7 @@ DELIMITER ;
 -- -----------------------------------------------------
 
 DELIMITER ??
-CREATE TRIGGER confirm_if_player_has_won_game BEFORE INSERT
+CREATE TRIGGER confirm_if_player_has_won_game AFTER INSERT
 ON Moves
 FOR EACH ROW
 	
@@ -818,13 +782,20 @@ BEGIN
 		
 	THEN 
 		UPDATE Players
-        SET players.playerWonGame = players.playerWonGame + 1 WHERE players.playerID = 
-			(SELECT players_playerID FROM moves
+			SET playerWonGame = players.playerWonGame + 1 WHERE playerID = 
+				(SELECT players_playerID FROM moves
 			ORDER BY moveID DESC LIMIT 1);
+            
 		UPDATE Game
-        SET game.gameHasEnded = 1 WHERE gameID = (SELECT game_gameID FROM Players WHERE playerWonGame = 1);
-
-    
+			SET gameHasEnded = 1 WHERE gameID = 
+				(SELECT game_gameID FROM Players WHERE playerWonGame = 1 AND playerID =
+						(SELECT players_playerID FROM moves ORDER BY moveID DESC LIMIT 1));
+            
+        UPDATE playerList
+			SET playerList.playerWinCount = playerList.playerWinCount + 1 WHERE playerListID = 
+				(SELECT pl_playerListID FROM players p WHERE playerWonGame = 1 AND playerID = 
+					(SELECT players_playerID FROM moves ORDER by moveID DESC LIMIT 1));
+        
     END IF;
     
 END ??
@@ -895,12 +866,12 @@ INSERT INTO dice (diceCount, diceFaces) VALUES (1, 10);
 
 
 
-insert into Game(boardSize, gameHasEnded, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
-values ( 25, false, false, false, 1);
-insert into Game(boardSize, gameHasEnded, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
-values (36,  false, true, false, 1);
-insert into Game(boardSize, gameHasEnded, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
-values (100, false, true, true, 2);
+insert into Game(boardSize, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
+values ( 25, false, false, 1);
+insert into Game(boardSize, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
+values (36,  true, false, 1);
+insert into Game(boardSize, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
+values (100,  true, true, 2);
 
 CALL add_new_game(50, 5);
 
@@ -941,6 +912,8 @@ CALL add_new_player_to_game('ORANGE', 2, 1);
 CALL add_new_player_to_game('GREEN', 2, 3);
 CALL add_new_player_to_game('ORANGE', 3, 4);
 CALL add_new_player_to_game('GREEN', 3, 3);
+CALL add_new_player_to_game('ORANGE', 4, 1);
+CALL add_new_player_to_game('GREEN', 4, 3);
 
 
 CALL add_player_move(0, 4, 1, 1);
@@ -953,15 +926,23 @@ CALL add_player_move(10, 16, 1, 1);
 CALL add_player_move(11, 14, 2, 1);
 CALL add_player_move(11,17, 3, 1);
 CALL add_player_move(16,19, 1, 1);
+
 CALL add_player_move(0, 12, 4, 2);
 CALL add_player_move(0, 7, 5, 2);
 CALL add_player_move(12, 14, 4, 2);
 CALL add_player_move(7, 15, 5, 2);
 CALL add_player_move(14, 18, 4, 2);
+
 CALL add_player_move(10, 15, 6, 3);
 CALL add_player_move(10, 15, 7, 3);
-
 CALL add_player_move(10, 100, 6, 3);
+
+CALL add_player_move(0, 6, 8, 4);
+CALL add_player_move(0, 5, 9, 4);
+CALL add_player_move(6, 17, 8, 4);
+CALL add_player_move(5, 12, 9, 4);
+CALL add_player_move(17, 18, 8, 4);
+CALL add_player_move(12, 50, 9, 4);
 
 END !!
 
@@ -1004,13 +985,13 @@ SET @averageGameMoves = average_moves_per_game();
 SET @averagePlayerMoves1 = average_player_moves_per_game(1);
 SET @averagePlayerMoves2 = average_player_moves_per_game(3);
 -- SET @highestMoveCount = best_player_move_average();
-CALL best_player_move_average(@highestMoveAverage);
+SET @highestMoveAverage = best_player_move_average();
 
 SELECT @averageGameMoves AS 'Average Game Moves', @averagePlayerMoves1 AS 'Average moves made by player 1', @averagePlayerMoves2 AS 'Average moves made by player 3', @HighestMoveCount AS 'Highest Player Move Count',
 @highestMoveAverage AS 'Best Move Average' ;
 
 SELECT * FROM playerlist
-ORDER BY playerAverageGameMoves DESC;
+ORDER BY playerAverageGameMoves ASC;
 
 
 
