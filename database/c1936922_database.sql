@@ -341,6 +341,32 @@ END ££
 DELIMITER ;
 
 -- -----------------------------------------------------
+-- Find player with highest total moves.
+-- -----------------------------------------------------
+
+DROP FUNCTION IF EXISTS find_most_player_moves()
+
+DELIMITER ££
+CREATE FUNCTION find_most_player_moves()
+RETURNS VARCHAR(45) NOT DETERMINISTIC
+
+BEGIN
+	DECLARE mostTravelledPlayer VARCHAR(45);
+    DECLARE finalResult VARCHAR(45);
+    SET mostTravelledPlayer = (SELECT playerName FROM playerList
+						ORDER BY playerTotalMovesMade DESC LIMIT 1);
+	
+    SET finalResult = CONCAT(mostTravelledPlayer, ' (', (SELECT playerTotalMovesMade FROM playerList
+						ORDER BY playerTotalMovesMade DESC LIMIT 1), ')');
+    
+    RETURN finalResult;
+                       
+                   
+END ££
+
+DELIMITER ;
+
+-- -----------------------------------------------------
 -- Find average total moves per game.
 -- -----------------------------------------------------
 DROP FUNCTION IF EXISTS average_moves_per_game()
@@ -407,6 +433,7 @@ BEGIN
 	DECLARE totalPlayerIDS INT DEFAULT 0;
 	DECLARE counter INT;
 	DECLARE playerGamesInvolved INT;
+    DECLARE finalResult VARCHAR(45);
 
 	SELECT COUNT(*) FROM playerList INTO totalPlayerIDS;
 	SET counter = 1;
@@ -427,8 +454,13 @@ BEGIN
 
 	SET @bestPlayer = (SELECT playerName FROM playerList WHERE NOT playerAverageGameMoves  = 0
 					ORDER BY playerAverageGameMoves ASC LIMIT 1);
+	
+    -- Code adapted from nickf - How to concat datatypes like integers(integer with integer) & varchar(varchar with varchar) in mysql?
+    -- Available at: https://stackoverflow.com/questions/2479012/how-to-concat-datatypes-like-integersinteger-with-integer-varcharvarchar-wi
+	SET finalResult = CONCAT(@bestPlayer,' (',  (SELECT playerAverageGameMoves FROM playerList WHERE NOT playerAverageGameMoves  = 0
+					ORDER BY playerAverageGameMoves ASC LIMIT 1), ')');
 					
-	RETURN @bestPlayer;
+	RETURN finalResult;
 	
 
 END //
@@ -1005,7 +1037,7 @@ SELECT @highestGameWins AS 'Highest Win Count', @lowestGameWins AS 'Lowest Win C
 SET @averageGameMoves = average_moves_per_game();
 SET @averagePlayerMoves1 = average_player_moves_per_game(1);
 SET @averagePlayerMoves2 = average_player_moves_per_game(3);
--- SET @highestMoveCount = best_player_move_average();
+SET @highestMoveCount = find_most_player_moves();
 SET @highestMoveAverage = best_player_move_average();
 
 SELECT @averageGameMoves AS 'Average Game Moves', @averagePlayerMoves1 AS 'Average moves made by player 1', @averagePlayerMoves2 AS 'Average moves made by player 3', @HighestMoveCount AS 'Highest Player Move Count',
