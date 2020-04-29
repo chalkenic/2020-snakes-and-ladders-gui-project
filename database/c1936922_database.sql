@@ -3,6 +3,7 @@
 -- Model: New Model    Version: 1.0
 -- MySQL Workbench Forward Engineering
 
+
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
@@ -775,32 +776,52 @@ FOR EACH ROW
 	
 BEGIN
 	SET @moveEndPosition = new.moveStart + new.moveRoll;
-    
-    IF @moveEndPosition >= (SELECT boardSize FROM game
+    SET @winningSquareOnly = (SELECT winningSquareOnlyFeature FROM game
     WHERE gameID = (SELECT game_gameID FROM moves
-					ORDER BY moveID DESC LIMIT 1))
+    ORDER BY moveID DESC LIMIT 1));
+    
+    -- checks if move's final position is over game's board size AND if winning square is turned off.
+    IF @moveEndPosition > (SELECT boardSize FROM game
+		WHERE gameID = (SELECT game_gameID FROM moves
+			ORDER BY moveID DESC LIMIT 1)) AND @winningSquareOnly = false
+
 		
 	THEN 
-		UPDATE Players
-			SET playerWonGame = players.playerWonGame + 1 WHERE playerID = 
-				(SELECT players_playerID FROM moves
-			ORDER BY moveID DESC LIMIT 1);
+		CALL update_database_wins();
+	
+    ELSEIF @moveEndPosition = (SELECT boardSize FROM game
+		WHERE gameID = (SELECT game_gameID FROM moves
+			ORDER BY moveID DESC LIMIT 1)) 
             
-		UPDATE Game
-			SET gameHasEnded = 1 WHERE gameID = 
-				(SELECT game_gameID FROM Players WHERE playerWonGame = 1 AND playerID =
-						(SELECT players_playerID FROM moves ORDER BY moveID DESC LIMIT 1));
-            
-        UPDATE playerList
-			SET playerList.playerWinCount = playerList.playerWinCount + 1 WHERE playerListID = 
-				(SELECT pl_playerListID FROM players p WHERE playerWonGame = 1 AND playerID = 
-					(SELECT players_playerID FROM moves ORDER by moveID DESC LIMIT 1));
-        
-    END IF;
+	THEN
+		CALL update_database_wins();
+		
+        END IF;
     
 END ??
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS update_database_wins;
+
+DELIMITER //
+CREATE PROCEDURE update_database_wins()
+BEGIN
+	UPDATE Players
+	SET playerWonGame = players.playerWonGame + 1 WHERE playerID = 
+		(SELECT players_playerID FROM moves
+	ORDER BY moveID DESC LIMIT 1);
+	
+	UPDATE Game
+		SET gameHasEnded = 1 WHERE gameID = 
+			(SELECT game_gameID FROM Players WHERE playerWonGame = 1 AND playerID =
+					(SELECT players_playerID FROM moves ORDER BY moveID DESC LIMIT 1));
+		
+	UPDATE playerList
+		SET playerList.playerWinCount = playerList.playerWinCount + 1 WHERE playerListID = 
+			(SELECT pl_playerListID FROM players p WHERE playerWonGame = 1 AND playerID = 
+				(SELECT players_playerID FROM moves ORDER by moveID DESC LIMIT 1));
+END //
+DELIMITER ;
 -- -----------------------------------------------------
 -- Trigger increments game turn when move entry made.
 -- -----------------------------------------------------
@@ -990,8 +1011,6 @@ SET @highestMoveAverage = best_player_move_average();
 SELECT @averageGameMoves AS 'Average Game Moves', @averagePlayerMoves1 AS 'Average moves made by player 1', @averagePlayerMoves2 AS 'Average moves made by player 3', @HighestMoveCount AS 'Highest Player Move Count',
 @highestMoveAverage AS 'Best Move Average' ;
 
-SELECT * FROM playerlist
-ORDER BY playerAverageGameMoves ASC;
 
 
 
