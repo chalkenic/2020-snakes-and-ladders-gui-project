@@ -15,11 +15,13 @@ public class GUIFrame extends JFrame {
     private JButton button;
 //    private JTextArea textArea;
     private GamePanel textPanel;
+    private GameToolbar toolbar;
 
     public GUIFrame() {
         super("Snakes & Ladders");
 
         setLayout(new BorderLayout());
+        toolbar = new GameToolbar();
         textPanel = new GamePanel();
 
 //        textArea = new JTextArea();
@@ -28,12 +30,6 @@ public class GUIFrame extends JFrame {
 
 
         button = new JButton(" Click me");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setTitle("Snakes & Ladders Game");
-        pack();
-        setVisible(true);
-        add(button, BorderLayout.SOUTH);
-        add(textPanel, BorderLayout.CENTER);
 
         button.addActionListener(new ActionListener() {
             @Override
@@ -43,11 +39,24 @@ public class GUIFrame extends JFrame {
             }
         });
 
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("Snakes & Ladders Game");
+        pack();
+        setVisible(true);
+
+
+
+        add(button, BorderLayout.SOUTH);
+        add(textPanel, BorderLayout.CENTER);
+        add(toolbar, BorderLayout.NORTH);
+
+
+
 //        label = new JLabel("Number of clicks innit: 0");
 
 
 //        JPanel panel = new JPanel();
-//        panel.setBorder(BorderFactory.createEmptyBorder(30, 30, 10, 100));
+//        panel.
 //        panel.setLayout(new BorderLayout(0, 1));
 //        panel.add(button);
 //        panel.add(label);

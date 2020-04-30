@@ -198,9 +198,9 @@ public final class Game {
   }
 
     /**
-     *
-     * @param currentPlayer
-     * @param squares
+     * Moves player to their new position on board.
+     * @param currentPlayer - current playing moving on board.
+     * @param squares - Position on board for player to move to.
      */
     private void movePlayerPosition(final Player currentPlayer, final Integer squares) {
 
