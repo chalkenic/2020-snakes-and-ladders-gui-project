@@ -1,17 +1,17 @@
-package com.cm6123.snl.GUI;
+package com.cm6123.snl.GUI.Panels;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class GamePanel extends JPanel {
+public class GameTextPanel extends JPanel {
 
     private JTextArea textArea;
 
-    public GamePanel() {
+    public GameTextPanel() {
         textArea = new JTextArea();
 
         setLayout(new BorderLayout());
-        setBorder(BorderFactory.createEmptyBorder(30, 30, 10, 100));
+        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         add(textArea, BorderLayout.CENTER);
 
