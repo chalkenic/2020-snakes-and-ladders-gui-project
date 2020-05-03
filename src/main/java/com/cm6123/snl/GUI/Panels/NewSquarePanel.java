@@ -1,7 +1,6 @@
 package com.cm6123.snl.GUI.Panels;
 
-import com.cm6123.snl.GUI.FormListener;
-import com.cm6123.snl.GUI.NewSquareFormEvents;
+import com.cm6123.snl.GUI.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -10,7 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class NewSquarePanel extends JPanel {
+public class NewSquarePanel extends SidePanel {
 
     private NewSquare squareChoice;
     private JLabel specialSquareFirstEntryLabel;
@@ -18,21 +17,30 @@ public class NewSquarePanel extends JPanel {
     private JTextField squareFirstField;
     private JTextField squareSecondField;
     private JButton createSnakeButton;
-    private FormListener formListener;
+    private GUIFrame gameGui;
 
+    private GameTextPanel textPanel;
+    private GameToolbar toolbar;
+
+    private SquareFormListener formListener;
+    private GridBagConstraints gridStructure;
 
     /////////////////BEGIN TEST CODE////////////////
     private JList newGame;
     /////////////////END TEST CODE//////////////////
 
-
-
-
-    public NewSquarePanel(final NewSquare newSquare) {
+    public NewSquarePanel(final GUIFrame gui, final NewSquare newSquare ) {
         this.squareChoice = newSquare;
-        Dimension dim = getPreferredSize();
-        dim.width = 250;
-        setPreferredSize(dim);
+        this.gameGui = gui;
+
+
+
+
+//        newSquarePanel = new SidePanel("Snake");
+
+
+
+
 
         if (newSquare == NewSquare.SNAKE) {
             specialSquareFirstEntryLabel = new JLabel("Snake Head: ");
@@ -62,7 +70,6 @@ public class NewSquarePanel extends JPanel {
 
         /////////////////END TEST CODE//////////////////
 
-
         createSnakeButton = new JButton("Create " + newSquare.toString().toLowerCase());
 //        rollDiceButton.setPreferredSize(new Dimension(300, 200));
 
@@ -71,26 +78,28 @@ public class NewSquarePanel extends JPanel {
 //            @Override
             public void actionPerformed(final ActionEvent submission) {
                 NewSquareFormEvents squareEntry = null;
-                if (squareFirstField.getText() != null) {
-                    if (squareSecondField.getText() != null) {
+                if (!squareFirstField.getText().equals("")) {
+                    if (!squareSecondField.getText().equals("")) {
                         try {
                             Integer squareStart = Integer.parseInt(squareFirstField.getText());
-                            Integer squareEnd = Integer.parseInt(squareSecondField.getText());
-                            squareEntry = new NewSquareFormEvents(this, squareStart, squareEnd);
+                            try {
+                                Integer squareEnd = Integer.parseInt(squareSecondField.getText());
+                                squareEntry = new NewSquareFormEvents(this, squareStart, squareEnd);
+                            } catch (NumberFormatException stringEntered) {
+                                squareEntry = new NewSquareFormEvents(this, squareStart);
+                            }
                         } catch (NumberFormatException stringEntered) {
                             System.out.println("ERROR - incorrect entry.");
-                            formListener.appendTextToPanel(
-                                    "---------------------------------------------------"
-                                    + "\nERROR - INCORRECT ENTRY MADE"
-                                    + "\n---------------------------------------------------");
+                            formListener.incorrectEntryMessage();
                         }
 
                     } else {
                         Integer squareStart = Integer.parseInt(squareFirstField.getText());
+                        System.out.println(squareStart);
                         squareEntry = new NewSquareFormEvents(this, squareStart);
                     }
                 } else {
-                    System.out.println("ERROR - no value entered.");
+                    formListener.incorrectEntryMessage();
                 }
 
 
@@ -101,17 +110,20 @@ public class NewSquarePanel extends JPanel {
                 /////////////////END TEST CODE//////////////////
 
                 if (formListener != null && squareEntry != null) {
-                    formListener.formSpecialSquareEntry(squareEntry);
+                    System.out.println("Test");
+                    formListener.formDatabaseEntry(squareEntry);
                 }
             }
         });
-
-
-        TitledBorder innerGameBarBorder = BorderFactory.createTitledBorder("New " + newSquare.toString().toLowerCase());
-        Border outerGameBarBorder = BorderFactory.createEmptyBorder(2, 10, 10, 10);
+        gameGui.add(this, BorderLayout.WEST);
+    }
+    @Override
+    public void createSidePanel() {
 
         //Code adapted from TitledBorder.CENTER : TitledBorder « javax.swing.border « Java by API
         //Available at: http://www.java2s.com/Code/JavaAPI/javax.swing.border/TitledBorderCENTER.htm
+        TitledBorder innerGameBarBorder = BorderFactory.createTitledBorder("New " + squareChoice.toString().toLowerCase());
+        Border outerGameBarBorder = BorderFactory.createEmptyBorder(2, 10, 10, 10);
         innerGameBarBorder.setTitleJustification(TitledBorder.CENTER);
 
         //Creates a border as a margin around inner game bar.
@@ -120,104 +132,96 @@ public class NewSquarePanel extends JPanel {
         //USED FOR FLEXIBILITY COMPARED TO OTHER LAYOUTS
         setLayout(new GridBagLayout());
 
-        GridBagConstraints gc = new GridBagConstraints();
+        gridStructure = new GridBagConstraints();
 
+        gridStructure.weightx = 1;
+        gridStructure.weighty = 0.1;
+        gridStructure.gridx = 0;
+        gridStructure.gridy = 0;
+        gridStructure.fill = GridBagConstraints.NONE;
 
-        /////////////////FIRST ROW////////////////
+        gridStructure.anchor = GridBagConstraints.LINE_END;
+        gridStructure.insets = new Insets(0, 0, 0, 5);
+        add(specialSquareFirstEntryLabel, gridStructure);
 
-        gc.weightx = 1;
-        gc.weighty = 0.1;
-        gc.gridx = 0;
-        gc.gridy = 0;
-        gc.fill = GridBagConstraints.NONE;
+        gridStructure.gridx = 1;
 
-        gc.anchor = GridBagConstraints.LINE_END;
-        gc.insets = new Insets(0, 0, 0, 5);
-        add(specialSquareFirstEntryLabel, gc);
+        gridStructure.anchor = GridBagConstraints.LINE_START;
+        gridStructure.insets = new Insets(0, 0, 0, 0);
+        add(squareFirstField, gridStructure);
 
-        gc.gridx = 1;
-
-        gc.anchor = GridBagConstraints.LINE_START;
-        gc.insets = new Insets(0, 0, 0, 0);
-        add(squareFirstField, gc);
-
-
-        /////////////////SECOND ROW////////////////
         if (specialSquareSecondEntryLabel != null) {
 
-            gc.weightx = 1;
-            gc.weighty = 0.1;
-            gc.gridy = 1;
-            gc.gridx = 0;
+            gridStructure.weightx = 1;
+            gridStructure.weighty = 0.1;
+            gridStructure.gridy = 1;
+            gridStructure.gridx = 0;
 
-            gc.anchor = GridBagConstraints.LINE_END;
-            gc.insets = new Insets(0, 0, 0, 5);
-            add(specialSquareSecondEntryLabel, gc);
+            gridStructure.anchor = GridBagConstraints.LINE_END;
+            gridStructure.insets = new Insets(0, 0, 0, 5);
+            add(specialSquareSecondEntryLabel, gridStructure);
 
-            gc.gridx = 1;
+            gridStructure.gridx = 1;
 
-            gc.anchor = GridBagConstraints.LINE_START;
-            gc.insets = new Insets(0, 0, 0, 0);
-            add(squareSecondField, gc);
+            gridStructure.anchor = GridBagConstraints.LINE_START;
+            gridStructure.insets = new Insets(0, 0, 0, 0);
+            add(squareSecondField, gridStructure);
         }
 
         /////////////////THIRD ROW////////////////
 
         /////////////////BEGIN TEST CODE////////////////
-        gc.weightx = 1;
-        gc.weighty = 0.2;
-        gc.gridy = 2;
+        gridStructure.weightx = 1;
+        gridStructure.weighty = 0.2;
+        gridStructure.gridy = 2;
 
-        gc.anchor = GridBagConstraints.FIRST_LINE_START;
-        gc.insets = new Insets(0, 0, 0, 5);
-        add(newGame, gc);
+        gridStructure.anchor = GridBagConstraints.FIRST_LINE_START;
+        gridStructure.insets = new Insets(0, 0, 0, 5);
+        add(newGame, gridStructure);
         /////////////////END TEST CODE//////////////////
 
         /////////////////FOURTH ROW////////////////
 
-        gc.weightx = 2;
-        gc.weighty = 2.0;
-        gc.gridy = 3;
+        gridStructure.weightx = 2;
+        gridStructure.weighty = 2.0;
+        gridStructure.gridy = 3;
 
-        gc.anchor = GridBagConstraints.FIRST_LINE_START;
-        gc.insets = new Insets(0, 0, 0, 0);
-        add(createSnakeButton, gc);
+        gridStructure.anchor = GridBagConstraints.FIRST_LINE_START;
+        gridStructure.insets = new Insets(0, 0, 0, 0);
+        add(createSnakeButton, gridStructure);
     }
 
-    public void setFormListener(final FormListener listener) {
+    @Override
+    public void setFormListener(final SquareFormListener listener) {
         this.formListener = listener;
     }
 
-    public Integer confirmValidSquareEntry(final NewSquare newSquare, final int... values) {
+
+    @Override
+    public Integer entryValidation(final NewSquare newSquare, final int... values) {
         Integer correctEntry = 0;
         System.out.println(values.length);
-
-        if (newSquare == NewSquare.SNAKE) {
-            if (values[0] > values[1]) {
-                formListener.appendTextToPanel(
-                        "\nNew Snake Head starts at position " + values[0]
-                        + "\n" + "New Snake Tail ends at position " + values[1]);
-                correctEntry = 1;
+        try {
+            if (newSquare == NewSquare.SNAKE) {
+                if (values[0] > values[1]) {
+                    correctEntry = 1;
+                }
+            } else if (newSquare == NewSquare.LADDER) {
+                if (values[0] < values[1]) {
+                    correctEntry = 2;
+                }
+            } else if (newSquare == NewSquare.BOOST) {
+                correctEntry = 3;
             }
-        } else if (newSquare == NewSquare.LADDER) {
-            System.out.println("test");
-            if (values[0] < values[1]) {
-                formListener.appendTextToPanel("\nNew Ladder Foot starts at position " + values[0]
-                        + "\n" + "New Ladder Top ends at position " + values[1]);
-                correctEntry = 2;
-            }
-        } else if (newSquare == NewSquare.BOOST && values.length == 1) {
-            System.out.println("Test2");
-            formListener.appendTextToPanel("\nBoost square added at location " + values[0]);
-            correctEntry = 3;
-
+        } catch (ArrayIndexOutOfBoundsException missingEnd) {
+            System.out.println("ERROR - missing entry for special square end. Ignoring addition.");
         }
         return correctEntry;
     }
 
-    public NewSquare getSquareChoice() {
+    @Override
+    public final NewSquare getSquareChoice() {
         return squareChoice;
     }
-}
-
+    }
 

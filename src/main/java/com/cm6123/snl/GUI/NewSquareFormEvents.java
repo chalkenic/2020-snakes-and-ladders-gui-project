@@ -16,7 +16,7 @@ public class NewSquareFormEvents extends EventObject {
     public NewSquareFormEvents(final Object source, final Integer newBoostSquare) {
         super(source);
 
-        this.boostSquare = newBoostSquare;
+        this.specialSquareStart = newBoostSquare;
     }
 
     public NewSquareFormEvents(final Object source, final Integer newSpecialSquareStart, final Integer newSpecialSquareEnd) {

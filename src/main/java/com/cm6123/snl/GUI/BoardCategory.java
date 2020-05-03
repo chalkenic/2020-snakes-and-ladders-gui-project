@@ -1,4 +1,4 @@
-package com.cm6123.snl.GUI.Panels;
+package com.cm6123.snl.GUI;
 
 public class BoardCategory {
         private Integer id;

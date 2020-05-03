@@ -10,7 +10,7 @@ public class RunSnakesAndLadders {
      * @param args
      */
     public static void main(final String[] args) {
-        new GUIFrame("newSpecialSquare");
+        GUIFrame snakesAndLaddersGui = new GUIFrame();
     }
 
 //    @Override
