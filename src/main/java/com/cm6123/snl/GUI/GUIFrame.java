@@ -17,13 +17,19 @@ public class GUIFrame extends JFrame {
     //    private JTextArea textArea;
     private GameTextPanel textPanel;
     private GameToolbar toolbar;
+    private JPanel panelContainer;
     private JPanel currentPanel;
-    private LayoutManager layout;
+//    private LayoutManager layout;
+    private CardLayout cardLayout;
 
     public GUIFrame() {
         super("Snakes & Ladders");
 
+
+
+
 //        setLayout(new BorderLayout());
+        panelContainer = new JPanel();
         toolbar = new GameToolbar();
         textPanel = new GameTextPanel();
 //        newSquarePanel = new SidePanel("Snake");
@@ -52,23 +58,25 @@ public class GUIFrame extends JFrame {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Snakes & Ladders Game");
+//        cardLayout = new CardLayout();
+//        panelContainer.setLayout(cardLayout);
+//        add(panelContainer);
+
         selectWindow("menu");
         pack();
         setVisible(true);
         setSize(600, 500);
+
+
 
     }
 
     public void selectWindow(final String windowChoice) {
 
         if (currentPanel != null) {
-//            if (currentPanel.getClass().equals(MainMenuPanel.class)) {
-                getContentPane().remove(currentPanel);
-//             } else {
-//                layout = currentPanel.getLayout();
-//                currentPanel.remove(BorderLayout.WEST);
-//            }
+            getContentPane().remove(currentPanel);
         }
+
 
         add(textPanel, BorderLayout.CENTER);
         add(toolbar, BorderLayout.NORTH);
@@ -78,21 +86,36 @@ public class GUIFrame extends JFrame {
 
                 getContentPane().removeAll();
                 MainMenuPanel mainMenuPanel = new MainMenuPanel(this);
+//                mainMenuPanel.setLayout(sidePanel);
                 currentPanel = mainMenuPanel;
 
-
                 mainMenuPanel.createMenuPanel();
-
-
-
+//                panelContainer.add(mainMenuPanel.createMenuPanel(), "1");
+//                cardLayout.show(panelContainer, "1");
                 break;
 
-            case "newspecialsquare":
+            case "creationmenu":
 
-                SidePanel newSquarePanel = new NewSquarePanel(this, NewSquare.LADDER);
+
+                CreationMenuPanel creationMenuPanel = new CreationMenuPanel(this, cardLayout);
+                currentPanel = creationMenuPanel;
+//                panelContainer.add(creationMenuPanel.createCreationPanel(), "2");
+
+                swapSidePanel(this, currentPanel, creationMenuPanel.createCreationPanel());
+//                cardLayout.show(panelContainer, "2");
+                break;
+
+
+            case "newspecialsquare":
+                System.out.println("Test3");
+
+                NewSquarePanel newSquarePanel = new NewSquarePanel(this, NewSquare.LADDER, cardLayout);
                 currentPanel = newSquarePanel;
 //                layout = (BorderLayout) newSquarePanel.getLayout();
-                newSquarePanel.createSidePanel();
+
+//                panelContainer.add(newSquarePanel, "3");
+                swapSidePanel(this, currentPanel, newSquarePanel.createSquarePanel());
+//                cardLayout.show(panelContainer, "3");
 
 
 
@@ -167,13 +190,17 @@ public class GUIFrame extends JFrame {
         }
     }
 
-    public void swapPanel(final JFrame currentFrame,
+    public void swapSidePanel(final JFrame currentFrame,
                           final JPanel oldPanel,
                           final JPanel newPanel) {
 
-        currentFrame.getContentPane().remove(oldPanel);
-        currentFrame.getContentPane().add(newPanel, BorderLayout.WEST);
-        currentFrame.validate();
+        System.out.println(currentFrame);
+        System.out.println(oldPanel);
+        System.out.println(newPanel);
+        currentFrame.remove(oldPanel);
+        currentFrame.add(newPanel, BorderLayout.WEST);
+        System.out.println("Test2");
+        currentFrame.revalidate();
 //    }
 
 //    public JPanel getCurrentPanel() {

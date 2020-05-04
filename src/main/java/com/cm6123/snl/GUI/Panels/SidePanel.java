@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 
 
-public class SidePanel extends JPanel {
+public abstract class SidePanel extends JPanel {
 
 //    private SquareFormListener formListener;
 
@@ -18,17 +18,16 @@ public class SidePanel extends JPanel {
         setPreferredSize(dim);
     }
 
-    public void setFormListener(final SquareFormListener listener) { }
+//    public abstract void setFormListener(SquareFormListener listener);
 
-    public Integer entryValidation(final NewSquare value, final int... othervalues ) {
-        return null;
-    }
+//    public abstract Integer entryValidation(NewSquare value, int... othervalues);
 
-    public NewSquare getSquareChoice() { return null; }
+//    public abstract NewSquare getSquareChoice();
 
-    public void createSidePanel() { }
+//    public abstract void createSidePanel();
 
-    public void createMenuPanel() { }
+
+//    public void createMenuPanel() { }
 }
 
 

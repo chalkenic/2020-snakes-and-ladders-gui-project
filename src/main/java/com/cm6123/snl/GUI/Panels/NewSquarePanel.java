@@ -29,18 +29,10 @@ public class NewSquarePanel extends SidePanel {
     private JList newGame;
     /////////////////END TEST CODE//////////////////
 
-    public NewSquarePanel(final GUIFrame gui, final NewSquare newSquare ) {
+    public NewSquarePanel(final GUIFrame gui, final NewSquare newSquare, final CardLayout layout) {
         this.squareChoice = newSquare;
         this.gameGui = gui;
-
-
-
-
-//        newSquarePanel = new SidePanel("Snake");
-
-
-
-
+//        this.setLayout(layout);
 
         if (newSquare == NewSquare.SNAKE) {
             specialSquareFirstEntryLabel = new JLabel("Snake Head: ");
@@ -95,7 +87,6 @@ public class NewSquarePanel extends SidePanel {
 
                     } else {
                         Integer squareStart = Integer.parseInt(squareFirstField.getText());
-                        System.out.println(squareStart);
                         squareEntry = new NewSquareFormEvents(this, squareStart);
                     }
                 } else {
@@ -115,10 +106,11 @@ public class NewSquarePanel extends SidePanel {
                 }
             }
         });
-        gameGui.add(this, BorderLayout.WEST);
+//        gameGui.add(this, BorderLayout.WEST);
     }
-    @Override
-    public void createSidePanel() {
+
+//    @Override
+    public JPanel createSquarePanel() {
 
         //Code adapted from TitledBorder.CENTER : TitledBorder « javax.swing.border « Java by API
         //Available at: http://www.java2s.com/Code/JavaAPI/javax.swing.border/TitledBorderCENTER.htm
@@ -189,15 +181,17 @@ public class NewSquarePanel extends SidePanel {
         gridStructure.anchor = GridBagConstraints.FIRST_LINE_START;
         gridStructure.insets = new Insets(0, 0, 0, 0);
         add(createSnakeButton, gridStructure);
+
+        return this;
     }
 
-    @Override
+//    @Override
     public void setFormListener(final SquareFormListener listener) {
         this.formListener = listener;
     }
 
 
-    @Override
+//    @Override
     public Integer entryValidation(final NewSquare newSquare, final int... values) {
         Integer correctEntry = 0;
         System.out.println(values.length);
@@ -219,7 +213,7 @@ public class NewSquarePanel extends SidePanel {
         return correctEntry;
     }
 
-    @Override
+//    @Override
     public final NewSquare getSquareChoice() {
         return squareChoice;
     }

@@ -46,14 +46,14 @@ public class MainMenuPanel extends JPanel {
         });
         loadGameButton.addActionListener(new ActionListener() {
             public void actionPerformed(final ActionEvent e) {
-                gameGui.selectWindow("loadgame");
+                gameGui.selectWindow("newspecialsquare");
 
             }
         });
 
         creationButton.addActionListener(new ActionListener() {
             public void actionPerformed(final ActionEvent e) {
-                gameGui.selectWindow("newspecialsquare");
+                gameGui.selectWindow("creationmenu");
 
             }
         });
@@ -61,7 +61,7 @@ public class MainMenuPanel extends JPanel {
     }
 
 //    @Override
-    public void createMenuPanel() {
+    public JPanel createMenuPanel() {
 
         //Code adapted from TitledBorder.CENTER : TitledBorder « javax.swing.border « Java by API
         //Available at: http://www.java2s.com/Code/JavaAPI/javax.swing.border/TitledBorderCENTER.htm
@@ -147,6 +147,8 @@ public class MainMenuPanel extends JPanel {
 //        gridStructure.anchor = GridBagConstraints.FIRST_LINE_START;
         gridStructure.insets = new Insets(0, 0, 0, 0);
         add(creationButton, gridStructure);
+
+        return this;
     }
 }
 
