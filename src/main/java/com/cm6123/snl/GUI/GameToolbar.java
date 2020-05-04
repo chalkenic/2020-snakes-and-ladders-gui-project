@@ -7,17 +7,18 @@ import java.awt.event.ActionListener;
 
 public class GameToolbar extends JPanel implements ActionListener {
 
-
+    private GUIFrame gameGui;
     private JButton testButton1;
     private JButton testButton2;
 
     private StringListener textListener;
 
-    public GameToolbar() {
+    public GameToolbar(final GUIFrame gui) {
+        this.gameGui = gui;
 
         setBorder(BorderFactory.createEtchedBorder());
 
-        testButton1 = new JButton("button 1");
+        testButton1 = new JButton("Main Menu");
         testButton2 = new JButton("button 2");
 
         testButton1.addActionListener(this);
@@ -42,7 +43,7 @@ public class GameToolbar extends JPanel implements ActionListener {
 
         if (clicked == testButton1) {
             if (textListener != null) {
-                textListener.textEmitted("button 1 has been pressed.\n");
+                gameGui.selectWindow("menu");
             }
 
 //            textPanel.appendText("button 1 pressed!\n");

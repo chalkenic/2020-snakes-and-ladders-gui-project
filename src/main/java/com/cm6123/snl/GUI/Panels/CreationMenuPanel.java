@@ -24,46 +24,50 @@ public class CreationMenuPanel extends SidePanel {
     private SquareFormListener formListener;
     private GridBagConstraints gridStructure;
     private GUIFrame gameGui;
+    private NewAddition additionChoice;
 
-    public CreationMenuPanel(final GUIFrame gui, final CardLayout layout) {
+    public CreationMenuPanel(final GUIFrame gui) {
         this.gameGui = gui;
 //        this.setLayout(layout);
 
 //        titleLabel = new JLabel("Creation tool");
 //        titleLabel.setFont(new Font("Arial Bold", Font.PLAIN, 16));
 
-        createNewSnakeButton = new JButton("Create Snake");
+        createNewSnakeButton = new JButton("Create New Snake");
         //Code adapted from answer of user Kris: How can I set size of a button?
         //available at: https://stackoverflow.com/questions/2536873/how-can-i-set-size-of-a-button
         createNewSnakeButton.setPreferredSize(new Dimension(200, 60));
 
-        createNewLadderButton = new JButton("Create Ladder");
+        createNewLadderButton = new JButton("Create New Ladder");
         createNewLadderButton.setPreferredSize(new Dimension(200, 60));
 
-        createNewBoostButton = new JButton("Create Boost");
+        createNewBoostButton = new JButton("Create New Boost");
         createNewBoostButton.setPreferredSize(new Dimension(200, 60));
 
-        createNewPlayerButton = new JButton("Create Player");
+        createNewPlayerButton = new JButton("Create New Player");
         createNewPlayerButton.setPreferredSize(new Dimension(200, 60));
 
-        createNewDieButton = new JButton("Create Dice");
+        createNewDieButton = new JButton("Create New Dice");
         createNewDieButton.setPreferredSize(new Dimension(200, 60));
 
         createNewSnakeButton.addActionListener(new ActionListener() {
             public void actionPerformed(final ActionEvent e) {
-//                gameGui.selectWindow("newgame");
+                additionChoice = NewAddition.SNAKE;
+                gameGui.selectWindow("newaddition");
 
             }
         });
         createNewLadderButton.addActionListener(new ActionListener() {
             public void actionPerformed(final ActionEvent e) {
-//                gameGui.selectWindow("loadgame");
+                additionChoice = NewAddition.LADDER;
+                gameGui.selectWindow("newaddition");
 
             }
         });
 
         createNewBoostButton.addActionListener(new ActionListener() {
             public void actionPerformed(final ActionEvent e) {
+                additionChoice = NewAddition.BOOST;
                 gameGui.selectWindow("newaddition");
 
             }
@@ -71,14 +75,16 @@ public class CreationMenuPanel extends SidePanel {
 
         createNewPlayerButton.addActionListener(new ActionListener() {
             public void actionPerformed(final ActionEvent e) {
-//                gameGui.selectWindow("newspecialsquare");
+                additionChoice = NewAddition.PLAYER;
+                gameGui.selectWindow("newaddition");
 
             }
         });
 
         createNewDieButton.addActionListener(new ActionListener() {
             public void actionPerformed(final ActionEvent e) {
-//                gameGui.selectWindow("newspecialsquare");
+                additionChoice = NewAddition.DIE;
+                gameGui.selectWindow("newaddition");
 
             }
         });
@@ -160,6 +166,10 @@ public class CreationMenuPanel extends SidePanel {
             add(createNewDieButton, gridStructure);
 
             return this;
+        }
+
+        public NewAddition getAdditionChoice() {
+            return additionChoice;
         }
 }
 

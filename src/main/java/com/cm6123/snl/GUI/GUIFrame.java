@@ -20,7 +20,8 @@ public class GUIFrame extends JFrame {
     private JPanel panelContainer;
     private JPanel currentPanel;
 //    private LayoutManager layout;
-    private CardLayout cardLayout;
+    private CreationMenuPanel creationMenuPanel;
+    private MainMenuPanel mainMenuPanel;
 
     public GUIFrame() {
         super("Snakes & Ladders");
@@ -30,16 +31,14 @@ public class GUIFrame extends JFrame {
 
 //        setLayout(new BorderLayout());
         panelContainer = new JPanel();
-        toolbar = new GameToolbar();
+        toolbar = new GameToolbar(this);
         textPanel = new GameTextPanel();
+
+
 //        newSquarePanel = new SidePanel("Snake");
 
 //        toolbar.setTextPanel(textPanel);
-        toolbar.setStringListener(new StringListener() {
-            public void textEmitted(final String text) {
-                textPanel.appendText(text);
-            }
-        });
+
 //        textArea = new JTextArea();
 //
 //        frame = new JFrame();
@@ -67,29 +66,48 @@ public class GUIFrame extends JFrame {
         setVisible(true);
         setSize(600, 500);
 
-
+        toolbar.setStringListener(new StringListener() {
+            public void textEmitted(final String text) {
+                textPanel.appendText(text);
+            }
+        });
 
     }
 
     public void selectWindow(final String windowChoice) {
+        System.out.println("Current window choice: " + windowChoice);
+        System.out.println(currentPanel);
+//
+//        if (currentPanel != null) {
+//            getContentPane().remove(currentPanel);
+//        }
 
-        if (currentPanel != null) {
-            getContentPane().remove(currentPanel);
+        if (windowChoice != "menu") {
+            add(textPanel, BorderLayout.CENTER);
+            add(toolbar, BorderLayout.NORTH);
         }
 
 
-        add(textPanel, BorderLayout.CENTER);
-        add(toolbar, BorderLayout.NORTH);
 
         switch (windowChoice.toLowerCase()) {
             case "menu":
 
                 getContentPane().removeAll();
-                MainMenuPanel mainMenuPanel = new MainMenuPanel(this);
-//                mainMenuPanel.setLayout(sidePanel);
-                currentPanel = mainMenuPanel;
+                revalidate();
+                mainMenuPanel = new MainMenuPanel(this);
+//               mainMenuPanel.setLayout(sidePanel);
 
-                mainMenuPanel.createMenuPanel();
+                if (currentPanel == null) {
+                    currentPanel = mainMenuPanel;
+                    mainMenuPanel.createMenuPanel();
+                } else {
+                    swapSidePanel(this,
+                            currentPanel,
+                            mainMenuPanel.createMenuPanel(),
+                            BorderLayout.CENTER);
+                    currentPanel = mainMenuPanel;
+                }
+
 //                panelContainer.add(mainMenuPanel.createMenuPanel(), "1");
 //                cardLayout.show(panelContainer, "1");
                 break;
@@ -97,28 +115,40 @@ public class GUIFrame extends JFrame {
             case "creationmenu":
 
 
-                CreationMenuPanel creationMenuPanel = new CreationMenuPanel(this, cardLayout);
-                currentPanel = creationMenuPanel;
-//                panelContainer.add(creationMenuPanel.createCreationPanel(), "2");
+                getContentPane().remove(currentPanel);
+                revalidate();
+                creationMenuPanel = new CreationMenuPanel(this);
 
-                swapSidePanel(this, currentPanel, creationMenuPanel.createCreationPanel());
+//                panelContainer.add(creationMenuPanel.createCreationPanel(), "2");
+                swapSidePanel(this,
+                        currentPanel,
+                        creationMenuPanel.createCreationPanel(),
+                        BorderLayout.WEST);
+                currentPanel = creationMenuPanel;
 //                cardLayout.show(panelContainer, "2");
                 break;
 
 
             case "newaddition":
+                getContentPane().remove(currentPanel);
+                revalidate();
+                NewAddition newAdditionChoice = creationMenuPanel.getAdditionChoice();
+                NewAdditionPanel additionPanel = new NewAdditionPanel(this, newAdditionChoice);
 
-                NewAdditionPanel newSquarePanel = new NewAdditionPanel(this, NewAddition.LADDER, cardLayout);
-                currentPanel = newSquarePanel;
-//                layout = (BorderLayout) newSquarePanel.getLayout();
+//                layout = (BorderLayout) additionPanel.getLayout();
 
-//                panelContainer.add(newSquarePanel, "3");
-                swapSidePanel(this, currentPanel, newSquarePanel.createAdditionPanel());
+//                panelContainer.add(additionPanel, "3");
+                swapSidePanel(this,
+                        currentPanel,
+                        additionPanel.createAdditionPanel(),
+                        BorderLayout.WEST);
+
+                currentPanel = additionPanel;
 //                cardLayout.show(panelContainer, "3");
 
 
 
-                newSquarePanel.setFormListener(new SquareFormListener() {
+                additionPanel.setFormListener(new SquareFormListener() {
 
 
                     public void appendTextToPanel(final String text) {
@@ -131,57 +161,58 @@ public class GUIFrame extends JFrame {
                                 + "\n|------------------------------------------------------|");
                     }
 
-                    public void formDatabaseEntry(final NewSquareFormEvents data) {
-                        Integer squareStart;
-                        Integer squareEnd;
-                        Integer newSquareType;
-                        Boolean secondSquareMissing = true;
+                    public void formDatabaseEntry(final NewAdditionFormEvents data) {
 
-                        squareStart = data.getSpecialSquareStart();
-                        squareEnd = data.getSpecialSquareEnd();
+                        if (data.getPlayerNameEntry() == null) {
+                            Integer firstFieldEntry;
+                            Integer secondFieldEntry;
+                            Integer newSquareType;
+                            Boolean secondSquareMissing = true;
 
-
-                        if (squareEnd == null) {
-                            System.out.println("Test2");
-                            newSquareType = newSquarePanel.entryValidation(
-                                    newSquarePanel.getAdditionChoice(),
-                                    squareStart);
-                        } else {
-                            System.out.println("Do i get here?");
-                            newSquareType = newSquarePanel.entryValidation(
-                                    newSquarePanel.getAdditionChoice(),
-                                    squareStart, squareEnd);
-                        }
+                            firstFieldEntry = data.getFirstFieldEntry();
+                            secondFieldEntry = data.getSecondFieldEntry();
 
 
-//                        if (squareStart != null) {
-                        if (newSquareType == 1) {
-                            appendTextToPanel("\nNew Snake Head starts at position " + squareStart
-                                    + "\n" + "New Snake Tail ends at position " + squareEnd);
+                            if (secondFieldEntry == null) {
+                                newSquareType = additionPanel.entryValidation(
+                                        additionPanel.getAdditionChoice(),
+                                        firstFieldEntry);
+                            } else {
+                                newSquareType = additionPanel.entryValidation(
+                                        additionPanel.getAdditionChoice(),
+                                        firstFieldEntry, secondFieldEntry);
+                            }
 
-                            System.out.println("JDBC LINK TO GO HERE");
-                        } else if (newSquareType == 2) {
-                            appendTextToPanel("\nNew Ladder Foot starts at position " + squareStart
-                                    + "\n" + "New Ladder Top ends at position " + squareEnd);
 
-                            System.out.println("JDBC LINK TO GO HERE");
-                        } else if (newSquareType == 3) {
-                            appendTextToPanel("\nBoost square added at location " + squareStart);
-                            System.out.println("JDBC LINK TO GO HERE");
+//                        if (firstFieldEntry != null) {
+                            if (newSquareType == 1) {
+                                appendTextToPanel("New Snake Head starts at position " + firstFieldEntry
+                                        + "\n" + "New Snake Tail ends at position " + secondFieldEntry + "\n");
 
-                        } else {
-                            System.out.println("is this the error?");
-                            incorrectEntryMessage();
-                        }
+                                System.out.println("JDBC LINK TO GO HERE");
+                            } else if (newSquareType == 2) {
+                                appendTextToPanel("New Ladder Foot starts at position " + firstFieldEntry
+                                        + "\n" + "New Ladder Top ends at position " + secondFieldEntry + "\n");
+
+                                System.out.println("JDBC LINK TO GO HERE");
+                            } else if (newSquareType == 3) {
+                                appendTextToPanel("Boost square added at location " + firstFieldEntry + "\n");
+                                System.out.println("JDBC LINK TO GO HERE");
+
+                            } else {
+                                System.out.println("is this the error?");
+                                incorrectEntryMessage();
+                            }
 //                            else {
 ////                                appendTextToPanel("\nERROR - values in incorrect positions or identical.");
 //                            }
 //                        } else {
 //                            appendTextToPanel("\nERROR - no value(s) entered.");
 //                        }
+                        }
                     }
 
-//                public void formBoostSquareEntry(final NewSquareFormEvents data) {
+//                public void formBoostSquareEntry(final NewAdditionFormEvents data) {
 //                    Integer boostSquareLocation = Integer.parseInt(data.getBoostSquare());
 //                }
                 });
@@ -191,10 +222,11 @@ public class GUIFrame extends JFrame {
 
     public void swapSidePanel(final JFrame currentFrame,
                           final JPanel oldPanel,
-                          final JPanel newPanel) {
+                          final JPanel newPanel,
+                              final String borderLayout) {
 
         currentFrame.remove(oldPanel);
-        currentFrame.add(newPanel, BorderLayout.WEST);
+        currentFrame.add(newPanel, borderLayout);
         currentFrame.revalidate();
 //    }
 

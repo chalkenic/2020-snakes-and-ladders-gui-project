@@ -29,10 +29,11 @@ public class NewAdditionPanel extends SidePanel {
     private JList newGame;
     /////////////////END TEST CODE//////////////////
 
-    public NewAdditionPanel(final GUIFrame gui, final NewAddition newAddition, final CardLayout layout) {
+    public NewAdditionPanel(final GUIFrame gui, final NewAddition newAddition) {
         this.additionChoice = newAddition;
         this.gameGui = gui;
 //        this.setLayout(layout);
+//        this.setBackground(Color.WHITE);
 
         if (newAddition == NewAddition.SNAKE) {
             specialSquareFirstEntryLabel = new JLabel("Snake Head: ");
@@ -74,45 +75,60 @@ public class NewAdditionPanel extends SidePanel {
                 //
 //            @Override
                 public void actionPerformed(final ActionEvent submission) {
-                    NewSquareFormEvents squareEntry = null;
-                    if (! squareFirstField.getText().equals("")) {
-                        if (! squareSecondField.getText().equals("")) {
-                            try {
-                                Integer squareStart = Integer.parseInt(squareFirstField.getText());
-                                try {
-                                    Integer squareEnd = Integer.parseInt(squareSecondField.getText());
-                                    squareEntry = new NewSquareFormEvents(this, squareStart, squareEnd);
-                                } catch (NumberFormatException stringEntered) {
-                                    squareEntry = new NewSquareFormEvents(this, squareStart);
-                                }
-                            } catch (NumberFormatException stringEntered) {
-                                System.out.println("ERROR - incorrect entry.");
-                                formListener.incorrectEntryMessage();
-                            }
 
+
+                    NewAdditionFormEvents newEntry = null;
+                    if (additionChoice != NewAddition.PLAYER) {
+                        if (!squareFirstField.getText().equals("")) {
+                            System.out.println("test1");
+                            if (! squareSecondField.getText().equals("")) {
+                                try {
+                                    Integer squareStart = Integer.parseInt(squareFirstField.getText());
+                                    System.out.println("test2");
+                                    try {
+                                        Integer squareEnd = Integer.parseInt(squareSecondField.getText());
+                                        System.out.println("test3");
+                                        newEntry = new NewAdditionFormEvents(this, squareStart, squareEnd);
+                                    } catch (NumberFormatException stringEntered) {
+                                        newEntry = new NewAdditionFormEvents(this, squareStart);
+                                    }
+                                } catch (NumberFormatException stringEntered) {
+                                    System.out.println("ERROR - incorrect entry.");
+                                    formListener.incorrectEntryMessage();
+                                }
+
+                            } else {
+                                Integer squareStart = Integer.parseInt(squareFirstField.getText());
+                                newEntry = new NewAdditionFormEvents(this, squareStart);
+                            }
                         } else {
-                            Integer squareStart = Integer.parseInt(squareFirstField.getText());
-                            squareEntry = new NewSquareFormEvents(this, squareStart);
+                            formListener.incorrectEntryMessage();
                         }
                     } else {
-                        formListener.incorrectEntryMessage();
+                        if (!squareFirstField.getText().equals("")) {
+                            String newPlayerName = squareFirstField.getText();
+                            newEntry = new NewAdditionFormEvents(this, newPlayerName);
+                        }
+
+
+
+
                     }
-
-
                     /////////////////BEGIN TEST CODE////////////////
                     BoardCategory chosenData = (BoardCategory) newGame.getSelectedValue();
 
 
                     /////////////////END TEST CODE//////////////////
 
-                    if (formListener != null && squareEntry != null) {
-                        System.out.println("Test");
-                        formListener.formDatabaseEntry(squareEntry);
+                    if (formListener != null && newEntry != null) {
+                        formListener.formDatabaseEntry(newEntry);
                     }
                 }
             });
+
 //        gameGui.add(this, BorderLayout.WEST);
         }
+
 
 
 //    @Override
@@ -200,7 +216,6 @@ public class NewAdditionPanel extends SidePanel {
 //    @Override
     public Integer entryValidation(final NewAddition newSquare, final int... values) {
         Integer correctEntry = 0;
-        System.out.println(values.length);
         try {
             if (newSquare == NewAddition.SNAKE) {
                 if (values[0] > values[1]) {
