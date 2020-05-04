@@ -78,7 +78,7 @@ public class MainMenuPanel extends JPanel {
         gridStructure = new GridBagConstraints();
 
         gridStructure.weightx = 1;
-        gridStructure.weighty = 0.5;
+        gridStructure.weighty = 1;
         gridStructure.gridx = 0;
         gridStructure.gridy = 1;
 //        gridStructure.fill = GridBagConstraints.NONE;
@@ -86,8 +86,6 @@ public class MainMenuPanel extends JPanel {
 //        gridStructure.anchor = GridBagConstraints.LINE_END;
         gridStructure.insets = new Insets(0, 0, 0, 5);
         add(welcomeLabel, gridStructure);
-
-        gridStructure = new GridBagConstraints();
 
         gridStructure.weightx = 1;
         gridStructure.weighty = 1;
