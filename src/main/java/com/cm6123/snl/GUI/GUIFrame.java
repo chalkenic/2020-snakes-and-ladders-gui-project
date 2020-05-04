@@ -16,12 +16,14 @@ public class GUIFrame extends JFrame {
     private JButton button;
     //    private JTextArea textArea;
     private GameTextPanel textPanel;
-    private GameToolbar toolbar;
+    private GameToolbarPanel toolbar;
     private JPanel panelContainer;
     private JPanel currentPanel;
 //    private LayoutManager layout;
     private CreationMenuPanel creationMenuPanel;
     private MainMenuPanel mainMenuPanel;
+    private LoadGamePanel loadGamePanel;
+    private NewGamePanel newGamePanel;
 
     public GUIFrame() {
         super("Snakes & Ladders");
@@ -31,7 +33,7 @@ public class GUIFrame extends JFrame {
 
 //        setLayout(new BorderLayout());
         panelContainer = new JPanel();
-        toolbar = new GameToolbar(this);
+        toolbar = new GameToolbarPanel(this);
         textPanel = new GameTextPanel();
 
 
@@ -81,19 +83,24 @@ public class GUIFrame extends JFrame {
 //        if (currentPanel != null) {
 //            getContentPane().remove(currentPanel);
 //        }
+//        if (windowChoice != "menu" && windowChoice != "loadgame") {
 
         if (windowChoice != "menu") {
-            add(textPanel, BorderLayout.CENTER);
             add(toolbar, BorderLayout.NORTH);
+            if (windowChoice != "loadgame" && windowChoice != "newgame") {
+                add(textPanel, BorderLayout.CENTER);
+                if (windowChoice != "creationmenu") {
+                    toolbar.showCreationButton();
+                }
+            }
+
         }
-
-
-
         switch (windowChoice.toLowerCase()) {
             case "menu":
 
-                getContentPane().removeAll();
-                revalidate();
+                getContentPane().remove(textPanel);
+//                getContentPane().remove(toolbar);
+//                revalidate();
                 mainMenuPanel = new MainMenuPanel(this);
 //               mainMenuPanel.setLayout(sidePanel);
 
@@ -101,7 +108,7 @@ public class GUIFrame extends JFrame {
                     currentPanel = mainMenuPanel;
                     mainMenuPanel.createMenuPanel();
                 } else {
-                    swapSidePanel(this,
+                    swapPanel(this,
                             currentPanel,
                             mainMenuPanel.createMenuPanel(),
                             BorderLayout.CENTER);
@@ -112,15 +119,49 @@ public class GUIFrame extends JFrame {
 //                cardLayout.show(panelContainer, "1");
                 break;
 
-            case "creationmenu":
+            case "newgame":
 
+                getContentPane().remove(currentPanel);
+                revalidate();
+                newGamePanel = new NewGamePanel(this);
+                System.out.println("Removing panel " + currentPanel);
+
+//                panelContainer.add(creationMenuPanel.createCreationPanel(), "2");
+                swapPanel(this,
+                        currentPanel,
+                        newGamePanel.createNewGamePanel(),
+                        BorderLayout.CENTER);
+                currentPanel = newGamePanel;
+//                cardLayout.show(panelContainer, "2");
+
+                break;
+
+
+            case "loadgame":
+
+                getContentPane().remove(currentPanel);
+                revalidate();
+                loadGamePanel = new LoadGamePanel(this);
+                System.out.println("Removing panel " + currentPanel);
+
+//                panelContainer.add(creationMenuPanel.createCreationPanel(), "2");
+                swapPanel(this,
+                        currentPanel,
+                        loadGamePanel.createloadGamePanel(),
+                        BorderLayout.CENTER);
+                currentPanel = loadGamePanel;
+//                cardLayout.show(panelContainer, "2");
+
+                break;
+
+            case "creationmenu":
 
                 getContentPane().remove(currentPanel);
                 revalidate();
                 creationMenuPanel = new CreationMenuPanel(this);
 
 //                panelContainer.add(creationMenuPanel.createCreationPanel(), "2");
-                swapSidePanel(this,
+                swapPanel(this,
                         currentPanel,
                         creationMenuPanel.createCreationPanel(),
                         BorderLayout.WEST);
@@ -138,7 +179,7 @@ public class GUIFrame extends JFrame {
 //                layout = (BorderLayout) additionPanel.getLayout();
 
 //                panelContainer.add(additionPanel, "3");
-                swapSidePanel(this,
+                swapPanel(this,
                         currentPanel,
                         additionPanel.createAdditionPanel(),
                         BorderLayout.WEST);
@@ -166,37 +207,42 @@ public class GUIFrame extends JFrame {
                         if (data.getPlayerNameEntry() == null) {
                             Integer firstFieldEntry;
                             Integer secondFieldEntry;
-                            Integer newSquareType;
+                            Boolean newSquareType;
                             Boolean secondSquareMissing = true;
 
                             firstFieldEntry = data.getFirstFieldEntry();
                             secondFieldEntry = data.getSecondFieldEntry();
 
-
                             if (secondFieldEntry == null) {
-                                newSquareType = additionPanel.entryValidation(
-                                        additionPanel.getAdditionChoice(),
+                                newSquareType = additionPanel.entryValidation(additionPanel.getAdditionChoice(),
                                         firstFieldEntry);
                             } else {
-                                newSquareType = additionPanel.entryValidation(
-                                        additionPanel.getAdditionChoice(),
+                                newSquareType = additionPanel.entryValidation(additionPanel.getAdditionChoice(),
                                         firstFieldEntry, secondFieldEntry);
                             }
 
-
-//                        if (firstFieldEntry != null) {
-                            if (newSquareType == 1) {
+                            if (newSquareType && data.getAdditionChoice() == NewAddition.SNAKE) {
                                 appendTextToPanel("New Snake Head starts at position " + firstFieldEntry
                                         + "\n" + "New Snake Tail ends at position " + secondFieldEntry + "\n");
 
                                 System.out.println("JDBC LINK TO GO HERE");
-                            } else if (newSquareType == 2) {
+                            } else if (newSquareType && data.getAdditionChoice() == NewAddition.LADDER) {
                                 appendTextToPanel("New Ladder Foot starts at position " + firstFieldEntry
                                         + "\n" + "New Ladder Top ends at position " + secondFieldEntry + "\n");
 
                                 System.out.println("JDBC LINK TO GO HERE");
-                            } else if (newSquareType == 3) {
+                            } else if (newSquareType && data.getAdditionChoice() == NewAddition.BOOST) {
                                 appendTextToPanel("Boost square added at location " + firstFieldEntry + "\n");
+                                System.out.println("JDBC LINK TO GO HERE");
+
+                            } else if (newSquareType && data.getAdditionChoice() == NewAddition.PLAYER) {
+                                appendTextToPanel("New player created: " + firstFieldEntry);
+                                System.out.println("JDBC LINK TO GO HERE");
+
+                            } else if (newSquareType && data.getAdditionChoice() == NewAddition.DIE) {
+                                appendTextToPanel("New Dice choice created.\n "
+                                + "Dice count: " + firstFieldEntry
+                                + "\nDice faces: " + secondFieldEntry + "\n");
                                 System.out.println("JDBC LINK TO GO HERE");
 
                             } else {
@@ -220,10 +266,10 @@ public class GUIFrame extends JFrame {
         }
     }
 
-    public void swapSidePanel(final JFrame currentFrame,
+    public void swapPanel(final JFrame currentFrame,
                           final JPanel oldPanel,
                           final JPanel newPanel,
-                              final String borderLayout) {
+                          final String borderLayout) {
 
         currentFrame.remove(oldPanel);
         currentFrame.add(newPanel, borderLayout);

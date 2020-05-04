@@ -9,27 +9,32 @@ public class NewAdditionFormEvents extends EventObject {
 //    private Integer boostSquare;
     private String playerNameEntry;
     private int boardCategory;
+    private NewAddition additionChoice;
 
     public NewAdditionFormEvents(final Object source) {
         super(source);
     }
 
-    public NewAdditionFormEvents(final Object source, final Integer newBoostSquare) {
+    public NewAdditionFormEvents(final Object source, final Integer newBoostSquare, final NewAddition addition) {
         super(source);
         this.firstFieldEntry = newBoostSquare;
+        this.additionChoice = addition;
     }
 
-    public NewAdditionFormEvents(final Object source, final Integer newSpecialSquareStart, final Integer newSpecialSquareEnd) {
+    public NewAdditionFormEvents(final Object source, final Integer newSpecialSquareStart,
+                                 final Integer newSpecialSquareEnd, final NewAddition addition) {
         super(source);
 
         this.firstFieldEntry = newSpecialSquareStart;
         this.secondFieldEntry = newSpecialSquareEnd;
+        this.additionChoice = addition;
     }
 
-    public NewAdditionFormEvents(final Object source, final String newPlayerEntry) {
+    public NewAdditionFormEvents(final Object source, final String newPlayerEntry, final NewAddition addition) {
         super(source);
 
         this.playerNameEntry = newPlayerEntry;
+        this.additionChoice = addition;
     }
 
     public Integer getFirstFieldEntry() {
@@ -55,6 +60,9 @@ public class NewAdditionFormEvents extends EventObject {
 //        return boostSquare;
 //    }
 //
+    public NewAddition getAdditionChoice() {
+        return additionChoice;
+    }
 //    public void setBoostSquare(final Integer newBoostSquare) {
 //        this.boostSquare = boostSquare;
 //    }

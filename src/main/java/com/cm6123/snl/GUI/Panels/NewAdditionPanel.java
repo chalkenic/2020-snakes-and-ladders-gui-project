@@ -12,15 +12,15 @@ import java.awt.event.ActionListener;
 public class NewAdditionPanel extends SidePanel {
 
     private NewAddition additionChoice;
-    private JLabel specialSquareFirstEntryLabel;
-    private JLabel specialSquareSecondEntryLabel;
-    private JTextField squareFirstField;
-    private JTextField squareSecondField;
-    private JButton createSnakeButton;
+    private JLabel additionFirstEntryLabel;
+    private JLabel additionSecondEntryLabel;
+    private JTextField additionFirstField;
+    private JTextField additionSecondField;
+    private JButton createAdditionButton;
     private GUIFrame gameGui;
 
     private GameTextPanel textPanel;
-    private GameToolbar toolbar;
+    private GameToolbarPanel toolbar;
 
     private SquareFormListener formListener;
     private GridBagConstraints gridStructure;
@@ -36,42 +36,47 @@ public class NewAdditionPanel extends SidePanel {
 //        this.setBackground(Color.WHITE);
 
         if (newAddition == NewAddition.SNAKE) {
-            specialSquareFirstEntryLabel = new JLabel("Snake Head: ");
-            specialSquareSecondEntryLabel = new JLabel("Snake Tail: ");
+            additionFirstEntryLabel = new JLabel("Snake Head: ");
+            additionSecondEntryLabel = new JLabel("Snake Tail: ");
         } else if (newAddition == NewAddition.LADDER) {
-            specialSquareFirstEntryLabel = new JLabel("Ladder Base: ");
-            specialSquareSecondEntryLabel = new JLabel("Ladder Top: ");
+            additionFirstEntryLabel = new JLabel("Ladder Base: ");
+            additionSecondEntryLabel = new JLabel("Ladder Top: ");
         } else if (newAddition == NewAddition.BOOST) {
-            specialSquareFirstEntryLabel = new JLabel("Boost location: ");
+            additionFirstEntryLabel = new JLabel("Boost location: ");
         } else if (newAddition == NewAddition.PLAYER) {
-            specialSquareFirstEntryLabel = new JLabel("New Player name: ");
+            additionFirstEntryLabel = new JLabel("New Player name: ");
         } else if (newAddition == NewAddition.DIE) {
-            specialSquareFirstEntryLabel = new JLabel("Dice Count: ");
-            specialSquareSecondEntryLabel = new JLabel("Die faces: ");
+            additionFirstEntryLabel = new JLabel("Dice Count: ");
+            additionSecondEntryLabel = new JLabel("Die faces: ");
         }
 
-            squareFirstField = new JTextField(10);
-            squareSecondField = new JTextField(10);
+        if (additionChoice != NewAddition.PLAYER) {
+            additionFirstField = new JTextField(10);
+        } else {
+            additionFirstField = new JTextField(40);
+        }
+
+            additionSecondField = new JTextField(10);
 
             /////////////////BEGIN TEST CODE////////////////
-            newGame = new JList();
-
-            DefaultListModel newGameList = new DefaultListModel();
-            newGameList.addElement(new BoardCategory(0, "1x1 Board"));
-            newGameList.addElement(new BoardCategory(1, "5x5 Board"));
-            newGameList.addElement(new BoardCategory(2, "10X10 Board"));
-            newGame.setModel(newGameList);
-
-            newGame.setPreferredSize(new Dimension(115, 57));
-            newGame.setBorder(BorderFactory.createEtchedBorder());
-            newGame.setSelectedIndex(0);
+//            newGame = new JList();
+//
+//            DefaultListModel newGameList = new DefaultListModel();
+//            newGameList.addElement(new BoardCategory(0, "1x1 Board"));
+//            newGameList.addElement(new BoardCategory(1, "5x5 Board"));
+//            newGameList.addElement(new BoardCategory(2, "10X10 Board"));
+//            newGame.setModel(newGameList);
+//
+//            newGame.setPreferredSize(new Dimension(115, 57));
+//            newGame.setBorder(BorderFactory.createEtchedBorder());
+//            newGame.setSelectedIndex(0);
 
             /////////////////END TEST CODE//////////////////
 
-            createSnakeButton = new JButton("Create " + newAddition.toString().toLowerCase());
+            createAdditionButton = new JButton("Create " + newAddition.toString().toLowerCase());
 //        rollDiceButton.setPreferredSize(new Dimension(300, 200));
 
-            createSnakeButton.addActionListener(new ActionListener() {
+            createAdditionButton.addActionListener(new ActionListener() {
                 //
 //            @Override
                 public void actionPerformed(final ActionEvent submission) {
@@ -79,18 +84,18 @@ public class NewAdditionPanel extends SidePanel {
 
                     NewAdditionFormEvents newEntry = null;
                     if (additionChoice != NewAddition.PLAYER) {
-                        if (!squareFirstField.getText().equals("")) {
+                        if (! additionFirstField.getText().equals("")) {
                             System.out.println("test1");
-                            if (! squareSecondField.getText().equals("")) {
+                            if (! additionSecondField.getText().equals("")) {
                                 try {
-                                    Integer squareStart = Integer.parseInt(squareFirstField.getText());
+                                    Integer squareStart = Integer.parseInt(additionFirstField.getText());
                                     System.out.println("test2");
                                     try {
-                                        Integer squareEnd = Integer.parseInt(squareSecondField.getText());
+                                        Integer squareEnd = Integer.parseInt(additionSecondField.getText());
                                         System.out.println("test3");
-                                        newEntry = new NewAdditionFormEvents(this, squareStart, squareEnd);
+                                        newEntry = new NewAdditionFormEvents(this, squareStart, squareEnd, additionChoice);
                                     } catch (NumberFormatException stringEntered) {
-                                        newEntry = new NewAdditionFormEvents(this, squareStart);
+                                        newEntry = new NewAdditionFormEvents(this, squareStart, additionChoice);
                                     }
                                 } catch (NumberFormatException stringEntered) {
                                     System.out.println("ERROR - incorrect entry.");
@@ -98,27 +103,27 @@ public class NewAdditionPanel extends SidePanel {
                                 }
 
                             } else {
-                                Integer squareStart = Integer.parseInt(squareFirstField.getText());
-                                newEntry = new NewAdditionFormEvents(this, squareStart);
+                                Integer squareStart = Integer.parseInt(additionFirstField.getText());
+                                newEntry = new NewAdditionFormEvents(this, squareStart, additionChoice);
                             }
                         } else {
                             formListener.incorrectEntryMessage();
                         }
                     } else {
-                        if (!squareFirstField.getText().equals("")) {
-                            String newPlayerName = squareFirstField.getText();
-                            newEntry = new NewAdditionFormEvents(this, newPlayerName);
+                        if (! additionFirstField.getText().equals("")) {
+                            String newPlayerName = additionFirstField.getText();
+                            newEntry = new NewAdditionFormEvents(this, newPlayerName, additionChoice);
                         }
 
 
 
 
                     }
-                    /////////////////BEGIN TEST CODE////////////////
-                    BoardCategory chosenData = (BoardCategory) newGame.getSelectedValue();
-
-
-                    /////////////////END TEST CODE//////////////////
+//                    /////////////////BEGIN TEST CODE////////////////
+//                    BoardCategory chosenData = (BoardCategory) newGame.getSelectedValue();
+//
+//
+//                    /////////////////END TEST CODE//////////////////
 
                     if (formListener != null && newEntry != null) {
                         formListener.formDatabaseEntry(newEntry);
@@ -156,15 +161,15 @@ public class NewAdditionPanel extends SidePanel {
 
         gridStructure.anchor = GridBagConstraints.LINE_END;
         gridStructure.insets = new Insets(0, 0, 0, 5);
-        add(specialSquareFirstEntryLabel, gridStructure);
+        add(additionFirstEntryLabel, gridStructure);
 
         gridStructure.gridx = 1;
 
         gridStructure.anchor = GridBagConstraints.LINE_START;
         gridStructure.insets = new Insets(0, 0, 0, 0);
-        add(squareFirstField, gridStructure);
+        add(additionFirstField, gridStructure);
 
-        if (specialSquareSecondEntryLabel != null) {
+        if (additionSecondEntryLabel != null) {
 
             gridStructure.weightx = 1;
             gridStructure.weighty = 0.1;
@@ -173,36 +178,36 @@ public class NewAdditionPanel extends SidePanel {
 
             gridStructure.anchor = GridBagConstraints.LINE_END;
             gridStructure.insets = new Insets(0, 0, 0, 5);
-            add(specialSquareSecondEntryLabel, gridStructure);
+            add(additionSecondEntryLabel, gridStructure);
 
             gridStructure.gridx = 1;
 
             gridStructure.anchor = GridBagConstraints.LINE_START;
             gridStructure.insets = new Insets(0, 0, 0, 0);
-            add(squareSecondField, gridStructure);
+            add(additionSecondField, gridStructure);
         }
 
         /////////////////THIRD ROW////////////////
 
         /////////////////BEGIN TEST CODE////////////////
-        gridStructure.weightx = 1;
-        gridStructure.weighty = 0.2;
-        gridStructure.gridy = 2;
-
-        gridStructure.anchor = GridBagConstraints.FIRST_LINE_START;
-        gridStructure.insets = new Insets(0, 0, 0, 5);
-        add(newGame, gridStructure);
+//        gridStructure.weightx = 1;
+//        gridStructure.weighty = 0.2;
+//        gridStructure.gridy = 2;
+//
+//        gridStructure.anchor = GridBagConstraints.FIRST_LINE_START;
+//        gridStructure.insets = new Insets(0, 0, 0, 5);
+//        add(newGame, gridStructure);
         /////////////////END TEST CODE//////////////////
 
         /////////////////FOURTH ROW////////////////
 
         gridStructure.weightx = 2;
         gridStructure.weighty = 2.0;
-        gridStructure.gridy = 3;
+        gridStructure.gridy = 2;
 
         gridStructure.anchor = GridBagConstraints.FIRST_LINE_START;
         gridStructure.insets = new Insets(0, 0, 0, 0);
-        add(createSnakeButton, gridStructure);
+        add(createAdditionButton, gridStructure);
 
         return this;
     }
@@ -214,24 +219,29 @@ public class NewAdditionPanel extends SidePanel {
 
 
 //    @Override
-    public Integer entryValidation(final NewAddition newSquare, final int... values) {
-        Integer correctEntry = 0;
+    public Boolean entryValidation(final NewAddition newSquare, final int... values) {
+        Boolean validEntry = false;
         try {
             if (newSquare == NewAddition.SNAKE) {
                 if (values[0] > values[1]) {
-                    correctEntry = 1;
+                    validEntry = true;
                 }
             } else if (newSquare == NewAddition.LADDER) {
                 if (values[0] < values[1]) {
-                    correctEntry = 2;
+                    validEntry = true;
                 }
             } else if (newSquare == NewAddition.BOOST) {
-                correctEntry = 3;
+                validEntry = true;
+            } else if (newSquare == NewAddition.PLAYER) {
+                validEntry = true;
+            } else if (newSquare == NewAddition.DIE) {
+                validEntry = true;
             }
         } catch (ArrayIndexOutOfBoundsException missingEnd) {
             System.out.println("ERROR - missing entry for special square end. Ignoring addition.");
+            return null;
         }
-        return correctEntry;
+        return validEntry;
     }
 
 //    @Override
