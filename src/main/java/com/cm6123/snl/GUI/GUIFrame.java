@@ -1,7 +1,7 @@
 package com.cm6123.snl.GUI;
 
 import com.cm6123.snl.GUI.Panels.*;
-//import com.cm6123.snl.GUI.Panels.NewSquarePanel;
+//import com.cm6123.snl.GUI.Panels.NewAdditionPanel;
 //import com.cm6123.snl.GUI.Panels.GameTextPanel;
 //import com.cm6123.snl.GUI.Panels.SidePanel;
 
@@ -106,15 +106,14 @@ public class GUIFrame extends JFrame {
                 break;
 
 
-            case "newspecialsquare":
-                System.out.println("Test3");
+            case "newaddition":
 
-                NewSquarePanel newSquarePanel = new NewSquarePanel(this, NewSquare.LADDER, cardLayout);
+                NewAdditionPanel newSquarePanel = new NewAdditionPanel(this, NewAddition.LADDER, cardLayout);
                 currentPanel = newSquarePanel;
 //                layout = (BorderLayout) newSquarePanel.getLayout();
 
 //                panelContainer.add(newSquarePanel, "3");
-                swapSidePanel(this, currentPanel, newSquarePanel.createSquarePanel());
+                swapSidePanel(this, currentPanel, newSquarePanel.createAdditionPanel());
 //                cardLayout.show(panelContainer, "3");
 
 
@@ -145,12 +144,12 @@ public class GUIFrame extends JFrame {
                         if (squareEnd == null) {
                             System.out.println("Test2");
                             newSquareType = newSquarePanel.entryValidation(
-                                    newSquarePanel.getSquareChoice(),
+                                    newSquarePanel.getAdditionChoice(),
                                     squareStart);
                         } else {
                             System.out.println("Do i get here?");
                             newSquareType = newSquarePanel.entryValidation(
-                                    newSquarePanel.getSquareChoice(),
+                                    newSquarePanel.getAdditionChoice(),
                                     squareStart, squareEnd);
                         }
 
@@ -194,12 +193,8 @@ public class GUIFrame extends JFrame {
                           final JPanel oldPanel,
                           final JPanel newPanel) {
 
-        System.out.println(currentFrame);
-        System.out.println(oldPanel);
-        System.out.println(newPanel);
         currentFrame.remove(oldPanel);
         currentFrame.add(newPanel, BorderLayout.WEST);
-        System.out.println("Test2");
         currentFrame.revalidate();
 //    }
 

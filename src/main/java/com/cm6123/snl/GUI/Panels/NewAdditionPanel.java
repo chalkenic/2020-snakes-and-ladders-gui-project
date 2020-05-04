@@ -9,9 +9,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class NewSquarePanel extends SidePanel {
+public class NewAdditionPanel extends SidePanel {
 
-    private NewSquare squareChoice;
+    private NewAddition additionChoice;
     private JLabel specialSquareFirstEntryLabel;
     private JLabel specialSquareSecondEntryLabel;
     private JTextField squareFirstField;
@@ -29,92 +29,98 @@ public class NewSquarePanel extends SidePanel {
     private JList newGame;
     /////////////////END TEST CODE//////////////////
 
-    public NewSquarePanel(final GUIFrame gui, final NewSquare newSquare, final CardLayout layout) {
-        this.squareChoice = newSquare;
+    public NewAdditionPanel(final GUIFrame gui, final NewAddition newAddition, final CardLayout layout) {
+        this.additionChoice = newAddition;
         this.gameGui = gui;
 //        this.setLayout(layout);
 
-        if (newSquare == NewSquare.SNAKE) {
+        if (newAddition == NewAddition.SNAKE) {
             specialSquareFirstEntryLabel = new JLabel("Snake Head: ");
             specialSquareSecondEntryLabel = new JLabel("Snake Tail: ");
-        } else if (newSquare == NewSquare.LADDER) {
+        } else if (newAddition == NewAddition.LADDER) {
             specialSquareFirstEntryLabel = new JLabel("Ladder Base: ");
             specialSquareSecondEntryLabel = new JLabel("Ladder Top: ");
-        } else if (newSquare == NewSquare.BOOST) {
+        } else if (newAddition == NewAddition.BOOST) {
             specialSquareFirstEntryLabel = new JLabel("Boost location: ");
+        } else if (newAddition == NewAddition.PLAYER) {
+            specialSquareFirstEntryLabel = new JLabel("New Player name: ");
+        } else if (newAddition == NewAddition.DIE) {
+            specialSquareFirstEntryLabel = new JLabel("Dice Count: ");
+            specialSquareSecondEntryLabel = new JLabel("Die faces: ");
         }
 
-        squareFirstField = new JTextField(10);
-        squareSecondField = new JTextField(10);
+            squareFirstField = new JTextField(10);
+            squareSecondField = new JTextField(10);
 
-        /////////////////BEGIN TEST CODE////////////////
-        newGame = new JList();
+            /////////////////BEGIN TEST CODE////////////////
+            newGame = new JList();
 
-        DefaultListModel newGameList = new DefaultListModel();
-        newGameList.addElement(new BoardCategory(0, "1x1 Board"));
-        newGameList.addElement(new BoardCategory(1, "5x5 Board"));
-        newGameList.addElement(new BoardCategory(2, "10X10 Board"));
-        newGame.setModel(newGameList);
+            DefaultListModel newGameList = new DefaultListModel();
+            newGameList.addElement(new BoardCategory(0, "1x1 Board"));
+            newGameList.addElement(new BoardCategory(1, "5x5 Board"));
+            newGameList.addElement(new BoardCategory(2, "10X10 Board"));
+            newGame.setModel(newGameList);
 
-        newGame.setPreferredSize(new Dimension(115, 57));
-        newGame.setBorder(BorderFactory.createEtchedBorder());
-        newGame.setSelectedIndex(0);
+            newGame.setPreferredSize(new Dimension(115, 57));
+            newGame.setBorder(BorderFactory.createEtchedBorder());
+            newGame.setSelectedIndex(0);
 
-        /////////////////END TEST CODE//////////////////
+            /////////////////END TEST CODE//////////////////
 
-        createSnakeButton = new JButton("Create " + newSquare.toString().toLowerCase());
+            createSnakeButton = new JButton("Create " + newAddition.toString().toLowerCase());
 //        rollDiceButton.setPreferredSize(new Dimension(300, 200));
 
-        createSnakeButton.addActionListener(new ActionListener() {
-            //
+            createSnakeButton.addActionListener(new ActionListener() {
+                //
 //            @Override
-            public void actionPerformed(final ActionEvent submission) {
-                NewSquareFormEvents squareEntry = null;
-                if (!squareFirstField.getText().equals("")) {
-                    if (!squareSecondField.getText().equals("")) {
-                        try {
-                            Integer squareStart = Integer.parseInt(squareFirstField.getText());
+                public void actionPerformed(final ActionEvent submission) {
+                    NewSquareFormEvents squareEntry = null;
+                    if (! squareFirstField.getText().equals("")) {
+                        if (! squareSecondField.getText().equals("")) {
                             try {
-                                Integer squareEnd = Integer.parseInt(squareSecondField.getText());
-                                squareEntry = new NewSquareFormEvents(this, squareStart, squareEnd);
+                                Integer squareStart = Integer.parseInt(squareFirstField.getText());
+                                try {
+                                    Integer squareEnd = Integer.parseInt(squareSecondField.getText());
+                                    squareEntry = new NewSquareFormEvents(this, squareStart, squareEnd);
+                                } catch (NumberFormatException stringEntered) {
+                                    squareEntry = new NewSquareFormEvents(this, squareStart);
+                                }
                             } catch (NumberFormatException stringEntered) {
-                                squareEntry = new NewSquareFormEvents(this, squareStart);
+                                System.out.println("ERROR - incorrect entry.");
+                                formListener.incorrectEntryMessage();
                             }
-                        } catch (NumberFormatException stringEntered) {
-                            System.out.println("ERROR - incorrect entry.");
-                            formListener.incorrectEntryMessage();
+
+                        } else {
+                            Integer squareStart = Integer.parseInt(squareFirstField.getText());
+                            squareEntry = new NewSquareFormEvents(this, squareStart);
                         }
-
                     } else {
-                        Integer squareStart = Integer.parseInt(squareFirstField.getText());
-                        squareEntry = new NewSquareFormEvents(this, squareStart);
+                        formListener.incorrectEntryMessage();
                     }
-                } else {
-                    formListener.incorrectEntryMessage();
+
+
+                    /////////////////BEGIN TEST CODE////////////////
+                    BoardCategory chosenData = (BoardCategory) newGame.getSelectedValue();
+
+
+                    /////////////////END TEST CODE//////////////////
+
+                    if (formListener != null && squareEntry != null) {
+                        System.out.println("Test");
+                        formListener.formDatabaseEntry(squareEntry);
+                    }
                 }
-
-
-                /////////////////BEGIN TEST CODE////////////////
-                BoardCategory chosenData = (BoardCategory) newGame.getSelectedValue();
-
-
-                /////////////////END TEST CODE//////////////////
-
-                if (formListener != null && squareEntry != null) {
-                    System.out.println("Test");
-                    formListener.formDatabaseEntry(squareEntry);
-                }
-            }
-        });
+            });
 //        gameGui.add(this, BorderLayout.WEST);
-    }
+        }
+
 
 //    @Override
-    public JPanel createSquarePanel() {
+    public JPanel createAdditionPanel() {
 
         //Code adapted from TitledBorder.CENTER : TitledBorder « javax.swing.border « Java by API
         //Available at: http://www.java2s.com/Code/JavaAPI/javax.swing.border/TitledBorderCENTER.htm
-        TitledBorder innerGameBarBorder = BorderFactory.createTitledBorder("New " + squareChoice.toString().toLowerCase());
+        TitledBorder innerGameBarBorder = BorderFactory.createTitledBorder("New " + additionChoice.toString().toLowerCase());
         Border outerGameBarBorder = BorderFactory.createEmptyBorder(2, 10, 10, 10);
         innerGameBarBorder.setTitleJustification(TitledBorder.CENTER);
 
@@ -192,19 +198,19 @@ public class NewSquarePanel extends SidePanel {
 
 
 //    @Override
-    public Integer entryValidation(final NewSquare newSquare, final int... values) {
+    public Integer entryValidation(final NewAddition newSquare, final int... values) {
         Integer correctEntry = 0;
         System.out.println(values.length);
         try {
-            if (newSquare == NewSquare.SNAKE) {
+            if (newSquare == NewAddition.SNAKE) {
                 if (values[0] > values[1]) {
                     correctEntry = 1;
                 }
-            } else if (newSquare == NewSquare.LADDER) {
+            } else if (newSquare == NewAddition.LADDER) {
                 if (values[0] < values[1]) {
                     correctEntry = 2;
                 }
-            } else if (newSquare == NewSquare.BOOST) {
+            } else if (newSquare == NewAddition.BOOST) {
                 correctEntry = 3;
             }
         } catch (ArrayIndexOutOfBoundsException missingEnd) {
@@ -214,8 +220,8 @@ public class NewSquarePanel extends SidePanel {
     }
 
 //    @Override
-    public final NewSquare getSquareChoice() {
-        return squareChoice;
+    public final NewAddition getAdditionChoice() {
+        return additionChoice;
     }
     }
 

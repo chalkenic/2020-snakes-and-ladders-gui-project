@@ -64,7 +64,7 @@ public class CreationMenuPanel extends SidePanel {
 
         createNewBoostButton.addActionListener(new ActionListener() {
             public void actionPerformed(final ActionEvent e) {
-                gameGui.selectWindow("newspecialsquare");
+                gameGui.selectWindow("newaddition");
 
             }
         });
