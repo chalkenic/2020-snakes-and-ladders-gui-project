@@ -1,77 +1,126 @@
 package com.cm6123.snl.GUI;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MenuBar extends JMenu{
+public class MenuBar extends JMenu implements ActionListener {
 
     private GUIFrame gameGui;
 
     private JMenuBar gameMenu;
     private JMenu fileMenu;
-    private JMenu windowMenu;
+    private JMenu menuNav;
     private JMenu showMenu;
 
     private JMenuItem mainMenu;
-    private JMenuItem exportData;
-    private JMenuItem importData;
-    private JMenuItem exitData;
+    private JMenuItem newGame;
+    private JMenuItem loadGame;
+    private JMenuItem saveGame;
+    private JMenuItem exitGame;
 
-    private JMenuItem showEditSnakes;
-    private JMenuItem showEditLadders;
-    private JMenuItem showEditBoosts;
-    private JMenuItem showEditPlayers;
-    private JMenuItem showEditDice;
-
-    public MenuBar() {
-
-        mainMenu.addActionListener(final GUIFrame gui) {
-            this.gameGui = gui;
-        };
+    private JMenuItem creationMenu;
 
 
-    }
-
-    public JMenuBar createMenuBar() {
+    public MenuBar(final GUIFrame gui) {
+        this.gameGui = gui;
 
         gameMenu = new JMenuBar();
 
         fileMenu = new JMenu("File");
+        menuNav = new JMenu("Menus");
+//        fileMenu.addMenuListener(this);
         mainMenu = new JMenuItem("Main Menu");
-        exportData = new JMenuItem("Load Game...");
+        mainMenu.addActionListener(this);
+//        mainMenu.setPreferredSize(new Dimension(50, 30));
 
-        importData = new JMenuItem("Save Game...");
-        exitData = new JMenuItem("Exit Program");
+        creationMenu = new JMenuItem("Creation Menu");
+        creationMenu.addActionListener(this);
+//        creationMenu.setPreferredSize(new Dimension(50, 30));
 
-        fileMenu.add("Main Menu");
+        newGame = new JMenuItem("New game");
+        newGame.addActionListener(this);
+
+        loadGame = new JMenuItem("Load Game...");
+        loadGame.addActionListener(this);
+
+        saveGame = new JMenuItem("Save Game...");
+        saveGame.addActionListener(this);
+
+        exitGame = new JMenuItem("Exit Program");
+        exitGame.addActionListener(this);
+
+
         fileMenu.addSeparator();
-        fileMenu.add(exportData);
-        fileMenu.add(importData);
+        fileMenu.add(newGame);
+        fileMenu.add(loadGame);
+        fileMenu.add(saveGame);
         fileMenu.addSeparator();
-        fileMenu.add(exitData);
+        fileMenu.add(exitGame);
 
+        menuNav.add(mainMenu);
+        menuNav.add(creationMenu);
 
-        windowMenu = new JMenu("Window");
-
-        showMenu = new JMenu("Navigate to");
-        showEditSnakes = new JMenuItem("Edit Snakes");
-        showEditLadders = new JMenuItem("Edit Ladders");
-        showEditBoosts = new JMenuItem("Edit Boosts");
-        showEditPlayers = new JMenuItem("Edit Players");
-        showEditDice = new JMenuItem("Edit Dice");
-
-        showMenu.add(showEditSnakes);
-        showMenu.add(showEditLadders);
-        showMenu.add(showEditBoosts);
-        showMenu.add(showEditPlayers);
-        showMenu.add(showEditDice);
-        windowMenu.add(showMenu);
 
         gameMenu.add(fileMenu);
-        gameMenu.add(windowMenu);
+        gameMenu.add(menuNav);
 
+
+//        exportData.addActionListener(this);
+//        saveGame.addActionListener(this);
+//        exitData.addActionListener(this);
+
+
+//
+//        showMenu = new JMenu("Navigate to");
+
+
+//       showEditSnakes.addActionListener(this);
+//        showEditLadders.addActionListener(this);
+//        showEditBoosts.addActionListener(this);
+//        showEditPlayers.addActionListener(this);
+//        showEditDice.addActionListener(this);
+//        showMenu.add(mainMenu);
+//        showMenu.add(creationMenu);
+//        fileMenu.addSeparator();
+//        showMenu.add(newGame);
+//        showMenu.add(loadGame);
+//        fileMenu.addSeparator();
+//        showMenu.add(exitGame);
+
+//        windowMenu.add(showMenu);
+
+
+//        gameMenu.add(windowMenu);
+
+    }
+
+    public JMenuBar getMenuBar() {
         return gameMenu;
+    }
 
+    public void actionPerformed(final ActionEvent click) {
+        System.out.println(click);
+
+        if (click.getSource().equals(mainMenu)) {
+            gameGui.selectWindow("menu");
+
+        } else if (click.getSource().equals(creationMenu)) {
+            gameGui.selectWindow("creationmenu");
+
+        } else if (click.getSource().equals(newGame)) {
+            gameGui.selectWindow("newgame");
+
+        } else if (click.getSource().equals(loadGame)) {
+            gameGui.selectWindow("loadgame");
+
+        } else if (click.getSource().equals(saveGame)) {
+//            gameGui.selectWindow("menu");
+
+        } else if (click.getSource().equals(exitGame)) {
+            System.exit(0);
+        }
 
     }
 }

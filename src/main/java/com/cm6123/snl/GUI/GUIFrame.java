@@ -8,6 +8,8 @@ import com.cm6123.snl.GUI.Panels.NewGame.NewGamePanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class GUIFrame extends JFrame {
 
@@ -36,13 +38,29 @@ public class GUIFrame extends JFrame {
 
 //        setLayout(new BorderLayout());
         panelContainer = new JPanel();
-        toolbar = new GameToolbarPanel(this);
+//        toolbar = new GameToolbarPanel(this);
         textPanel = new GameTextPanel();
 
         gameMenu = new MenuBar(this);
+//
+//
+////        setJMenuBar(gameMenu.createMenuBar());
+//
+        setJMenuBar(gameMenu.getMenuBar());
 
-        setJMenuBar(gameMenu.createMenuBar());
-
+//        gameMenu = new MenuBar(this);
+//
+//        setJMenuBar(gameMenu.createMenuBar());
+//
+//
+//        gameMenu.addActionListener(new ActionListener() {
+//           @Override
+//           public void actionPerformed(final ActionEvent e) {
+//               if (e.getSource() == gameMenu.getMainMenu()) {
+//                   System.out.println("hello");
+//               }
+//           }
+//       });
 
 
 //        newSquarePanel = new SidePanel("Snake");
@@ -65,7 +83,7 @@ public class GUIFrame extends JFrame {
 //        });
 
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Snakes & Ladders Game");
 //        cardLayout = new CardLayout();
 //        panelContainer.setLayout(cardLayout);
@@ -74,35 +92,29 @@ public class GUIFrame extends JFrame {
         selectWindow("menu");
         pack();
         setVisible(true);
+        frame = this;
 //        setSize(800, 650);
         setMinimumSize(new Dimension(800, 600));
 
-        toolbar.setStringListener(new StringListener() {
-            public void textEmitted(final String text) {
-                textPanel.appendText(text);
-            }
-        });
+//        toolbar.setStringListener(new StringListener() {
+//            public void textEmitted(final String text) {
+//                textPanel.appendText(text);
+//            }
+//        });
 
     }
 
     public void selectWindow(final String windowChoice) {
-        System.out.println("Current window choice: " + windowChoice);
-        System.out.println(currentPanel);
+
 //
 //        if (currentPanel != null) {
 //            getContentPane().remove(currentPanel);
 //        }
 //        if (windowChoice != "menu" && windowChoice != "loadgame") {
 
-        if (windowChoice != "menu") {
-            add(toolbar, BorderLayout.NORTH);
+
             if (windowChoice != "loadgame" && windowChoice != "newgame") {
                 add(textPanel, BorderLayout.CENTER);
-                if (windowChoice != "creationmenu") {
-                    toolbar.showCreationButton();
-                }
-            }
-
         }
         switch (windowChoice.toLowerCase()) {
             case "menu":
@@ -131,10 +143,10 @@ public class GUIFrame extends JFrame {
 
             case "newgame":
 
+                getContentPane().remove(textPanel);
                 getContentPane().remove(currentPanel);
                 revalidate();
                 newGamePanel = new NewGamePanel(this);
-                System.out.println("Removing panel " + currentPanel);
 
 //                panelContainer.add(creationMenuPanel.createCreationPanel(), "2");
                 swapPanel(this,
@@ -148,11 +160,10 @@ public class GUIFrame extends JFrame {
 
 
             case "loadgame":
-
+                getContentPane().remove(textPanel);
                 getContentPane().remove(currentPanel);
                 revalidate();
                 loadGamePanel = new LoadGamePanel(this);
-                System.out.println("Removing panel " + currentPanel);
 
 //                panelContainer.add(creationMenuPanel.createCreationPanel(), "2");
                 swapPanel(this,
@@ -183,7 +194,6 @@ public class GUIFrame extends JFrame {
                 break;
 
             case "creationmenu":
-
                 getContentPane().remove(currentPanel);
                 revalidate();
                 creationMenuPanel = new CreationMenuPanel(this);
@@ -302,13 +312,16 @@ public class GUIFrame extends JFrame {
         currentFrame.remove(oldPanel);
         currentFrame.add(newPanel, borderLayout);
         currentFrame.revalidate();
+
+    }
+}
 //    }
 
 //    public JPanel getCurrentPanel() {
 //        return currentPanel;
 //    }
 
-        //        label = new JLabel("Number of clicks innit: 0");
+//        label = new JLabel("Number of clicks innit: 0");
 
 
 //        JPanel panel = new JPanel();
@@ -330,12 +343,18 @@ public class GUIFrame extends JFrame {
 //        counter++;
 //        textArea.setText("Number of clicks innit: " + counter);
 //    }
-    }
+
 //    private JMenuBar createMenuBar() {
 //        JMenuBar gameMenu = new JMenuBar();
 //
 //        JMenu fileMenu = new JMenu("File");
 //        JMenuItem mainMenu = new JMenuItem("Main Menu");
+//        mainMenu.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(final ActionEvent e) {
+//                selectWindow("menu");
+//            }
+//        });
 //        JMenuItem exportData = new JMenuItem("Load Game...");
 //        JMenuItem importData = new JMenuItem("Save Game...");
 //        JMenuItem exitData = new JMenuItem("Exit Program");
@@ -370,4 +389,3 @@ public class GUIFrame extends JFrame {
 //        return gameMenu;
 //
 //    }
-}
