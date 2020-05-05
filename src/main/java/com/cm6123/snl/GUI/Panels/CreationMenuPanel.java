@@ -21,7 +21,7 @@ public class CreationMenuPanel extends SidePanel {
     private JLabel titleLabel;
     private JLabel descriptionLabel;
 
-    private SquareFormListener formListener;
+    private FormListener formListener;
     private GridBagConstraints gridStructure;
     private GUIFrame gameGui;
     private NewAddition additionChoice;
@@ -35,21 +35,21 @@ public class CreationMenuPanel extends SidePanel {
 //        titleLabel = new JLabel("Creation tool");
 //        titleLabel.setFont(new Font("Arial Bold", Font.PLAIN, 16));
 
-        createNewSnakeButton = new JButton("Create New Snake");
+        createNewSnakeButton = new JButton("Edit Snake");
         //Code adapted from answer of user Kris: How can I set size of a button?
         //available at: https://stackoverflow.com/questions/2536873/how-can-i-set-size-of-a-button
         createNewSnakeButton.setPreferredSize(new Dimension(200, 60));
 
-        createNewLadderButton = new JButton("Create New Ladder");
+        createNewLadderButton = new JButton("Edit Ladder");
         createNewLadderButton.setPreferredSize(new Dimension(200, 60));
 
-        createNewBoostButton = new JButton("Create New Boost");
+        createNewBoostButton = new JButton("Edit Boost");
         createNewBoostButton.setPreferredSize(new Dimension(200, 60));
 
-        createNewPlayerButton = new JButton("Create New Player");
+        createNewPlayerButton = new JButton("Edit Player");
         createNewPlayerButton.setPreferredSize(new Dimension(200, 60));
 
-        createNewDieButton = new JButton("Create New Dice");
+        createNewDieButton = new JButton("Edit Dice");
         createNewDieButton.setPreferredSize(new Dimension(200, 60));
 
         createNewSnakeButton.addActionListener(new ActionListener() {

@@ -6,7 +6,7 @@ import java.awt.*;
 
 public abstract class SidePanel extends JPanel {
 
-//    private SquareFormListener formListener;
+//    private FormListener formListener;
 
     public SidePanel() {
 
@@ -14,7 +14,7 @@ public abstract class SidePanel extends JPanel {
 
     public abstract void setPanelSize(Integer width, Integer height);
 
-//    public abstract void setFormListener(SquareFormListener listener);
+//    public abstract void setFormListener(FormListener listener);
 
 //    public abstract Integer entryValidation(NewAddition value, int... othervalues);
 

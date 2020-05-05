@@ -22,7 +22,7 @@ public class NewAdditionPanel extends SidePanel {
     private GameTextPanel textPanel;
     private GameToolbarPanel toolbar;
 
-    private SquareFormListener formListener;
+    private FormListener formListener;
     private GridBagConstraints gridStructure;
 
     /////////////////BEGIN TEST CODE////////////////
@@ -58,13 +58,13 @@ public class NewAdditionPanel extends SidePanel {
             additionSecondEntryLabel = new JLabel("Die faces: ");
         }
 
+        additionFirstField = new JTextField(10);
+
         if (additionChoice != NewAddition.PLAYER) {
-            additionFirstField = new JTextField(10);
-        } else {
-            additionFirstField = new JTextField(40);
+            additionSecondField = new JTextField(10);
         }
 
-            additionSecondField = new JTextField(10);
+
 
             /////////////////BEGIN TEST CODE////////////////
 //            newGame = new JList();
@@ -87,23 +87,24 @@ public class NewAdditionPanel extends SidePanel {
             createAdditionButton.addActionListener(new ActionListener() {
                 //
 //            @Override
-                public void actionPerformed(final ActionEvent submission) {
+                public void actionPerformed(final ActionEvent e) {
 
 
-                    NewAdditionFormEvents newEntry = null;
+                    FormEvents newEntry = null;
+
                     if (additionChoice != NewAddition.PLAYER) {
                         if (! additionFirstField.getText().equals("")) {
-                            System.out.println("test1");
+
                             if (! additionSecondField.getText().equals("")) {
                                 try {
                                     Integer squareStart = Integer.parseInt(additionFirstField.getText());
-                                    System.out.println("test2");
+
                                     try {
                                         Integer squareEnd = Integer.parseInt(additionSecondField.getText());
-                                        System.out.println("test3");
-                                        newEntry = new NewAdditionFormEvents(this, squareStart, squareEnd, additionChoice);
+
+                                        newEntry = new FormEvents(this, squareStart, squareEnd, additionChoice);
                                     } catch (NumberFormatException stringEntered) {
-                                        newEntry = new NewAdditionFormEvents(this, squareStart, additionChoice);
+                                        newEntry = new FormEvents(this, squareStart, additionChoice);
                                     }
                                 } catch (NumberFormatException stringEntered) {
                                     System.out.println("ERROR - incorrect entry.");
@@ -111,36 +112,35 @@ public class NewAdditionPanel extends SidePanel {
                                 }
 
                             } else {
-                                Integer squareStart = Integer.parseInt(additionFirstField.getText());
-                                newEntry = new NewAdditionFormEvents(this, squareStart, additionChoice);
+                                try {
+                                    Integer squareStart = Integer.parseInt(additionFirstField.getText());
+                                    newEntry = new FormEvents(this, squareStart, additionChoice);
+                                } catch (NumberFormatException stringEntered) {
+                                    System.out.println("ERROR - incorrect entry.");
+                                    formListener.incorrectEntryMessage();
+                                }
                             }
                         } else {
                             formListener.incorrectEntryMessage();
                         }
                     } else {
-                        if (! additionFirstField.getText().equals("")) {
+                        if (!additionFirstField.getText().equals("")) {
                             String newPlayerName = additionFirstField.getText();
-                            newEntry = new NewAdditionFormEvents(this, newPlayerName, additionChoice);
+                            newEntry = new FormEvents(this, newPlayerName, additionChoice);
+                        } else {
+                            formListener.incorrectEntryMessage();
                         }
-
-
-
-
                     }
-//                    /////////////////BEGIN TEST CODE////////////////
 //                    BoardCategory chosenData = (BoardCategory) newGame.getSelectedValue();
-//
-//
-//                    /////////////////END TEST CODE//////////////////
 
-                    if (formListener != null && newEntry != null) {
-                        formListener.formDatabaseEntry(newEntry);
-                    }
+                if (formListener != null && newEntry != null) {
+                    formListener.formDatabaseEntry(newEntry);
                 }
-    });
+            }
+        });
 
 //        gameGui.add(this, BorderLayout.WEST);
-        }
+    }
 
     public void setPanelSize(final Integer width, final Integer height) {
         Dimension dim = getPreferredSize();
@@ -228,7 +228,7 @@ public class NewAdditionPanel extends SidePanel {
     }
 
 //    @Override
-    public void setFormListener(final SquareFormListener listener) {
+    public void setFormListener(final FormListener listener) {
         this.formListener = listener;
     }
 
@@ -254,7 +254,7 @@ public class NewAdditionPanel extends SidePanel {
             }
         } catch (ArrayIndexOutOfBoundsException missingEnd) {
             System.out.println("ERROR - missing entry for special square end. Ignoring addition.");
-            return null;
+            return validEntry;
         }
         return validEntry;
     }

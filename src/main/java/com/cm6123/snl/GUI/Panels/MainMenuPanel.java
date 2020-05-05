@@ -16,7 +16,7 @@ public class MainMenuPanel extends JPanel {
     private JButton creationButton;
     private JLabel welcomeLabel;
 
-    private SquareFormListener formListener;
+    private FormListener formListener;
     private GridBagConstraints gridStructure;
     private GUIFrame gameGui;
 

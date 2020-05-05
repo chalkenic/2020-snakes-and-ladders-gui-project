@@ -1,6 +1,7 @@
 package com.cm6123.snl.GUI;
 
 import com.cm6123.snl.GUI.Panels.*;
+import com.cm6123.snl.GUI.Panels.NewGame.NewGamePanel;
 //import com.cm6123.snl.GUI.Panels.NewAdditionPanel;
 //import com.cm6123.snl.GUI.Panels.GameTextPanel;
 //import com.cm6123.snl.GUI.Panels.SidePanel;
@@ -24,6 +25,8 @@ public class GUIFrame extends JFrame {
     private MainMenuPanel mainMenuPanel;
     private LoadGamePanel loadGamePanel;
     private NewGamePanel newGamePanel;
+//    private JMenuBar dropdownMenu;
+    private MenuBar gameMenu;
 
     public GUIFrame() {
         super("Snakes & Ladders");
@@ -35,6 +38,11 @@ public class GUIFrame extends JFrame {
         panelContainer = new JPanel();
         toolbar = new GameToolbarPanel(this);
         textPanel = new GameTextPanel();
+
+        gameMenu = new MenuBar(this);
+
+        setJMenuBar(gameMenu.createMenuBar());
+
 
 
 //        newSquarePanel = new SidePanel("Snake");
@@ -154,6 +162,24 @@ public class GUIFrame extends JFrame {
                 currentPanel = loadGamePanel;
 //                cardLayout.show(panelContainer, "2");
 
+                loadGamePanel.setFormListener(new FormListener() {
+
+                    public void appendTextToPanel(final String text) {
+                        textPanel.appendText(text);
+                    }
+
+                    public void incorrectEntryMessage() {
+                        textPanel.appendText("Cannot find file!\n");
+                    }
+
+                    public void formDatabaseEntry(final FormEvents data) {
+                        if (data.getLoadGameEntry() != null) {
+                            Integer loadGameEntry = data.getLoadGameEntry();
+                            appendTextToPanel("loaded game " + loadGameEntry + "!\n");
+                        }
+                    }
+                });
+
                 break;
 
             case "creationmenu":
@@ -169,6 +195,8 @@ public class GUIFrame extends JFrame {
                         BorderLayout.WEST);
                 currentPanel = creationMenuPanel;
 //                cardLayout.show(panelContainer, "2");
+
+
                 break;
 
 
@@ -189,9 +217,7 @@ public class GUIFrame extends JFrame {
                 currentPanel = additionPanel;
 //                cardLayout.show(panelContainer, "3");
 
-
-
-                additionPanel.setFormListener(new SquareFormListener() {
+                additionPanel.setFormListener(new FormListener() {
 
 
                     public void appendTextToPanel(final String text) {
@@ -199,12 +225,12 @@ public class GUIFrame extends JFrame {
                     }
 
                     public void incorrectEntryMessage() {
-                        textPanel.appendText("\n|------------------------------------------------------|"
+                        textPanel.appendText("|------------------------------------------------------|"
                                 + "\n| ERROR - INCORRECT ENTRY MADE  |"
-                                + "\n|------------------------------------------------------|");
+                                + "\n|------------------------------------------------------|\n");
                     }
 
-                    public void formDatabaseEntry(final NewAdditionFormEvents data) {
+                    public void formDatabaseEntry(final FormEvents data) {
 
                         if (data.getPlayerNameEntry() == null) {
                             Integer firstFieldEntry;
@@ -212,8 +238,8 @@ public class GUIFrame extends JFrame {
                             Boolean newSquareType;
                             Boolean secondSquareMissing = true;
 
-                            firstFieldEntry = data.getFirstFieldEntry();
-                            secondFieldEntry = data.getSecondFieldEntry();
+                            firstFieldEntry = data.getFirstEntry();
+                            secondFieldEntry = data.getSecondEntry();
 
                             if (secondFieldEntry == null) {
                                 newSquareType = additionPanel.entryValidation(additionPanel.getAdditionChoice(),
@@ -237,14 +263,10 @@ public class GUIFrame extends JFrame {
                                 appendTextToPanel("Boost square added at location " + firstFieldEntry + "\n");
                                 System.out.println("JDBC LINK TO GO HERE");
 
-                            } else if (newSquareType && data.getAdditionChoice() == NewAddition.PLAYER) {
-                                appendTextToPanel("New player created: " + firstFieldEntry);
-                                System.out.println("JDBC LINK TO GO HERE");
-
                             } else if (newSquareType && data.getAdditionChoice() == NewAddition.DIE) {
-                                appendTextToPanel("New Dice choice created.\n "
-                                + "Dice count: " + firstFieldEntry
-                                + "\nDice faces: " + secondFieldEntry + "\n");
+                                appendTextToPanel("New Die choice created:\n"
+                                + "Amount of dice: " + firstFieldEntry
+                                + "\ndice faces: " + secondFieldEntry + "\n");
                                 System.out.println("JDBC LINK TO GO HERE");
 
                             } else {
@@ -257,10 +279,14 @@ public class GUIFrame extends JFrame {
 //                        } else {
 //                            appendTextToPanel("\nERROR - no value(s) entered.");
 //                        }
+                        } else {
+                            String playerFieldEntry = data.getPlayerNameEntry();
+                            appendTextToPanel("New player created: " + playerFieldEntry + "\n");
+                            System.out.println("JDBC LINK TO GO HERE");
                         }
                     }
 
-//                public void formBoostSquareEntry(final NewAdditionFormEvents data) {
+//                public void formBoostSquareEntry(final FormEvents data) {
 //                    Integer boostSquareLocation = Integer.parseInt(data.getBoostSquare());
 //                }
                 });
@@ -305,4 +331,43 @@ public class GUIFrame extends JFrame {
 //        textArea.setText("Number of clicks innit: " + counter);
 //    }
     }
+//    private JMenuBar createMenuBar() {
+//        JMenuBar gameMenu = new JMenuBar();
+//
+//        JMenu fileMenu = new JMenu("File");
+//        JMenuItem mainMenu = new JMenuItem("Main Menu");
+//        JMenuItem exportData = new JMenuItem("Load Game...");
+//        JMenuItem importData = new JMenuItem("Save Game...");
+//        JMenuItem exitData = new JMenuItem("Exit Program");
+//        fileMenu.add("Main Menu");
+//        fileMenu.addSeparator();
+//        fileMenu.add(exportData);
+//        fileMenu.add(importData);
+//        fileMenu.addSeparator();
+//        fileMenu.add(exitData);
+//
+//
+//        JMenu windowMenu = new JMenu("Window");
+//
+//        JMenu showMenu = new JMenu("Navigate to");
+//        JMenuItem showEditSnakes = new JMenuItem("Edit Snakes");
+//        JMenuItem showEditLadders = new JMenuItem("Edit Ladders");
+//        JMenuItem showEditBoosts = new JMenuItem("Edit Boosts");
+//        JMenuItem showEditPlayers = new JMenuItem("Edit Players");
+//        JMenuItem showEditDice = new JMenuItem("Edit Dice");
+//
+//        showMenu.add(showEditSnakes);
+//        showMenu.add(showEditLadders);
+//        showMenu.add(showEditBoosts);
+//        showMenu.add(showEditPlayers);
+//        showMenu.add(showEditDice);
+//        windowMenu.add(showMenu);
+//
+//        gameMenu.add(fileMenu);
+//        gameMenu.add(windowMenu);
+//
+//
+//        return gameMenu;
+//
+//    }
 }

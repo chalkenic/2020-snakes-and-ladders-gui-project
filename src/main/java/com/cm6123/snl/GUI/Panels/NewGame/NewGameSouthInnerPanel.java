@@ -1,25 +1,27 @@
-package com.cm6123.snl.GUI.Panels;
+package com.cm6123.snl.GUI.Panels.NewGame;
+
+import com.cm6123.snl.GUI.Panels.SidePanel;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 
-public class NewGameSouthPanel extends SidePanel {
+public class NewGameSouthInnerPanel extends SidePanel {
 
-    private JLabel recordGameLabel;
+
     private JLabel defaultGameLabel;
     private JLabel boardSizeLabel;
+    private JComboBox boardSizeBox;
     private GridBagConstraints gridStructure;
 
-    public NewGameSouthPanel(final String borderTitle) {
+    public NewGameSouthInnerPanel(final String borderTitle) {
 
         boardSizeLabel = new JLabel("Board Size ");
-        boardSizeLabel.setPreferredSize(new Dimension(150, 30));
-        recordGameLabel = new JLabel("Check to record game ");
-        recordGameLabel.setPreferredSize(new Dimension(150, 30));
-        defaultGameLabel = new JLabel("Start default game ");
-        defaultGameLabel.setPreferredSize(new Dimension(150, 30));
+        boardSizeLabel.setPreferredSize(new Dimension(400, 30));
+
+        defaultGameLabel = new JLabel("Start a default game (2 players, set snakes/ladders, no features)");
+        defaultGameLabel.setPreferredSize(new Dimension(400, 30));
 
 
         TitledBorder innerGameBarBorder = BorderFactory.createTitledBorder(borderTitle);
@@ -28,11 +30,13 @@ public class NewGameSouthPanel extends SidePanel {
 
         setBorder(BorderFactory.createCompoundBorder(outerGameBarBorder, innerGameBarBorder));
 
+        boardSizeBox = new JComboBox();
+
         JButton testButton1 = new JButton("test1");
-        JButton testButton2 = new JButton("test2");
-        JButton testButton3 = new JButton("test3");
-        JButton testButton4 = new JButton("test4");
-        JButton testButton5 = new JButton("Start Game");
+        JButton testButton3 = new JButton("Default Game");
+//        JButton testButton4 = new JButton("Default Game");
+        JButton testButton5 = new JButton("Start Game With Options");
+        testButton5.setBackground(Color.PINK);
 //        testButton5.setPreferredSize(new Dimension(300, 60));
 
 
@@ -42,7 +46,7 @@ public class NewGameSouthPanel extends SidePanel {
 //    gridStructure.fill = GridBagConstraints.NONE;
 //        gridStructure.gridwidth = 1;
 
-        gridStructure.weightx = 0.1;
+        gridStructure.weightx = 1;
         gridStructure.weighty = 0.1;
 
         gridStructure.gridx = 0;
@@ -50,7 +54,7 @@ public class NewGameSouthPanel extends SidePanel {
 //    gridStructure.fill = GridBagConstraints.NONE;
 //
     gridStructure.anchor = GridBagConstraints.LINE_START;
-//        gridStructure.insets = new Insets(0, 0, 0, 5);
+        gridStructure.insets = new Insets(0, 5, 0, 0);
         add(boardSizeLabel, gridStructure);
 
 //        gridStructure.gridwidth = 50;
@@ -59,36 +63,13 @@ public class NewGameSouthPanel extends SidePanel {
         /////////////BEGIN TEMPORARY FORMATTING CODE//////////////////
 //        gridStructure.gridwidth = 1;
 //        gridStructure.weightx = 6;
-        gridStructure.gridx = 2;
+        gridStructure.gridx = 0;
         gridStructure.gridy = 0;
 
-
+        gridStructure.anchor = GridBagConstraints.LINE_END;
 //    gridStructure.anchor = GridBagConstraints.FIRST_LINE_START;
-//        gridStructure.insets = new Insets(0, 0, 0, 5);
+        gridStructure.insets = new Insets(0, 0, 0, 5);
         add(testButton1, gridStructure);
-
-//        gridStructure.gridwidth = 10;
-
-//        gridStructure.gridwidth = 1;
-
-//        gridStructure.weightx = 1;
-        gridStructure.gridx = 0;
-        gridStructure.gridy = 1;
-//    gridStructure.fill = GridBagConstraints.NONE;
-        gridStructure.anchor = GridBagConstraints.LINE_START;
-//    gridStructure.anchor = GridBagConstraints.LINE_END;
-//        gridStructure.insets = new Insets(0, 0, 0, 5);
-        add(recordGameLabel, gridStructure);
-
-        /////////////BEGIN TEMPORARY FORMATTING CODE//////////////////
-//        gridStructure.weightx = 0.1;
-//    gridStructure.weightx = 0.1;
-//    gridStructure.weighty = 0.2;
-        gridStructure.gridx = 2;
-
-//    gridStructure.anchor = GridBagConstraints.FIRST_LINE_START;
-//        gridStructure.insets = new Insets(0, 0, 0, 5);
-        add(testButton2, gridStructure);
 
 //        gridStructure.weightx = 1;
         gridStructure.gridx = 0;
@@ -96,33 +77,38 @@ public class NewGameSouthPanel extends SidePanel {
 //    gridStructure.fill = GridBagConstraints.NONE;
         gridStructure.anchor = GridBagConstraints.LINE_START;
 //    gridStructure.anchor = GridBagConstraints.LINE_END;
-//        gridStructure.insets = new Insets(0, 0, 0, 5);
+        gridStructure.insets = new Insets(0, 5, 0, 0);
         add(defaultGameLabel, gridStructure);
 
         /////////////BEGIN TEMPORARY FORMATTING CODE//////////////////
 //        gridStructure.weightx = 0.1;
 //    gridStructure.weightx = 0.1;
 //    gridStructure.weighty = 0.2;
-        gridStructure.gridx = 2;
+        gridStructure.gridx = 0;
         gridStructure.gridy = 2;
 
+        gridStructure.anchor = GridBagConstraints.LINE_END;
 //    gridStructure.anchor = GridBagConstraints.FIRST_LINE_START;
-//        gridStructure.insets = new Insets(0, 0, 0, 5);
+        gridStructure.insets = new Insets(0, 0, 0, 5);
         add(testButton3, gridStructure);
 //        gridStructure.gridwidth = 1;
 //
 //        gridStructure.weightx = 1;
-        gridStructure.ipadx = 300;
+//        gridStructure.weightx = 3;
+
+        //Code adapted from VGR Answer: Java - Resize buttons in GridBagLayout.
+        //Available at: https://stackoverflow.com/questions/40491835/java-resize-buttons-in-gridbaglayout
+        gridStructure.ipadx = 500;
         gridStructure.ipady = 20;
 
 
-        gridStructure.gridx = 1;
+        gridStructure.gridx = 0;
         gridStructure.gridy = 3;
-//
+        gridStructure.anchor = GridBagConstraints.FIRST_LINE_START;
 //        Insets westInsets = new Insets (5, 0, 5, 5);
 //        Insets eastInsets = new Insets (5, 5, 5, 0);
 
-        gridStructure.insets = new Insets(5, 5, 5, 100);
+        gridStructure.insets = new Insets(5, 5, 5, 5);
 
 //        gridStructure.anchor = (gridStructure.gridx == 0) ? GridBagConstraints.WEST : GridBagConstraints.EAST;
 //        gridStructure.fill = (gridStructure.gridx == 0) ? GridBagConstraints.BOTH : GridBagConstraints.HORIZONTAL;
@@ -131,7 +117,7 @@ public class NewGameSouthPanel extends SidePanel {
 //        gridStructure.weighty = 1.0;
 
 //        gridStructure.insets = new Insets(0, 0, 0, 5);
-        add(testButton4, gridStructure);
+        add(testButton5, gridStructure);
 
     }
 
