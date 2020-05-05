@@ -66,7 +66,8 @@ public class GUIFrame extends JFrame {
         selectWindow("menu");
         pack();
         setVisible(true);
-        setSize(600, 500);
+//        setSize(800, 650);
+        setMinimumSize(new Dimension(800, 600));
 
         toolbar.setStringListener(new StringListener() {
             public void textEmitted(final String text) {
@@ -113,6 +114,7 @@ public class GUIFrame extends JFrame {
                             mainMenuPanel.createMenuPanel(),
                             BorderLayout.CENTER);
                     currentPanel = mainMenuPanel;
+
                 }
 
 //                panelContainer.add(mainMenuPanel.createMenuPanel(), "1");

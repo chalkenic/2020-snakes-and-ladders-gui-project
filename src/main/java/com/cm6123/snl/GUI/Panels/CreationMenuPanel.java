@@ -28,6 +28,8 @@ public class CreationMenuPanel extends SidePanel {
 
     public CreationMenuPanel(final GUIFrame gui) {
         this.gameGui = gui;
+
+        setPanelSize(350, 200);
 //        this.setLayout(layout);
 
 //        titleLabel = new JLabel("Creation tool");
@@ -171,5 +173,12 @@ public class CreationMenuPanel extends SidePanel {
         public NewAddition getAdditionChoice() {
             return additionChoice;
         }
+
+    public void setPanelSize(final Integer width, final Integer height) {
+        Dimension dim = getPreferredSize();
+        dim.width = width;
+        dim.height = height;
+        setPreferredSize(dim);
+    };
 }
 

@@ -27,11 +27,19 @@ public class NewAdditionPanel extends SidePanel {
 
     /////////////////BEGIN TEST CODE////////////////
     private JList newGame;
+
     /////////////////END TEST CODE//////////////////
 
     public NewAdditionPanel(final GUIFrame gui, final NewAddition newAddition) {
         this.additionChoice = newAddition;
         this.gameGui = gui;
+
+        setPanelSize(350, 200);
+
+
+
+
+
 //        this.setLayout(layout);
 //        this.setBackground(Color.WHITE);
 
@@ -129,10 +137,17 @@ public class NewAdditionPanel extends SidePanel {
                         formListener.formDatabaseEntry(newEntry);
                     }
                 }
-            });
+    });
 
 //        gameGui.add(this, BorderLayout.WEST);
         }
+
+    public void setPanelSize(final Integer width, final Integer height) {
+        Dimension dim = getPreferredSize();
+        dim.width = width;
+        dim.height = height;
+        setPreferredSize(dim);
+    };
 
 
 

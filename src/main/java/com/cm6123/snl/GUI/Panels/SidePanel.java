@@ -10,10 +10,9 @@ public abstract class SidePanel extends JPanel {
 
     public SidePanel() {
 
-        Dimension dim = getPreferredSize();
-        dim.width = 250;
-        setPreferredSize(dim);
     }
+
+    public abstract void setPanelSize(Integer width, Integer height);
 
 //    public abstract void setFormListener(SquareFormListener listener);
 
