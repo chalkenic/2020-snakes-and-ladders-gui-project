@@ -95,6 +95,8 @@ public class MenuBar extends JMenu implements ActionListener {
 //        gameMenu.add(windowMenu);
 
     }
+    //Code adapted from Eric Leibenguth: JFrame Action Listener that listens to all menu items?
+    //https://stackoverflow.com/questions/31229899/jframe-action-listener-that-listens-to-all-menu-items
 
     public JMenuBar getMenuBar() {
         return gameMenu;

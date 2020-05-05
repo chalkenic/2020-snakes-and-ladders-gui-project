@@ -25,4 +25,8 @@ public class GameTextPanel extends JPanel {
     public void appendText(String text) {
         textArea.append(text);
     }
+
+    public void wipeTextBox() {
+        textArea.setText(null);
+    }
 }

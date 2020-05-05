@@ -107,6 +107,7 @@ public class GUIFrame extends JFrame {
     }
 
     public void selectWindow(final String windowChoice) {
+        System.out.println(currentPanel);
 
 //
 //        if (currentPanel != null) {
@@ -120,6 +121,7 @@ public class GUIFrame extends JFrame {
         }
         switch (windowChoice.toLowerCase()) {
             case "menu":
+
 
                 getContentPane().remove(textPanel);
 //                getContentPane().remove(toolbar);
@@ -145,6 +147,7 @@ public class GUIFrame extends JFrame {
 
             case "newgame":
 
+
                 getContentPane().remove(textPanel);
                 getContentPane().remove(currentPanel);
                 revalidate();
@@ -161,6 +164,7 @@ public class GUIFrame extends JFrame {
                 break;
 
             case "rundefaultgame":
+                textPanel.wipeTextBox();
                 getContentPane().remove(currentPanel);
                 revalidate();
 
@@ -178,7 +182,7 @@ public class GUIFrame extends JFrame {
                         currentPanel,
                         runGamePanel.createRunGamePanel(),
                         BorderLayout.WEST);
-                currentPanel = newGamePanel;
+                currentPanel = runGamePanel;
 
 //            case "runnormalgame":
 //                getContentPane().remove(currentPanel);
