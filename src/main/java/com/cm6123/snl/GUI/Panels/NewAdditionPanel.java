@@ -20,7 +20,7 @@ public class NewAdditionPanel extends SidePanel {
     private GUIFrame gameGui;
 
     private GameTextPanel textPanel;
-    private GameToolbarPanel toolbar;
+//    private GameToolbarPanel toolbar;
 
     private FormListener formListener;
     private GridBagConstraints gridStructure;

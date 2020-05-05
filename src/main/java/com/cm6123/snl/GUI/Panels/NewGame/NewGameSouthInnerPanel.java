@@ -1,21 +1,28 @@
 package com.cm6123.snl.GUI.Panels.NewGame;
 
+import com.cm6123.snl.GUI.GUIFrame;
 import com.cm6123.snl.GUI.Panels.SidePanel;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class NewGameSouthInnerPanel extends SidePanel {
+public class NewGameSouthInnerPanel extends SidePanel implements ActionListener {
 
 
     private JLabel defaultGameLabel;
     private JLabel boardSizeLabel;
+    private JButton defaultGameButton;
+    private JButton startGameButton;
     private JComboBox boardSizeBox;
     private GridBagConstraints gridStructure;
+    private GUIFrame gameGui;
 
-    public NewGameSouthInnerPanel(final String borderTitle) {
+    public NewGameSouthInnerPanel(final String borderTitle, final GUIFrame gui) {
+        this.gameGui = gui;
 
         boardSizeLabel = new JLabel("Board Size ");
         boardSizeLabel.setPreferredSize(new Dimension(400, 30));
@@ -32,11 +39,12 @@ public class NewGameSouthInnerPanel extends SidePanel {
 
         boardSizeBox = new JComboBox();
 
-        JButton testButton1 = new JButton("test1");
-        JButton testButton3 = new JButton("Default Game");
+        JButton boardSize = new JButton("Board Size");
+        defaultGameButton = new JButton("Default Game");
+        defaultGameButton.addActionListener(this);
 //        JButton testButton4 = new JButton("Default Game");
-        JButton testButton5 = new JButton("Start Game With Options");
-        testButton5.setBackground(Color.PINK);
+        startGameButton = new JButton("Start Game With Options");
+        startGameButton.setBackground(Color.PINK);
 //        testButton5.setPreferredSize(new Dimension(300, 60));
 
 
@@ -69,7 +77,7 @@ public class NewGameSouthInnerPanel extends SidePanel {
         gridStructure.anchor = GridBagConstraints.LINE_END;
 //    gridStructure.anchor = GridBagConstraints.FIRST_LINE_START;
         gridStructure.insets = new Insets(0, 0, 0, 5);
-        add(testButton1, gridStructure);
+        add(boardSize, gridStructure);
 
 //        gridStructure.weightx = 1;
         gridStructure.gridx = 0;
@@ -90,7 +98,7 @@ public class NewGameSouthInnerPanel extends SidePanel {
         gridStructure.anchor = GridBagConstraints.LINE_END;
 //    gridStructure.anchor = GridBagConstraints.FIRST_LINE_START;
         gridStructure.insets = new Insets(0, 0, 0, 5);
-        add(testButton3, gridStructure);
+        add(defaultGameButton, gridStructure);
 //        gridStructure.gridwidth = 1;
 //
 //        gridStructure.weightx = 1;
@@ -117,7 +125,7 @@ public class NewGameSouthInnerPanel extends SidePanel {
 //        gridStructure.weighty = 1.0;
 
 //        gridStructure.insets = new Insets(0, 0, 0, 5);
-        add(testButton5, gridStructure);
+        add(startGameButton, gridStructure);
 
     }
 
@@ -127,4 +135,10 @@ public class NewGameSouthInnerPanel extends SidePanel {
         dim.height = height;
         setPreferredSize(dim);
     };
+
+    public void actionPerformed(final ActionEvent click) {
+        if (click.getSource().equals(defaultGameButton)) {
+           gameGui.selectWindow("rundefaultgame");
+        }
+    }
 }

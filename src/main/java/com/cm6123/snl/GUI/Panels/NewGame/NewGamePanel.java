@@ -42,9 +42,9 @@ public class NewGamePanel extends JPanel {
 
     public NewGamePanel(final GUIFrame gui) {
         this.gameGui = gui;
-        leftPanel = new NewGameWestInnerPanel("Basic Features");
-        rightPanel = new NewGameEastInnerPanel("Additional Features");
-        bottomPanel = new NewGameSouthInnerPanel("Board & Game");
+        leftPanel = new NewGameWestInnerPanel("Basic Features", gameGui);
+        rightPanel = new NewGameEastInnerPanel("Additional Features",gameGui);
+        bottomPanel = new NewGameSouthInnerPanel("Board & Game", gameGui);
 
 
         for (int i = 0; i < 10; i++) {

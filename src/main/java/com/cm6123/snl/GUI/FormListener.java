@@ -4,6 +4,5 @@ import java.util.EventListener;
 
 public interface FormListener extends EventListener {
      void formDatabaseEntry(FormEvents data);
-     void appendTextToPanel(String incorrectEntry);
      void incorrectEntryMessage();
 }

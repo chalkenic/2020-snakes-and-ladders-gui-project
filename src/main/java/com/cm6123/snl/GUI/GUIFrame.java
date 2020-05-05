@@ -2,6 +2,8 @@ package com.cm6123.snl.GUI;
 
 import com.cm6123.snl.GUI.Panels.*;
 import com.cm6123.snl.GUI.Panels.NewGame.NewGamePanel;
+import com.cm6123.snl.Game;
+import com.cm6123.snl.GameBuilder;
 //import com.cm6123.snl.GUI.Panels.NewAdditionPanel;
 //import com.cm6123.snl.GUI.Panels.GameTextPanel;
 //import com.cm6123.snl.GUI.Panels.SidePanel;
@@ -19,7 +21,7 @@ public class GUIFrame extends JFrame {
     private JButton button;
     //    private JTextArea textArea;
     private GameTextPanel textPanel;
-    private GameToolbarPanel toolbar;
+//    private GameToolbarPanel toolbar;
     private JPanel panelContainer;
     private JPanel currentPanel;
 //    private LayoutManager layout;
@@ -27,7 +29,7 @@ public class GUIFrame extends JFrame {
     private MainMenuPanel mainMenuPanel;
     private LoadGamePanel loadGamePanel;
     private NewGamePanel newGamePanel;
-//    private JMenuBar dropdownMenu;
+    private RunGamePanel runGamePanel;
     private MenuBar gameMenu;
 
     public GUIFrame() {
@@ -158,6 +160,38 @@ public class GUIFrame extends JFrame {
 
                 break;
 
+            case "rundefaultgame":
+                getContentPane().remove(currentPanel);
+                revalidate();
+
+                Game theGame = new GameBuilder()
+                        .withBoardSize(5)
+                        .withPlayers(2)
+                        .withSnakes(10, 3, 17, 11, 21, 7)
+                        .withLadders(4, 9, 13, 19, 16, 22)
+                        .build();
+
+                runGamePanel = new RunGamePanel(this, theGame);
+
+//                panelContainer.add(creationMenuPanel.createCreationPanel(), "2");
+                swapPanel(this,
+                        currentPanel,
+                        runGamePanel.createRunGamePanel(),
+                        BorderLayout.WEST);
+                currentPanel = newGamePanel;
+
+//            case "runnormalgame":
+//                getContentPane().remove(currentPanel);
+//                revalidate();
+//                runGamePanel = new RunGamePanel(this);
+//
+////                panelContainer.add(creationMenuPanel.createCreationPanel(), "2");
+//                swapPanel(this,
+//                        currentPanel,
+//                        runGamePanel.createRunGamePanel(),
+//                        BorderLayout.WEST);
+//                currentPanel = newGamePanel;
+                break;
 
             case "loadgame":
                 getContentPane().remove(textPanel);
@@ -230,9 +264,9 @@ public class GUIFrame extends JFrame {
                 additionPanel.setFormListener(new FormListener() {
 
 
-                    public void appendTextToPanel(final String text) {
-                        textPanel.appendText(text);
-                    }
+//                    public void appendTextToPanel(final String text) {
+//                        textPanel.appendText(text);
+//                    }
 
                     public void incorrectEntryMessage() {
                         textPanel.appendText("|------------------------------------------------------|"
@@ -313,6 +347,10 @@ public class GUIFrame extends JFrame {
         currentFrame.add(newPanel, borderLayout);
         currentFrame.revalidate();
 
+    }
+
+    public void appendTextToPanel(final String text) {
+        textPanel.appendText(text);
     }
 }
 //    }

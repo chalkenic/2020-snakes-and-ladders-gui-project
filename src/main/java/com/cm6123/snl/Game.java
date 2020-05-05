@@ -155,7 +155,7 @@ public final class Game {
     return players.getCurrentPlayer().getPlayerData();
   }
 
-  Player getCurrentPlayer() {
+  public Player getCurrentPlayer() {
     return players.getCurrentPlayer();
   }
 

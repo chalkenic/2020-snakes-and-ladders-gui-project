@@ -1,5 +1,6 @@
 package com.cm6123.snl.GUI.Panels.NewGame;
 
+import com.cm6123.snl.GUI.GUIFrame;
 import com.cm6123.snl.GUI.Panels.SidePanel;
 
 import javax.swing.*;
@@ -26,7 +27,7 @@ public class NewGameEastInnerPanel extends SidePanel {
 
 
 
-    public NewGameEastInnerPanel(final String borderTitle) {
+    public NewGameEastInnerPanel(final String borderTitle,final GUIFrame gui) {
 
         winningSquareOnlyOnLabel = new JLabel("Winning Square Feature: ");
         winningSquareOnlyOnLabel.setPreferredSize(new Dimension(250, 62));

@@ -1,5 +1,6 @@
 package com.cm6123.snl.GUI.Panels.NewGame;
 
+import com.cm6123.snl.GUI.GUIFrame;
 import com.cm6123.snl.GUI.Panels.SidePanel;
 
 import javax.swing.*;
@@ -25,7 +26,7 @@ public class NewGameWestInnerPanel extends SidePanel {
 
 
 
-    public NewGameWestInnerPanel(final String borderTitle) {
+    public NewGameWestInnerPanel(final String borderTitle,final GUIFrame gui) {
 
 //        setPanelSize(350, 380);
 

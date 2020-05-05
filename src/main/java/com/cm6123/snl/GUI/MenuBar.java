@@ -101,7 +101,6 @@ public class MenuBar extends JMenu implements ActionListener {
     }
 
     public void actionPerformed(final ActionEvent click) {
-        System.out.println(click);
 
         if (click.getSource().equals(mainMenu)) {
             gameGui.selectWindow("menu");
