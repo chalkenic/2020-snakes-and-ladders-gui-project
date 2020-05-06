@@ -173,7 +173,7 @@ public class GUIFrame extends JFrame {
                         .withPlayers(3)
                         .withSnakes(10, 3, 17, 11, 21, 7)
                         .withLadders(4, 9, 13, 19, 16, 22)
-                        .build();
+                        .buildWithWinningSquare();
 
                 runGamePanel = new RunGamePanel(this, theGame);
 

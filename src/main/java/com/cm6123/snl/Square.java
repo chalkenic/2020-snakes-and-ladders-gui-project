@@ -95,36 +95,11 @@ public class Square {
   public Boolean isBoostSquare() {
     return isBoostSquare;
   }
-
-  /**
-   * True if square starts a snake move.
-   * @return true if snake move is triggered here.
-   */
-  public Boolean isSnakeHead() {
-    return isSnakeStart;
-  }
-
-  /**
-   * True if square starts a ladder move.
-   * @return true if ladder move is triggered here.
-   */
-  public Boolean isLadderFoot() {
-    return isLadderStart;
-  }
-
   /**
    * Assigns square as Boost for determining player roll.
    */
   void setAsBoostSquare() {
     isBoostSquare = true;
-  }
-
-  void setAsSnakeHead() {
-    isSnakeStart = true;
-  }
-
-  void setAsLadderFoot() {
-    isLadderStart = true;
   }
 }
 

@@ -1,6 +1,5 @@
 package com.cm6123.snl;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -19,11 +18,17 @@ public final class Board {
    * Internal set of special (snake or ladder) squares.
    */
   private final Set<Integer> specials;
-
+  /**
+   * List of positions where snake head squares reside.
+   */
   private final List<Integer> snakeHeadList;
-
+  /**
+   * List of positions where ladder foot squares reside.
+   */
   private final List<Integer> ladderFootList;
-
+  /**
+   * List of positions where boost squares reside.
+   */
   private final List<Integer> boostList;
 
     /**
@@ -303,5 +308,14 @@ public final class Board {
    */
   public List<Integer> getBoostList() {
     return boostList;
+  }
+
+  public Integer getSquareDestination(final Integer choice) {
+    Integer squareChoice = null;
+    for (Square s : squares) {
+      if (s.getNumber() == choice) {
+        squareChoice = squares.get(choice).destination().getNumber();
+      }
+    } return squareChoice;
   }
 }

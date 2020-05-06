@@ -23,6 +23,8 @@ public class RunGamePanel extends SidePanel {
     private JLabel playerPositionLabel;
 //    private JTextField
     private JButton rollDiceButton;
+    private JButton newGameButton;
+    private JButton saveGameButton;
     private GridBagConstraints gridStructure;
     private Border currentPlayerBorder;
     private BoardMove boardMovement;
@@ -60,6 +62,9 @@ public class RunGamePanel extends SidePanel {
 //        gamePlayerList.setBorder(currentPlayerBorder);
 
         rollDiceButton = new JButton("Roll Dice");
+        newGameButton = new JButton("Start new Game");
+        newGameButton.setEnabled(false);
+        saveGameButton = new JButton("Save current game");
 
         rollDiceButton.addActionListener(new ActionListener() {
             @Override
@@ -69,7 +74,22 @@ public class RunGamePanel extends SidePanel {
                 }
             }
         });
-        boardMovement = new BoardMove(currentGame);
+
+        newGameButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                gameGui.selectWindow("newgame");
+                }
+        });
+
+//        saveGameButton.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(final ActionEvent e) {
+//
+//                }
+//            }
+//        });
+
 
     }
 
@@ -122,6 +142,18 @@ public class RunGamePanel extends SidePanel {
 
         add(rollDiceButton, gridStructure);
 
+        gridStructure.ipadx = 1;
+        gridStructure.ipady = 1;
+
+        gridStructure.gridx = 0;
+        gridStructure.gridy = 5;
+
+        gridStructure.anchor = GridBagConstraints.LINE_START;
+        add(saveGameButton, gridStructure);
+
+        gridStructure.anchor = GridBagConstraints.LINE_END;
+        add(newGameButton, gridStructure);
+
 
         launchGame();
         return this;
@@ -135,17 +167,22 @@ public class RunGamePanel extends SidePanel {
     }
 
     public void launchGame() {
+        System.out.println(currentGame.isWinningSquareOn());
          dice = new DiceSet(6, 1);
+        boardMovement = new BoardMove(currentGame, gameGui);
         playerTurnStart();
     }
 
     private void settlePlayerMove() {
         Integer diceRoll = dice.roll().getValue();
         Player currentPlayer = currentGame.getCurrentPlayer();
+        Integer currentPosition = currentPlayer.getPosition().get();
+        System.out.println("player " + currentPlayer.getColour() + "; start position: " + currentPosition);
+        System.out.println("player roll: " + diceRoll);
 
         gameGui.appendTextToPanel(currentPlayer.getColour() + " player has rolled a " + diceRoll + "!\n");
 
-        boardMovement.movePlayer(diceRoll);
+        boardMovement.movePlayer(diceRoll, currentPlayer, currentPosition);
 
         if (!currentGame.isGameOver()) {
             //Code adapted from Wayan Saryada - How do I get the items of a JList components?
@@ -155,7 +192,9 @@ public class RunGamePanel extends SidePanel {
                 if (player.toString() == currentPlayer.getColour().toString()) {
 
                     gameGui.appendTextToPanel(currentPlayer.getColour() + " player ends their turn at "
-                           + "position " + (currentPlayer.getPosition().get() + 1) + "\n\n");
+                            + "position " + (currentPlayer.getPosition().get() + 1) + "\n"
+                            + currentPlayer.getColour() + " distance covered: "
+                            + (currentPlayer.getPosition().get() - currentPosition) + " squares\n\n");
 
                 }
             }
@@ -167,6 +206,7 @@ public class RunGamePanel extends SidePanel {
                 if (player.toString() == currentPlayer.getColour().toString()) {
                     gamePlayerList.setSelectedIndex(i);
                     gamePlayerList.setSelectionBackground(Color.ORANGE);
+                    newGameButton.setEnabled(true);
 
                     gameGui.appendTextToPanel(currentPlayer.getColour().toString() + " player wins the "
                             + "game!");
@@ -180,6 +220,7 @@ public class RunGamePanel extends SidePanel {
     private void playerTurnStart() {
         Player currentPlayer = currentGame.getCurrentPlayer();
         Integer position = currentGame.getCurrentPlayer().getPosition().get();
+        System.out.println("player " + currentPlayer.getColour() + "; position " + position);
 
         for (int i = 0; i < gamePlayerList.getModel().getSize(); i++) {
             Object player = gamePlayerList.getModel().getElementAt(i);
