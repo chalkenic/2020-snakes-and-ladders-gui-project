@@ -110,7 +110,6 @@ public final class Game {
       //If winning Square Only feature switched on, player's position with new roll queried for legality.
       if (winningSquareOn) {
         if (checkIfLegalPosition(currentPlayer, squares)) {
-          System.out.println("hello?");
             //Player moves as normal if legal.
             movePlayerPosition(currentPlayer, squares);
         } else {
@@ -121,7 +120,7 @@ public final class Game {
         }
         //Game continues as normal if winning square feature off.
       } else {
-//          movePlayerPosition(currentPlayer, squares);
+          movePlayerPosition(currentPlayer, squares);
       }
 
 
@@ -194,7 +193,6 @@ public final class Game {
    * @return true if player still inside board boundaries.
    */
   private Boolean checkIfLegalPosition(final Player player, final Integer roll) {
-    System.out.println(numberOfSquares());
     if ((player.getPosition().get() + roll) >= numberOfSquares()) {
       System.out.print("WARNING: PLAYER ROLL (" + roll + ") "
              + "EXCEEDS BOARD SIZE (" + board.size() + "). "

@@ -318,4 +318,8 @@ public final class Board {
       }
     } return squareChoice;
   }
+
+  public Integer getWinningSquare() {
+    return squares.get(size() - 1).getNumber();
+  }
 }

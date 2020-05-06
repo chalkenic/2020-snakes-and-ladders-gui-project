@@ -169,10 +169,11 @@ public class GUIFrame extends JFrame {
                 revalidate();
 
                 Game theGame = new GameBuilder()
-                        .withBoardSize(5)
-                        .withPlayers(3)
-                        .withSnakes(10, 3, 17, 11, 21, 7)
-                        .withLadders(4, 9, 13, 19, 16, 22)
+                        .withBoardSize(10)
+                        .withPlayers(5)
+                        .withSnakes(12, 5, 17, 11, 21, 7)
+                        .withLadders(3, 18, 13, 19, 16, 22)
+                        .withBoosts(2, 6, 15)
                         .buildWithWinningSquare();
 
                 runGamePanel = new RunGamePanel(this, theGame);

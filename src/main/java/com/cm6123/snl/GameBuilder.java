@@ -86,7 +86,7 @@ public final class GameBuilder {
    * @return configured game object with board, snakes, ladders, players & winning square.
    */
   public Game buildWithWinningSquare() {
-    if (boosts.length < 1) {
+    if (boosts.length > 0) {
       Game theWinningSquareGame = new Game(tempPlayers, tempBoardSize, snakes, ladders, boosts);
       theWinningSquareGame.setWinningSquareOnlyOn();
       theWinningSquareGame.setBoostSquareOn();

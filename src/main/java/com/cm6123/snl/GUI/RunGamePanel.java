@@ -18,9 +18,13 @@ public class RunGamePanel extends SidePanel {
     private Game currentGame;
     private JList gamePlayerList;
     private DefaultListModel currentPlayers;
+    private JLabel winningSquareLabel;
     private JLabel currentPlayerLabel;
     private JLabel playerColourTurnLabel;
     private JLabel playerPositionLabel;
+
+    private JLabel playerColourTurnResultLabel;
+    private JLabel playerPositionResultLabel;
 //    private JTextField
     private JButton rollDiceButton;
     private JButton newGameButton;
@@ -46,11 +50,14 @@ public class RunGamePanel extends SidePanel {
 
         currentPlayers = new DefaultListModel();
 
-        currentPlayerLabel = new JLabel("Current Player turn");
-        playerColourTurnLabel = new JLabel();
-//        playerColourTurnLabel.setBorder(currentPlayerBorder);
-        playerPositionLabel = new JLabel();
-//        playerPositionLabel.setBorder(currentPlayerBorder);
+        winningSquareLabel = new JLabel("WINNING SQUARE: " + currentGame.getBoard().getWinningSquare());
+        winningSquareLabel.setFont(new Font("Arial Bold", Font.PLAIN, 20));
+
+        currentPlayerLabel = new JLabel("Player Order");
+        playerColourTurnLabel = new JLabel("Player turn: ");
+        playerPositionLabel = new JLabel("Player position: ");
+        playerColourTurnResultLabel = new JLabel();
+        playerPositionResultLabel = new JLabel();
 
         for (int i = 0; i < currentGame.numberOfPlayers(); i++) {
             currentPlayers.addElement(currentGame.getPlayerData(i).getColour().toString());
@@ -109,45 +116,41 @@ public class RunGamePanel extends SidePanel {
         gridStructure.weighty = 0.1;
         gridStructure.gridx = 0;
         gridStructure.gridy = 0;
+
+        add(winningSquareLabel, gridStructure);
+
         gridStructure.fill = GridBagConstraints.NONE;
 
-//        gridStructure.anchor = GridBagConstraints.LINE_END;
-
+        gridStructure.gridy = 1;
         add(currentPlayerLabel, gridStructure);
 
-        gridStructure.gridy = 1;
-//        gridStructure.fill = GridBagConstraints.NONE;
-
-//        gridStructure.anchor = GridBagConstraints.LINE_START;
-
+        gridStructure.gridy = 2;
         add(gamePlayerList, gridStructure);
 
-        gridStructure.gridy = 2;
-
-        add(playerColourTurnLabel, gridStructure);
-
         gridStructure.gridy = 3;
+        gridStructure.anchor = GridBagConstraints.LINE_START;
+        add(playerColourTurnLabel, gridStructure);
+        gridStructure.anchor = GridBagConstraints.CENTER;
+        add(playerColourTurnResultLabel, gridStructure);
 
+        gridStructure.gridy = 4;
+
+        gridStructure.anchor = GridBagConstraints.LINE_START;
         add(playerPositionLabel, gridStructure);
+        gridStructure.anchor = GridBagConstraints.CENTER;
+        add(playerPositionResultLabel, gridStructure);
 
         gridStructure.weightx = 2;
         gridStructure.weighty = 1;
-        gridStructure.gridy = 4;
-
+        gridStructure.gridy = 5;
         gridStructure.ipadx = 150;
         gridStructure.ipady = 150;
-
-//        gridStructure.anchor = GridBagConstraints.LINE_END;
-
-
         add(rollDiceButton, gridStructure);
 
         gridStructure.ipadx = 1;
         gridStructure.ipady = 1;
-
         gridStructure.gridx = 0;
-        gridStructure.gridy = 5;
-
+        gridStructure.gridy = 6;
         gridStructure.anchor = GridBagConstraints.LINE_START;
         add(saveGameButton, gridStructure);
 
@@ -168,7 +171,7 @@ public class RunGamePanel extends SidePanel {
 
     public void launchGame() {
         System.out.println(currentGame.isWinningSquareOn());
-         dice = new DiceSet(6, 1);
+         dice = new DiceSet(6, 2);
         boardMovement = new BoardMove(currentGame, gameGui);
         playerTurnStart();
     }
@@ -177,9 +180,9 @@ public class RunGamePanel extends SidePanel {
         Integer diceRoll = dice.roll().getValue();
         Player currentPlayer = currentGame.getCurrentPlayer();
         Integer currentPosition = currentPlayer.getPosition().get();
-        System.out.println("player " + currentPlayer.getColour() + "; start position: " + currentPosition);
-        System.out.println("player roll: " + diceRoll);
 
+        gameGui.appendTextToPanel(currentPlayer.getColour() + " player starts their turn at position "
+                + currentPosition + ".\n");
         gameGui.appendTextToPanel(currentPlayer.getColour() + " player has rolled a " + diceRoll + "!\n");
 
         boardMovement.movePlayer(diceRoll, currentPlayer, currentPosition);
@@ -192,8 +195,8 @@ public class RunGamePanel extends SidePanel {
                 if (player.toString() == currentPlayer.getColour().toString()) {
 
                     gameGui.appendTextToPanel(currentPlayer.getColour() + " player ends their turn at "
-                            + "position " + (currentPlayer.getPosition().get() + 1) + "\n"
-                            + currentPlayer.getColour() + " distance covered: "
+                            + "position " + currentPlayer.getPosition().get() + ".\n\n"
+                            + currentPlayer.getColour() + " player distance covered: "
                             + (currentPlayer.getPosition().get() - currentPosition) + " squares\n\n");
 
                 }
@@ -207,8 +210,9 @@ public class RunGamePanel extends SidePanel {
                     gamePlayerList.setSelectedIndex(i);
                     gamePlayerList.setSelectionBackground(Color.ORANGE);
                     newGameButton.setEnabled(true);
-
-                    gameGui.appendTextToPanel(currentPlayer.getColour().toString() + " player wins the "
+                    gameGui.appendTextToPanel(currentPlayer.getColour() + " player ends their turn at "
+                                    + "position " + currentPlayer.getPosition().get() + "\n");
+                    gameGui.appendTextToPanel(currentPlayer.getColour() + " player wins the "
                             + "game!");
                 }
             }
@@ -220,15 +224,14 @@ public class RunGamePanel extends SidePanel {
     private void playerTurnStart() {
         Player currentPlayer = currentGame.getCurrentPlayer();
         Integer position = currentGame.getCurrentPlayer().getPosition().get();
-        System.out.println("player " + currentPlayer.getColour() + "; position " + position);
 
         for (int i = 0; i < gamePlayerList.getModel().getSize(); i++) {
             Object player = gamePlayerList.getModel().getElementAt(i);
             if (player.toString() == currentPlayer.getColour().toString()) {
                 gamePlayerList.setSelectedIndex(i);
                 gamePlayerList.setSelectionBackground(Color.CYAN);
-                playerColourTurnLabel.setText("Player turn: " + currentPlayer.getColour());
-                playerPositionLabel.setText("Player position: " + (position + 1));
+                playerColourTurnResultLabel.setText(currentPlayer.getColour().toString());
+                playerPositionResultLabel.setText(position.toString());
 
             }
         }
