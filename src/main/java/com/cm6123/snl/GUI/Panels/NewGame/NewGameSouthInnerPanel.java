@@ -16,10 +16,11 @@ public class NewGameSouthInnerPanel extends SidePanel implements ActionListener 
     private JLabel defaultGameLabel;
     private JLabel boardSizeLabel;
     private JButton defaultGameButton;
-    private JButton startGameButton;
+    private JButton customGameButton;
     private JComboBox boardSizeBox;
     private GridBagConstraints gridStructure;
     private GUIFrame gameGui;
+    private JSlider boardSize;
 
     public NewGameSouthInnerPanel(final String borderTitle, final GUIFrame gui) {
         this.gameGui = gui;
@@ -27,7 +28,7 @@ public class NewGameSouthInnerPanel extends SidePanel implements ActionListener 
         boardSizeLabel = new JLabel("Board Size ");
         boardSizeLabel.setPreferredSize(new Dimension(400, 30));
 
-        defaultGameLabel = new JLabel("Start a default game (2 players, set snakes/ladders, no features)");
+        defaultGameLabel = new JLabel("Start default game (2 players, example snakes/ladders/dice, no features)");
         defaultGameLabel.setPreferredSize(new Dimension(400, 30));
 
 
@@ -39,12 +40,23 @@ public class NewGameSouthInnerPanel extends SidePanel implements ActionListener 
 
         boardSizeBox = new JComboBox();
 
-        JButton boardSize = new JButton("Board Size");
-        defaultGameButton = new JButton("Default Game");
+//        JButton boardSize = new JButton("Board Size");
+        boardSize = new JSlider(4, 15, 4);
+        boardSize.setPreferredSize(new Dimension(600, 50));
+        boardSize.setPaintLabels(true);
+        boardSize.setPaintTicks(true);
+        boardSize.setPaintTrack(true);
+
+        boardSize.setMajorTickSpacing(1);
+//        boardSize.setMinorTickSpacing(1);
+
+
+        defaultGameButton = new JButton("Start Default Game");
         defaultGameButton.addActionListener(this);
 //        JButton testButton4 = new JButton("Default Game");
-        startGameButton = new JButton("Start Game With Options");
-        startGameButton.setBackground(Color.PINK);
+        customGameButton = new JButton("Start Game With Options");
+        customGameButton.setBackground(Color.PINK);
+        customGameButton.addActionListener(this);
 //        testButton5.setPreferredSize(new Dimension(300, 60));
 
 
@@ -125,7 +137,7 @@ public class NewGameSouthInnerPanel extends SidePanel implements ActionListener 
 //        gridStructure.weighty = 1.0;
 
 //        gridStructure.insets = new Insets(0, 0, 0, 5);
-        add(startGameButton, gridStructure);
+        add(customGameButton, gridStructure);
 
     }
 
@@ -139,6 +151,12 @@ public class NewGameSouthInnerPanel extends SidePanel implements ActionListener 
     public void actionPerformed(final ActionEvent click) {
         if (click.getSource().equals(defaultGameButton)) {
            gameGui.selectWindow("rundefaultgame");
+        } else if (click.getSource().equals(customGameButton)) {
+            gameGui.selectWindow("runcustomgame");
         }
+    }
+
+    public Integer getBoardSize() {
+        return boardSize.getValue();
     }
 }

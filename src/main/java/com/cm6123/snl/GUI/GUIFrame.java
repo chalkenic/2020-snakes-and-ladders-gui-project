@@ -4,6 +4,7 @@ import com.cm6123.snl.GUI.Panels.*;
 import com.cm6123.snl.GUI.Panels.NewGame.NewGamePanel;
 import com.cm6123.snl.Game;
 import com.cm6123.snl.GameBuilder;
+import com.cm6123.snl.dice.DiceSet;
 //import com.cm6123.snl.GUI.Panels.NewAdditionPanel;
 //import com.cm6123.snl.GUI.Panels.GameTextPanel;
 //import com.cm6123.snl.GUI.Panels.SidePanel;
@@ -31,6 +32,9 @@ public class GUIFrame extends JFrame {
     private NewGamePanel newGamePanel;
     private RunGamePanel runGamePanel;
     private MenuBar gameMenu;
+
+    private Game newGame;
+    private DiceSet diceSet;
 
     public GUIFrame() {
         super("Snakes & Ladders");
@@ -107,7 +111,6 @@ public class GUIFrame extends JFrame {
     }
 
     public void selectWindow(final String windowChoice) {
-        System.out.println(currentPanel);
 
 //
 //        if (currentPanel != null) {
@@ -168,15 +171,16 @@ public class GUIFrame extends JFrame {
                 getContentPane().remove(currentPanel);
                 revalidate();
 
-                Game theGame = new GameBuilder()
-                        .withBoardSize(10)
-                        .withPlayers(5)
-                        .withSnakes(12, 5, 17, 11, 21, 7)
-                        .withLadders(3, 18, 13, 19, 16, 22)
-                        .withBoosts(2, 6, 15)
-                        .buildWithWinningSquare();
+                Game defaultGame = new GameBuilder()
+                        .withBoardSize(5)
+                        .withPlayers(2)
+                        .withSnakes(14, 5, 20, 11)
+                        .withLadders(3, 12, 13, 17)
+                        .build();
 
-                runGamePanel = new RunGamePanel(this, theGame);
+                diceSet = new DiceSet(6, 1);
+
+                runGamePanel = new RunGamePanel(this, defaultGame, diceSet);
 
 //                panelContainer.add(creationMenuPanel.createCreationPanel(), "2");
                 swapPanel(this,
@@ -185,17 +189,58 @@ public class GUIFrame extends JFrame {
                         BorderLayout.WEST);
                 currentPanel = runGamePanel;
 
-//            case "runnormalgame":
-//                getContentPane().remove(currentPanel);
-//                revalidate();
-//                runGamePanel = new RunGamePanel(this);
+                break;
+
+            case "runcustomgame":
+                textPanel.wipeTextBox();
+                getContentPane().remove(currentPanel);
+                revalidate();
+
+                CreateGame customGame = new CreateGame(this);
+//                try {
+                    customGame.getCustomGameData(newGamePanel);
+
+                    newGame = customGame.getGame();
+
+                    diceSet = new DiceSet(customGame.getDiceFaces(), customGame.getDiceCount());
+
+                    runGamePanel = new RunGamePanel(this, newGame, diceSet);
+                    swapPanel(this,
+                            currentPanel,
+                            runGamePanel.createRunGamePanel(),
+                            BorderLayout.WEST);
+
+                    currentPanel = runGamePanel;
+//                } catch (NullPointerException n) {
+//                    System.out.println("No game found. returning to main menu.");
+//                    selectWindow("menu");
+//                }
+
+
+
+
 //
-////                panelContainer.add(creationMenuPanel.createCreationPanel(), "2");
-//                swapPanel(this,
-//                        currentPanel,
-//                        runGamePanel.createRunGamePanel(),
-//                        BorderLayout.WEST);
-//                currentPanel = newGamePanel;
+//                runGamePanel = new RunGamePanel(this, customGame.getCustomGame());
+
+//                panelContainer.add(creationMenuPanel.createCreationPanel(), "2");
+
+                break;
+
+            case "runduplicateGame":
+
+                textPanel.wipeTextBox();
+                getContentPane().remove(currentPanel);
+                revalidate();
+
+                runGamePanel = new RunGamePanel(this, newGame, diceSet);
+
+                swapPanel(this,
+                        currentPanel,
+                        runGamePanel.createRunGamePanel(),
+                        BorderLayout.WEST);
+
+                currentPanel = runGamePanel;
+
                 break;
 
             case "loadgame":

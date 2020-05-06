@@ -22,6 +22,10 @@ public class RunGamePanel extends SidePanel {
     private JLabel currentPlayerLabel;
     private JLabel playerColourTurnLabel;
     private JLabel playerPositionLabel;
+    private JLabel boostFeatureLabel;
+    private JLabel winningFeatureLabel;
+    private JLabel boostFeatureResultLabel;
+    private JLabel winningFeatureResultLabel;
 
     private JLabel playerColourTurnResultLabel;
     private JLabel playerPositionResultLabel;
@@ -33,10 +37,14 @@ public class RunGamePanel extends SidePanel {
     private Border currentPlayerBorder;
     private BoardMove boardMovement;
     private DiceSet dice;
+    private String winningSquareFeature;
+    private String boostFeature;
 
-    public RunGamePanel(final GUIFrame gui, final Game newGame) {
+    public RunGamePanel(final GUIFrame gui, final Game newGame, final DiceSet diceChoice) {
         this.currentGame = newGame;
         this.gameGui = gui;
+        this.dice = diceChoice;
+
 
 
         setPanelSize(350, 200);
@@ -47,6 +55,33 @@ public class RunGamePanel extends SidePanel {
         gamePlayerList.setFixedCellWidth(100);
         gamePlayerList.setBorder(currentPlayerBorder);
 
+        boostFeatureLabel = new JLabel("Boost feature: ");
+        winningFeatureLabel = new JLabel("Winning Square feature: ");
+        boostFeatureResultLabel = new JLabel();
+        boostFeatureResultLabel.setSize(new Dimension(20, 20));
+        //Code adapted from Peter lang answer: How do I set a JLabel's background color?
+        //Available at: https://stackoverflow.com/questions/2380314/how-do-i-set-a-jlabels-background-color
+
+        boostFeatureResultLabel.setOpaque(true);
+        winningFeatureResultLabel = new JLabel();
+        winningFeatureResultLabel.setSize(new Dimension(20, 20));
+        winningFeatureResultLabel.setOpaque(true);
+
+        if (currentGame.isWinningSquareOn()) {
+            winningFeatureResultLabel.setText("ON");
+            winningFeatureResultLabel.setBackground(Color.GREEN);
+        } else {
+            winningFeatureResultLabel.setText("OFF");
+            winningFeatureResultLabel.setBackground(Color.RED);
+        }
+
+        if (currentGame.getBoostSquareOn()) {
+            boostFeatureResultLabel.setText("ON");
+            boostFeatureResultLabel.setBackground(Color.GREEN);
+        } else {
+            boostFeatureResultLabel.setText("OFF");
+            boostFeatureResultLabel.setBackground(Color.RED);
+        }
 
         currentPlayers = new DefaultListModel();
 
@@ -89,15 +124,12 @@ public class RunGamePanel extends SidePanel {
                 }
         });
 
-//        saveGameButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(final ActionEvent e) {
-//
-//                }
-//            }
-//        });
-
-
+        saveGameButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                gameGui.selectWindow("runduplicateGame");
+            }
+        });
     }
 
     public JPanel createRunGamePanel() {
@@ -150,7 +182,26 @@ public class RunGamePanel extends SidePanel {
         gridStructure.ipadx = 1;
         gridStructure.ipady = 1;
         gridStructure.gridx = 0;
+        gridStructure.weighty = 0.1;
+
         gridStructure.gridy = 6;
+        gridStructure.anchor = GridBagConstraints.LINE_START;
+        add(boostFeatureLabel, gridStructure);
+
+        gridStructure.anchor = GridBagConstraints.CENTER;
+        add(boostFeatureResultLabel, gridStructure);
+
+        gridStructure.gridy = 7;
+        gridStructure.anchor = GridBagConstraints.LINE_START;
+        add(winningFeatureLabel, gridStructure);
+
+
+        gridStructure.anchor = GridBagConstraints.CENTER;
+        add(winningFeatureResultLabel, gridStructure);
+
+        gridStructure.weighty = 1;
+        gridStructure.gridy = 8;
+
         gridStructure.anchor = GridBagConstraints.LINE_START;
         add(saveGameButton, gridStructure);
 
@@ -171,7 +222,6 @@ public class RunGamePanel extends SidePanel {
 
     public void launchGame() {
         System.out.println(currentGame.isWinningSquareOn());
-         dice = new DiceSet(6, 2);
         boardMovement = new BoardMove(currentGame, gameGui);
         playerTurnStart();
     }
@@ -195,9 +245,12 @@ public class RunGamePanel extends SidePanel {
                 if (player.toString() == currentPlayer.getColour().toString()) {
 
                     gameGui.appendTextToPanel(currentPlayer.getColour() + " player ends their turn at "
-                            + "position " + currentPlayer.getPosition().get() + ".\n\n"
-                            + currentPlayer.getColour() + " player distance covered: "
-                            + (currentPlayer.getPosition().get() - currentPosition) + " squares\n\n");
+                            + "position " + currentPlayer.getPosition().get() + "\n\n");
+
+                    gameGui.appendTextToPanel(currentPlayer.getColour() + " player distance covered: "
+                            + (currentPlayer.getPosition().get() - currentPosition) + " squares\n");
+
+                    gameGui.appendTextToPanel("|---------------------------------------------------------|\n");
 
                 }
             }
@@ -211,9 +264,10 @@ public class RunGamePanel extends SidePanel {
                     gamePlayerList.setSelectionBackground(Color.ORANGE);
                     newGameButton.setEnabled(true);
                     gameGui.appendTextToPanel(currentPlayer.getColour() + " player ends their turn at "
-                                    + "position " + currentPlayer.getPosition().get() + "\n");
+                                    + "position " + currentPlayer.getPosition().get() + "\n\n");
                     gameGui.appendTextToPanel(currentPlayer.getColour() + " player wins the "
-                            + "game!");
+                            + "game!\n");
+                    gameGui.appendTextToPanel("|---------------------------------------------------------|\n");
                 }
             }
         }

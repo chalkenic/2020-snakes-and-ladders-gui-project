@@ -27,16 +27,18 @@ public class NewGameEastInnerPanel extends SidePanel {
 
 
 
-    public NewGameEastInnerPanel(final String borderTitle,final GUIFrame gui) {
+
+    public NewGameEastInnerPanel(final String borderTitle, final GUIFrame gui) {
 
         winningSquareOnlyOnLabel = new JLabel("Winning Square Feature: ");
         winningSquareOnlyOnLabel.setPreferredSize(new Dimension(250, 62));
         boostSquareOnLabel = new JLabel("Boost Square Feature: ");
         boostSquareOnLabel.setPreferredSize(new Dimension(250, 62));
-        boostSquareChoiceLabel = new JLabel("Boost Squares: ");
+        boostSquareChoiceLabel = new JLabel("Boost Squares (e.g. 7, 15): ");
         boostSquareChoiceLabel.setPreferredSize(new Dimension(250, 62));
         recordGameLabel = new JLabel("Check to record game ");
         recordGameLabel.setPreferredSize(new Dimension(250, 64));
+
 
         boostCheckBox = new JCheckBox();
         winningCheckBox = new JCheckBox();
@@ -128,4 +130,28 @@ public class NewGameEastInnerPanel extends SidePanel {
         dim.height = height;
         setPreferredSize(dim);
     };
+
+    public Boolean getWinningCheckBox() {
+        Boolean entry = false;
+        if (winningCheckBox.isSelected()) {
+            entry = true;
+        }
+        return entry;
+    }
+
+    public Boolean getRecordCheckBox() {
+        Boolean entry = false;
+        if (recordCheckBox.isSelected()) {
+            entry = true;
+        }
+        return entry;
+    }
+
+    public String getBoostChoiceField() {
+        String entry = null;
+        if (boostCheckBox.isSelected()) {
+            entry = boostChoiceField.getText();
+        }
+        return entry;
+    }
 }

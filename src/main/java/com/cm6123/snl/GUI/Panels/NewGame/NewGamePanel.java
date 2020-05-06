@@ -90,4 +90,15 @@ public JPanel createNewGamePanel() {
     return this;
 }
 
+    public NewGameWestInnerPanel getLeftPanel() {
+        return leftPanel;
+    }
+
+    public NewGameEastInnerPanel getRightPanel() {
+        return rightPanel;
+    }
+
+    public NewGameSouthInnerPanel getSouthPanel() {
+        return bottomPanel;
+    }
 }

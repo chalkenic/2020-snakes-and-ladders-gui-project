@@ -12,13 +12,13 @@ public class NewGameWestInnerPanel extends SidePanel {
 
     private JLabel snakeChoiceLabel;
     private JLabel ladderChoiceLabel;
-    private JLabel playerChoiceLabel;
+    private JLabel playerCountLabel;
     private JLabel diceCountChoiceLabel;
     private JLabel diceFaceChoiceLabel;
 
     private JTextField snakeChoiceField;
     private JTextField ladderChoiceField;
-    private JTextField playerChoiceField;
+    private JTextField playerCountField;
     private JTextField diceCountChoiceField;
     private JTextField diceFaceChoiceField;
 
@@ -26,19 +26,20 @@ public class NewGameWestInnerPanel extends SidePanel {
 
 
 
-    public NewGameWestInnerPanel(final String borderTitle,final GUIFrame gui) {
+
+    public NewGameWestInnerPanel(final String borderTitle, final GUIFrame gui) {
 
 //        setPanelSize(350, 380);
 
-        playerChoiceLabel = new JLabel("Choose Player count: ");
-        playerChoiceLabel.setPreferredSize(new Dimension(250, 50));
-        snakeChoiceLabel = new JLabel("Create Snakes: ");
+        playerCountLabel = new JLabel("Choose Player count (2 - 5): ");
+        playerCountLabel.setPreferredSize(new Dimension(250, 50));
+        snakeChoiceLabel = new JLabel("Create Snakes (e.g. 14,5,20,11): ");
         snakeChoiceLabel.setPreferredSize(new Dimension(250, 50));
-        ladderChoiceLabel = new JLabel("Create Ladders: ");
+        ladderChoiceLabel = new JLabel("Create Ladders (e.g. 3,12,13,17): ");
         ladderChoiceLabel.setPreferredSize(new Dimension(250, 50));
-        diceCountChoiceLabel = new JLabel("Choose Dice amount: ");
+        diceCountChoiceLabel = new JLabel("Choose Dice amount (e.g. 1): ");
         diceCountChoiceLabel.setPreferredSize(new Dimension(250, 50));
-        diceFaceChoiceLabel = new JLabel("Choose dice face count: ");
+        diceFaceChoiceLabel = new JLabel("Choose dice face count (e.g. 6): ");
         diceFaceChoiceLabel.setPreferredSize(new Dimension(250, 50));
 
         TitledBorder innerGameBarBorder = BorderFactory.createTitledBorder(borderTitle);
@@ -49,7 +50,7 @@ public class NewGameWestInnerPanel extends SidePanel {
 
         snakeChoiceField = new JTextField(6);
         ladderChoiceField = new JTextField(6);
-        playerChoiceField = new JTextField(6);
+        playerCountField = new JTextField(6);
         diceCountChoiceField = new JTextField(6);
         diceFaceChoiceField = new JTextField(6);
 
@@ -57,18 +58,18 @@ public class NewGameWestInnerPanel extends SidePanel {
 
         gridStructure = new GridBagConstraints();
 
-        //Instructs playerChoiceLabel position on Panel.
+        //Instructs playerCountLabel position on Panel.
         gridStructure.weightx = 3;
         gridStructure.weighty = 1;
         gridStructure.gridx = 0;
         gridStructure.gridy = 0;
         gridStructure.insets = new Insets(0, 5, 0, 0);
-        add(playerChoiceLabel, gridStructure);
+        add(playerCountLabel, gridStructure);
 
 
         gridStructure.gridx = 5;
         gridStructure.insets = new Insets(0, 0, 0, 5);
-        add(snakeChoiceField, gridStructure);
+        add(playerCountField, gridStructure);
 
         //Instructs snakeChoiceLabel position on Panel.
         gridStructure.weightx = 3;
@@ -80,7 +81,7 @@ public class NewGameWestInnerPanel extends SidePanel {
         gridStructure.weightx = 0.1;
         gridStructure.gridx = 5;
         gridStructure.insets = new Insets(0, 0, 0, 5);
-        add(ladderChoiceField, gridStructure);
+        add(snakeChoiceField, gridStructure);
 
         //Instructs ladderChoiceLabel position on Panel.
         gridStructure.weightx = 3;
@@ -92,7 +93,7 @@ public class NewGameWestInnerPanel extends SidePanel {
         gridStructure.weightx = 0.1;
         gridStructure.gridx = 5;
         gridStructure.insets = new Insets(0, 0, 0, 5);
-        add(playerChoiceField, gridStructure);
+        add(ladderChoiceField, gridStructure);
 
         //Instructs diceCountChoiceLabel position on Panel.
         gridStructure.weightx = 3;
@@ -129,5 +130,23 @@ public class NewGameWestInnerPanel extends SidePanel {
         setPreferredSize(dim);
     };
 
+    public String getSnakeChoiceField() {
+        return snakeChoiceField.getText();
+    }
 
+    public String getLadderChoiceField() {
+        return ladderChoiceField.getText();
+    }
+
+    public Integer getPlayerCountField() {
+        return Integer.parseInt(playerCountField.getText());
+    }
+
+    public Integer getDiceCountChoiceField() {
+        return Integer.parseInt(diceCountChoiceField.getText());
+    }
+
+    public Integer getDiceFaceChoiceField() {
+        return Integer.parseInt(diceFaceChoiceField.getText());
+    }
 }
