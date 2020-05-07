@@ -1,4 +1,4 @@
-package com.cm6123.snl.GUI;
+package com.cm6123.snl.GUI.PanelBackgroundLogic;
 
 import com.cm6123.snl.gameDB.GameDBUtils;
 

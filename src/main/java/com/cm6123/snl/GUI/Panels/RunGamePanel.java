@@ -1,6 +1,6 @@
 package com.cm6123.snl.GUI.Panels;
 
-import com.cm6123.snl.GUI.BoardMove;
+import com.cm6123.snl.GUI.PanelBackgroundLogic.BoardMove;
 import com.cm6123.snl.GUI.GUIFrame;
 import com.cm6123.snl.Game;
 import com.cm6123.snl.Player;

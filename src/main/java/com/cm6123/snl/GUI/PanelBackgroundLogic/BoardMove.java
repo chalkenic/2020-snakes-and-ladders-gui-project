@@ -1,6 +1,7 @@
-package com.cm6123.snl.GUI;
+package com.cm6123.snl.GUI.PanelBackgroundLogic;
 
 import com.cm6123.snl.*;
+import com.cm6123.snl.GUI.GUIFrame;
 
 import java.util.List;
 

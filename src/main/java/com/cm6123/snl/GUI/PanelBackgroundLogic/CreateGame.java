@@ -1,5 +1,6 @@
-package com.cm6123.snl.GUI;
+package com.cm6123.snl.GUI.PanelBackgroundLogic;
 
+import com.cm6123.snl.GUI.GUIFrame;
 import com.cm6123.snl.GUI.Panels.NewGame.NewGameEastInnerPanel;
 import com.cm6123.snl.GUI.Panels.NewGame.NewGamePanel;
 import com.cm6123.snl.GUI.Panels.NewGame.NewGameSouthInnerPanel;

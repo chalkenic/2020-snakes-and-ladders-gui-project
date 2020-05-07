@@ -1,6 +1,8 @@
 package com.cm6123.snl.GUI.Panels;
 
 import com.cm6123.snl.GUI.*;
+import com.cm6123.snl.gameDB.GameDBUtils;
+import com.cm6123.snl.gameDB.LoadDataDBManager;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -8,6 +10,7 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
 
 public class EditorChoicePanel extends SidePanel {
 
@@ -26,7 +29,7 @@ public class EditorChoicePanel extends SidePanel {
     private GridBagConstraints gridStructure;
 
     /////////////////BEGIN TEST CODE////////////////
-    private JList newGame;
+    private JList dbEntries;
 
     /////////////////END TEST CODE//////////////////
 
@@ -36,8 +39,8 @@ public class EditorChoicePanel extends SidePanel {
 
         setPanelSize(350, 200);
 
-
-
+        dbEntries = new JList();
+        DefaultListModel dbEntryList = new DefaultListModel();
 
 
 //        this.setLayout(layout);
@@ -45,17 +48,26 @@ public class EditorChoicePanel extends SidePanel {
 
         if (newAddition == Edit.SNAKE) {
 
+            loadDBGames(Edit.SNAKE);
 
             additionFirstEntryLabel = new JLabel("Snake Head: ");
             additionSecondEntryLabel = new JLabel("Snake Tail: ");
         } else if (newAddition == Edit.LADDER) {
+
+            loadDBGames(Edit.LADDER);
             additionFirstEntryLabel = new JLabel("Ladder Base: ");
             additionSecondEntryLabel = new JLabel("Ladder Top: ");
         } else if (newAddition == Edit.BOOST) {
+
+            loadDBGames(Edit.BOOST);
             additionFirstEntryLabel = new JLabel("Boost location: ");
         } else if (newAddition == Edit.PLAYER) {
+
+            loadDBGames(Edit.PLAYER);
             additionFirstEntryLabel = new JLabel("Edit Player name: ");
         } else if (newAddition == Edit.DIE) {
+
+            loadDBGames(Edit.DIE);
             additionFirstEntryLabel = new JLabel("Dice Count: ");
             additionSecondEntryLabel = new JLabel("Die faces: ");
         }
@@ -67,9 +79,8 @@ public class EditorChoicePanel extends SidePanel {
         }
 
 
-
-            /////////////////BEGIN TEST CODE////////////////
-//            newGame = new JList();
+        /////////////////BEGIN TEST CODE////////////////
+//
 //
 //            DefaultListModel newGameList = new DefaultListModel();
 //            newGameList.addElement(new BoardCategory(0, "1x1 Board"));
@@ -81,58 +92,58 @@ public class EditorChoicePanel extends SidePanel {
 //            newGame.setBorder(BorderFactory.createEtchedBorder());
 //            newGame.setSelectedIndex(0);
 
-            /////////////////END TEST CODE//////////////////
+        /////////////////END TEST CODE//////////////////
 
-            createAdditionButton = new JButton("Edit " + newAddition.toString().toLowerCase());
+        createAdditionButton = new JButton("Edit " + newAddition.toString().toLowerCase());
 //        rollDiceButton.setPreferredSize(new Dimension(300, 200));
 
-            createAdditionButton.addActionListener(new ActionListener() {
-                //
+        createAdditionButton.addActionListener(new ActionListener() {
+            //
 //            @Override
-                public void actionPerformed(final ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
 
 
-                    FormEvents newEntry = null;
+                FormEvents newEntry = null;
 
-                    if (additionChoice != Edit.PLAYER) {
-                        if (!additionFirstField.getText().equals("")) {
+                if (additionChoice != Edit.PLAYER) {
+                    if (! additionFirstField.getText().equals("")) {
 
-                            if (!additionSecondField.getText().equals("")) {
+                        if (! additionSecondField.getText().equals("")) {
+                            try {
+                                Integer squareStart = Integer.parseInt(additionFirstField.getText());
+
                                 try {
-                                    Integer squareStart = Integer.parseInt(additionFirstField.getText());
+                                    Integer squareEnd = Integer.parseInt(additionSecondField.getText());
 
-                                    try {
-                                        Integer squareEnd = Integer.parseInt(additionSecondField.getText());
-
-                                        newEntry = new FormEvents(this, squareStart, squareEnd, additionChoice);
-                                    } catch (NumberFormatException stringEntered) {
-                                        newEntry = new FormEvents(this, squareStart, additionChoice);
-                                    }
+                                    newEntry = new FormEvents(this, squareStart, squareEnd, additionChoice);
                                 } catch (NumberFormatException stringEntered) {
-                                    System.out.println("ERROR - incorrect edit.");
-                                    formListener.incorrectEntryMessage();
-                                }
-
-                            } else {
-                                try {
-                                    Integer squareStart = Integer.parseInt(additionFirstField.getText());
                                     newEntry = new FormEvents(this, squareStart, additionChoice);
-                                } catch (NumberFormatException stringEntered) {
-                                    System.out.println("ERROR - incorrect edit.");
-                                    formListener.incorrectEntryMessage();
                                 }
+                            } catch (NumberFormatException stringEntered) {
+                                System.out.println("ERROR - incorrect edit.");
+                                formListener.incorrectEntryMessage();
                             }
+
                         } else {
-                            formListener.incorrectEntryMessage();
+                            try {
+                                Integer squareStart = Integer.parseInt(additionFirstField.getText());
+                                newEntry = new FormEvents(this, squareStart, additionChoice);
+                            } catch (NumberFormatException stringEntered) {
+                                System.out.println("ERROR - incorrect edit.");
+                                formListener.incorrectEntryMessage();
+                            }
                         }
                     } else {
-                        if (!additionFirstField.getText().equals("")) {
-                            String newPlayerName = additionFirstField.getText();
-                            newEntry = new FormEvents(this, newPlayerName, additionChoice);
-                        } else {
-                            formListener.incorrectEntryMessage();
-                        }
+                        formListener.incorrectEntryMessage();
                     }
+                } else {
+                    if (! additionFirstField.getText().equals("")) {
+                        String newPlayerName = additionFirstField.getText();
+                        newEntry = new FormEvents(this, newPlayerName, additionChoice);
+                    } else {
+                        formListener.incorrectEntryMessage();
+                    }
+                }
 //                    BoardCategory chosenData = (BoardCategory) newGame.getSelectedValue();
 
                 if (formListener != null && newEntry != null) {
@@ -149,11 +160,12 @@ public class EditorChoicePanel extends SidePanel {
         dim.width = width;
         dim.height = height;
         setPreferredSize(dim);
-    };
+    }
+
+    ;
 
 
-
-//    @Override
+    //    @Override
     public JPanel editChoicePanel() {
 
         //Code adapted from TitledBorder.CENTER : TitledBorder « javax.swing.border « Java by API
@@ -230,13 +242,13 @@ public class EditorChoicePanel extends SidePanel {
         return this;
     }
 
-//    @Override
+    //    @Override
     public void setFormListener(final FormListener listener) {
         this.formListener = listener;
     }
 
 
-//    @Override
+    //    @Override
     public Boolean entryValidation(final Edit newSquare, final int... values) {
         Boolean validEntry = false;
         try {
@@ -262,9 +274,40 @@ public class EditorChoicePanel extends SidePanel {
         return validEntry;
     }
 
-//    @Override
+    //    @Override
     public final Edit getAdditionChoice() {
         return additionChoice;
     }
+
+    private void loadDBGames(final Edit choice) {
+        Connection connect = GameDBUtils.connectGuiToDatabase();
+
+        if (choice == Edit.SNAKE) {
+            LoadDataDBManager dbLoader = new LoadDataDBManager();
+            dbLoader.countSnakesInDatabase(connect);
+//            System.out.println(totalentries);
+        }
+//        } else if (choice == Edit.LADDER) {
+//            Integer totalentries = LoadDataDBManager.countLaddersInDatabase(connect);
+//            System.out.println(totalentries);
+//
+//        } else if (choice == Edit.BOOST) {
+//            Integer totalentries = LoadDataDBManager.countBoostsInDatabase(connect);
+//            System.out.println(totalentries);
+//
+//
+//        } else if (choice == Edit.PLAYER) {
+//            Integer totalentries = LoadDataDBManager.countPlayersInDatabase(connect);
+//            System.out.println(totalentries);
+//
+//        } else if (choice == Edit.DIE) {
+//            Integer totalentries = LoadDataDBManager.countDiceInDatabase(connect);
+//            System.out.println(totalentries);
+//        }
+//        for (Integer i = 1; i < totalGames + 1; i++) {
+//         savedGames.addElement(new GameFile(i, "File " + i));
     }
+}
+
+
 

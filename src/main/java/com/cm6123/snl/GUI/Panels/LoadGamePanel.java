@@ -1,8 +1,10 @@
 package com.cm6123.snl.GUI.Panels;
 
 import com.cm6123.snl.GUI.*;
+import com.cm6123.snl.GUI.PanelBackgroundLogic.CreateGame;
+import com.cm6123.snl.GUI.PanelBackgroundLogic.GameFile;
 import com.cm6123.snl.gameDB.GameDBUtils;
-import com.cm6123.snl.gameDB.LoadGameDBManager;
+import com.cm6123.snl.gameDB.LoadDataDBManager;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -24,11 +26,11 @@ public class LoadGamePanel extends JPanel {
     private String currentSelection;
     private FormListener formListener;
     private JScrollPane scrollPane;
-    private LoadGameDBManager loadDatabase;
+    private LoadDataDBManager loadDatabase;
 
     public LoadGamePanel(final GUIFrame gui) {
         this.gameGui = gui;
-        this.loadDatabase = new LoadGameDBManager();
+        this.loadDatabase = new LoadDataDBManager();
         savedGames = new DefaultListModel();
         loadDBGames();
 
@@ -131,7 +133,7 @@ public class LoadGamePanel extends JPanel {
 
     private void loadDBGames() {
         Connection connect = GameDBUtils.connectGuiToDatabase();
-        Integer totalGames = LoadGameDBManager.countGamesInDatabase(connect);
+        Integer totalGames = LoadDataDBManager.countGamesInDatabase(connect);
         for (Integer i = 1; i < totalGames + 1; i++) {
             savedGames.addElement(new GameFile(i, "File " + i));
         }
