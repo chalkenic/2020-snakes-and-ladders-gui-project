@@ -118,7 +118,7 @@ public class CreateGame {
         gameGui.appendTextToPanel("Board size set to " + tempBoardSize + "x" + tempBoardSize + ".\n");
 
     }
-    public Game getGame() {
+    public Game buildGame() {
         Game newCustomGame = null;
         gameGui.appendTextToPanel("-----------------------------------------------------------------------|\n");
             if (winningSquareOnlyFeature) {
@@ -158,8 +158,14 @@ public class CreateGame {
                         .withLadders(ladders)
                         .build();
             }
-            
+
         return newCustomGame;
+    }
+
+    public void getLoadedGameData(final GameFile loadGameChoice) {
+        snakes = new Integer[loadGameChoice.getGameSnakes().size()];
+        ladders = new Integer[]
+
     }
 
     public Integer getDiceFaces() {
@@ -169,6 +175,7 @@ public class CreateGame {
     public Integer getDiceCount() {
         return diceCount;
     }
+
 
 
 }

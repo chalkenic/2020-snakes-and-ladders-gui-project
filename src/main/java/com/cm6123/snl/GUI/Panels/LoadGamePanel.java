@@ -73,10 +73,12 @@ public class LoadGamePanel extends JPanel {
                 FormEvents loadGameEvent = null;
 
                 GameFile loadGameChoice = (GameFile) gameList.getSelectedValue();
-                loadGameEvent = new FormEvents(this, loadGameChoice.getGameID());
+//                loadGameEvent = new FormEvents(this, loadGameChoice.getId());
 
                 if (formListener != null) {
-                    formListener.formDatabaseEntry(loadGameEvent);
+//                    formListener.formDatabaseEntry(loadGameEvent);
+                    CreateGame loadedGame = new CreateGame(gameGui);
+                    loadedGame.getLoadedGameData(loadGameChoice);
                 }
 
 
@@ -130,7 +132,6 @@ public class LoadGamePanel extends JPanel {
         Connection connect = GameDBUtils.connectGuiToDatabase();
         Integer totalGames = LoadGameDBManager.countGamesInDatabase(connect);
         for (Integer i = 1; i < totalGames + 1; i++) {
-            System.out.println(i);
             savedGames.addElement(new GameFile(i, "File " + i));
         }
     }

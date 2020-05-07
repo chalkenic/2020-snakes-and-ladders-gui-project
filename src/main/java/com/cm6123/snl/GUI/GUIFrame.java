@@ -205,7 +205,7 @@ public class GUIFrame extends JFrame {
 //                try {
                 customGame.getCustomGameData(newGamePanel);
 
-                newGame = customGame.getGame();
+                newGame = customGame.buildGame();
 
 
                 diceSet = new DiceSet(customGame.getDiceFaces(), customGame.getDiceCount());
@@ -243,7 +243,7 @@ public class GUIFrame extends JFrame {
                 } else {
                     customGame.getCustomGameData(newGamePanel);
 
-                    newGame = customGame.getGame();
+                    newGame = customGame.buildGame();
                 }
 
                 duplicateGamePanel = new RunGamePanel(this, newGame, diceSet);

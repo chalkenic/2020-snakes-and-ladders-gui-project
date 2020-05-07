@@ -15,9 +15,9 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema snakesAndLaddersData
 -- -----------------------------------------------------
-DROP SCHEMA IF EXISTS `snakesAndLaddersDatabase`;
+-- DROP SCHEMA IF EXISTS `snakesAndLaddersDatabase`;
 CREATE SCHEMA IF NOT EXISTS `snakesAndLaddersDatabase` DEFAULT CHARACTER SET utf8 ;
-USE `snakesAndLaddersData` ;
+USE `snakesAndLaddersDatabase` ;
 
 
 -- ----------------------------------------------------------------------------------
@@ -27,13 +27,11 @@ USE `snakesAndLaddersData` ;
 -- 
 --
 -- ----------------------------------------------------------------------------------
-
 -- -----------------------------------------------------
 -- Table `snakesAndLaddersData`.`Dice`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `snakesAndLaddersData`.`Dice` ;
 
-CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`Dice` (
+CREATE TABLE IF NOT EXISTS `snakesAndLaddersDatabase`.`Dice` (
   `diceID` INTEGER NOT NULL AUTO_INCREMENT,
   `diceCount` INT NOT NULL,
   `diceFaces` INT NOT NULL,
@@ -48,9 +46,8 @@ INSERT INTO Dice (diceCount, diceFaces) VALUES (1, 6);
 -- -----------------------------------------------------
 -- Table `snakesAndLaddersData`.`Game`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `snakesAndLaddersData`.`Game` ;
 
-CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`Game` (
+CREATE TABLE IF NOT EXISTS `snakesAndLaddersDatabase`.`Game` (
   `gameID` INT NOT NULL AUTO_INCREMENT,
   `gamePlayerTurn` INT NOT NULL DEFAULT 1,
   `gameRound` INT NOT NULL DEFAULT 1,
@@ -59,10 +56,11 @@ CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`Game` (
   `gameHasEnded` TINYINT NULL DEFAULT false,
   `boostSquareFeature` TINYINT NULL DEFAULT false,
   `winningSquareOnlyFeature` TINYINT NULL DEFAULT false,
+  `recordGameFeature` TINYINT NULL DEFAULT false,
   `dice_diceID` INT NOT NULL,
   PRIMARY KEY (`gameID`),
     FOREIGN KEY (`dice_diceID`)
-    REFERENCES `snakesAndLaddersData`.`Dice` (`diceID`)
+    REFERENCES `snakesAndLaddersDatabase`.`Dice` (`diceID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -70,9 +68,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `snakesAndLaddersData`.`Players`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `snakesAndLaddersData`.`players` ;
 
-CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`players` (
+CREATE TABLE IF NOT EXISTS `snakesAndLaddersDatabase`.`players` (
   `playerID` INT NOT NULL AUTO_INCREMENT,
   -- `playerName` VARCHAR(45),
   `playerColour` VARCHAR(45) NOT NULL,
@@ -83,9 +80,9 @@ CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`players` (
   `pl_PlayerListID`INT NOT NULL,
   PRIMARY KEY (`playerID`),
     FOREIGN KEY (`game_gameID`)
-    REFERENCES `snakesAndLaddersData`.`Game` (`gameID`),
+    REFERENCES `snakesAndLaddersDatabase`.`Game` (`gameID`),
     FOREIGN KEY (`pl_PlayerListID`)
-    REFERENCES `snakesAndLaddersData`.`PlayerList` (`PlayerListID`)
+    REFERENCES `snakesAndLaddersDatabase`.`PlayerList` (`PlayerListID`)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
@@ -94,9 +91,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `snakesAndLaddersData`.`PlayerList`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `snakesAndLaddersData`.`PlayerList` ;
 
-CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`PlayerList` (
+CREATE TABLE IF NOT EXISTS `snakesAndLaddersDatabase`.`PlayerList` (
 	`PlayerListID` INT NOT NULL AUTO_INCREMENT,
     `playerName` VARCHAR(45),
     `playerWinCount` INT DEFAULT 0,
@@ -108,16 +104,15 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `snakesAndLaddersData`.`Snakes`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `snakesAndLaddersData`.`Snakes` ;
 
-CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`Snakes` (
+CREATE TABLE IF NOT EXISTS `snakesAndLaddersDatabase`.`Snakes` (
   `snakeID` INT NOT NULL AUTO_INCREMENT,
   `snakeHead` INT NOT NULL,
   `snakeTail` INT NOT NULL,
   `game_gameID` INT NOT NULL,
   PRIMARY KEY (`snakeID`),
     FOREIGN KEY (`game_gameID`)
-    REFERENCES `snakesAndLaddersData`.`Game` (`gameID`)
+    REFERENCES `snakesAndLaddersDatabase`.`Game` (`gameID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -125,16 +120,15 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `snakesAndLaddersData`.`Ladders`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `snakesAndLaddersData`.`Ladders` ;
 
-CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`Ladders` (
+CREATE TABLE IF NOT EXISTS `snakesAndLaddersDatabase`.`Ladders` (
   `ladderID` INT NOT NULL AUTO_INCREMENT,
   `ladderFoot` INT NOT NULL,
   `ladderTop` INT NOT NULL,
   `game_gameID` INT NOT NULL,
   PRIMARY KEY (`ladderID`),
     FOREIGN KEY (`game_gameID`)
-    REFERENCES `snakesAndLaddersData`.`Game` (`gameID`)
+    REFERENCES `snakesAndLaddersDatabase`.`Game` (`gameID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -142,15 +136,14 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `snakesAndLaddersData`.`Boosts`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `snakesAndLaddersData`.`Boosts` ;
 
-CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`Boosts` (
+CREATE TABLE IF NOT EXISTS `snakesAndLaddersDatabase`.`Boosts` (
   `boostID` INT NOT NULL AUTO_INCREMENT,
   `boostLocation` INT NOT NULL,
   `game_gameID` INT NOT NULL,
   PRIMARY KEY (`boostID`),
     FOREIGN KEY (`Game_gameID`)
-    REFERENCES `snakesAndLaddersData`.`Game` (`gameID`)
+    REFERENCES `snakesAndLaddersDatabase`.`Game` (`gameID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -158,9 +151,9 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `snakesAndLaddersData`.`Moves`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `snakesAndLaddersData`.`Moves` ;
 
-CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`Moves` (
+
+CREATE TABLE IF NOT EXISTS `snakesAndLaddersDatabase`.`Moves` (
   `moveID` INT NOT NULL AUTO_INCREMENT,
   `moveStart` INT NOT NULL,
   `moveEnd` INT NOT NULL,
@@ -172,11 +165,11 @@ CREATE TABLE IF NOT EXISTS `snakesAndLaddersData`.`Moves` (
   `game_gameID` INT NOT NULL,
   PRIMARY KEY (`moveID`),
     FOREIGN KEY (`players_playerID`)
-    REFERENCES `snakesAndLaddersData`.`players` (`playerID`)
+    REFERENCES `snakesAndLaddersDatabase`.`players` (`playerID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
     FOREIGN KEY (`game_gameID`)
-    REFERENCES `snakesAndLaddersData`.`Game` (`gameID`)
+    REFERENCES `snakesAndLaddersDatabase`.`Game` (`gameID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -194,6 +187,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Counts amount of snake squares landed on in a game.
 -- -----------------------------------------------------
+DROP FUNCTION IF EXISTS snake_count_landed_in_game;
 
 DELIMITER ££
 CREATE FUNCTION snake_count_landed_in_game (gameChoice INT)
@@ -214,6 +208,8 @@ DELIMITER ;
 -- -----------------------------------------------------
 -- Counts amount of ladder squares landed on in a game.
 -- -----------------------------------------------------
+
+DROP FUNCTION IF EXISTS ladder_count_landed_in_game;
 
 DELIMITER ££
 CREATE FUNCTION ladder_count_landed_in_game (gameChoice INT)
@@ -236,6 +232,8 @@ DELIMITER ;
 -- Counts amount of ladder squares landed on in a game.
 -- -----------------------------------------------------
 
+DROP FUNCTION IF EXISTS boost_count_landed_in_game;
+
 DELIMITER ££
 CREATE FUNCTION boost_count_landed_in_game (gameChoice INT)
 RETURNS INT NOT DETERMINISTIC
@@ -256,7 +254,7 @@ DELIMITER ;
 -- Finds longest total moves taken in a game.
 -- -----------------------------------------------------
 
-DROP FUNCTION IF EXISTS find_longest_game()
+DROP FUNCTION IF EXISTS find_longest_game;
 
 DELIMITER ££
 CREATE FUNCTION find_longest_game()
@@ -277,7 +275,7 @@ DELIMITER ;
 -- Finds lowest total moves taken in a game.
 -- -----------------------------------------------------
 
-DROP FUNCTION IF EXISTS find_shortest_game()
+DROP FUNCTION IF EXISTS find_shortest_game;
 
 DELIMITER ££
 CREATE FUNCTION find_shortest_game()
@@ -298,7 +296,7 @@ DELIMITER ;
 -- Find player with highest win count.
 -- -----------------------------------------------------
 
-DROP FUNCTION IF EXISTS find_highest_win_player()
+DROP FUNCTION IF EXISTS find_highest_win_player;
 
 DELIMITER ££
 CREATE FUNCTION find_highest_win_player()
@@ -321,7 +319,7 @@ DELIMITER ;
 -- Find player with lowest win count.
 -- -----------------------------------------------------
 
-DROP FUNCTION IF EXISTS find_lowest_win_player()
+DROP FUNCTION IF EXISTS find_lowest_win_player;
 
 DELIMITER ££
 CREATE FUNCTION find_lowest_win_player()
@@ -344,7 +342,7 @@ DELIMITER ;
 -- Find player with highest total moves.
 -- -----------------------------------------------------
 
-DROP FUNCTION IF EXISTS find_most_player_moves()
+DROP FUNCTION IF EXISTS find_most_player_moves;
 
 DELIMITER ££
 CREATE FUNCTION find_most_player_moves()
@@ -369,7 +367,7 @@ DELIMITER ;
 -- -----------------------------------------------------
 -- Find average total moves per game.
 -- -----------------------------------------------------
-DROP FUNCTION IF EXISTS average_moves_per_game()
+DROP FUNCTION IF EXISTS average_moves_per_game;
 
 DELIMITER ££
 CREATE FUNCTION average_moves_per_game()
@@ -393,7 +391,7 @@ DELIMITER ;
 -- -----------------------------------------------------
 -- Find average moves during game for specific player.
 -- -----------------------------------------------------
-DROP FUNCTION IF EXISTS average_player_moves_per_game()
+DROP FUNCTION IF EXISTS average_player_moves_per_game;
 
 DELIMITER ££
 CREATE FUNCTION average_player_moves_per_game(playerChoice INT)
@@ -474,6 +472,7 @@ DELIMITER ;
 -- 
 --
 -- ----------------------------------------------------------------------------------
+
 
 -- -----------------------------------------------------
 -- Procedure passes in new Player data from call into table. 
@@ -624,9 +623,9 @@ DELIMITER //
 CREATE PROCEDURE select_players_from_game(IN currentgame INT)
 BEGIN
 	SELECT 
-    playerColour AS 'player Colour',  
-    playerPosition AS 'current position', 
-    playerMovesTaken AS 'moves taken'
+    playerColour,  
+    playerPosition, 
+    playerMovesTaken
     FROM players
     WHERE game_gameID = currentGame;
 END //
@@ -708,6 +707,7 @@ DELIMITER ;
 -- -----------------------------------------------------
 -- Trigger calculates diceroll into table before entry of player's positions on turn.
 -- -----------------------------------------------------
+DROP TRIGGER IF EXISTS calculate_move_roll_from_entries;
 
 DELIMITER ??
 CREATE TRIGGER calculate_move_roll_from_entries BEFORE INSERT
@@ -722,6 +722,7 @@ DELIMITER ;
 -- -----------------------------------------------------
 -- Trigger increments a player's personal & assigned game's total roll counts upon entering a new move into Moves table..
 -- -----------------------------------------------------
+DROP TRIGGER IF EXISTS append_player_moves_made_total;
 
 DELIMITER ??
 CREATE TRIGGER append_player_moves_made_total AFTER INSERT
@@ -751,6 +752,8 @@ DELIMITER ;
 -- Trigger a move's final roll position to the specific player for current record purpose.
 -- -----------------------------------------------------
 
+DROP TRIGGER IF EXISTS assign_move_end_position_to_player_on_players_table;
+
 DELIMITER ??
 CREATE TRIGGER assign_move_end_position_to_player_on_players_table AFTER INSERT
 ON Moves
@@ -773,6 +776,9 @@ DELIMITER ;
 -- -----------------------------------------------------
 -- Trigger notes whether player's roll triggered a special square (snake/ladder/boost) and assigns dedicated value tracker to true if so.
 -- -----------------------------------------------------
+
+DROP TRIGGER IF EXISTS assert_if_player_lands_on_special_square;
+
 DELIMITER ??
 CREATE TRIGGER assert_if_player_lands_on_special_square BEFORE INSERT
 ON Moves
@@ -800,6 +806,8 @@ DELIMITER ;
 -- -----------------------------------------------------
 -- Trigger marks if player won game during turn. Increments player, playerList and marks Game as complete.
 -- -----------------------------------------------------
+
+DROP TRIGGER IF EXISTS confirm_if_player_has_won_game;
 
 DELIMITER ??
 CREATE TRIGGER confirm_if_player_has_won_game AFTER INSERT
@@ -857,6 +865,9 @@ DELIMITER ;
 -- -----------------------------------------------------
 -- Trigger increments game turn when move entry made.
 -- -----------------------------------------------------
+
+DROP TRIGGER IF EXISTS increment_game_turn_count;
+
 DELIMITER ??
 CREATE TRIGGER increment_game_turn_count AFTER INSERT
 ON Moves
@@ -876,6 +887,8 @@ DELIMITER ;
 -- -----------------------------------------------------
 -- Trigger increments game round when turns reach player count. game turns reset to 1.
 -- -----------------------------------------------------
+
+DROP TRIGGER IF EXISTS increment_new_game_round;
 
 DELIMITER ??
 CREATE TRIGGER increment_new_game_round AFTER INSERT
@@ -926,29 +939,29 @@ values (36,  true, false, 1);
 insert into Game(boardSize, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
 values (100,  true, true, 2);
 
-CALL add_new_game(50, 5);
+CALL add_new_game(50, 1);
 
 CALL add_new_snake (16,8, 1);
-CALL add_new_snake (16,8, 2);
-CALL add_new_snake (16,8, 3);
+CALL add_new_snake (18,8, 2);
+CALL add_new_snake (22,8, 3);
 
 CALL add_new_snake (7, 3, 1);
-CALL add_new_snake (7, 3, 2);
-CALL add_new_snake (7, 3, 3);
+CALL add_new_snake (9, 3, 2);
+CALL add_new_snake (11, 3, 3);
 
-CALL add_new_ladder(9, 13, 1);
-CALL add_new_ladder(9, 13, 2);
-CALL add_new_ladder(9, 13, 3);
+CALL add_new_ladder(4, 13, 1);
+CALL add_new_ladder(5, 13, 2);
+CALL add_new_ladder(6, 13, 3);
 
-CALL add_new_ladder (4, 21, 1);
-CALL add_new_ladder (4, 21, 2);
-CALL add_new_ladder (4, 21, 3);
+CALL add_new_ladder (14, 21, 1);
+CALL add_new_ladder (15, 21, 2);
+CALL add_new_ladder (17, 21, 3);
 
-CALL add_new_boost(14, 1);
+CALL add_new_boost(2, 1);
 CALL add_new_boost (14, 2);
-CALL add_new_boost (14, 3);
-CALL add_new_boost (19, 1);
-CALL add_new_boost (19, 2);
+CALL add_new_boost (18, 3);
+CALL add_new_boost (10, 1);
+CALL add_new_boost (11, 2);
 CALL add_new_boost (19, 3);
 
 INSERT INTO PlayerList(playerName, playerWinCount) VALUES ("Fred", 2);
@@ -958,15 +971,15 @@ INSERT INTO PlayerList(playerName, playerWinCount) VALUES ("Wendy", 5);
 
 CALL add_new_player("Bill");
 
-CALL add_new_player_to_game('ORANGE', 1, 1);
-CALL add_new_player_to_game('GREEN', 1, 2);
-CALL add_new_player_to_game('BLUE', 1, 3);
-CALL add_new_player_to_game('ORANGE', 2, 1);
-CALL add_new_player_to_game('GREEN', 2, 3);
-CALL add_new_player_to_game('ORANGE', 3, 4);
-CALL add_new_player_to_game('GREEN', 3, 3);
-CALL add_new_player_to_game('ORANGE', 4, 1);
-CALL add_new_player_to_game('GREEN', 4, 3);
+CALL add_new_player_to_game('RED', 1, 1);
+CALL add_new_player_to_game('BLUE', 1, 2);
+CALL add_new_player_to_game('YELLOW', 1, 3);
+CALL add_new_player_to_game('RED', 2, 1);
+CALL add_new_player_to_game('BLUE', 2, 3);
+CALL add_new_player_to_game('RED', 3, 4);
+CALL add_new_player_to_game('BLUE', 3, 3);
+CALL add_new_player_to_game('RED', 4, 1);
+CALL add_new_player_to_game('BLUE', 4, 3);
 
 
 CALL add_player_move(0, 4, 1, 1);
@@ -1009,42 +1022,57 @@ DELIMITER ;
 --
 --
 -- ----------------------------------------------------------------------------------
+DROP PROCEDURE IF EXISTS test;
 
-CALL insert_dummy_data;
+DELIMITER !!
+CREATE PROCEDURE test()
+BEGIN
+	CALL insert_dummy_data;
 
-CALL select_game(1, @gameChoice);
-CALL select_players_from_game(@gameChoice); 
-CALL select_dice_choice_from_game(@gameChoice);
+	CALL select_game(1, @gameChoice);
+	CALL select_players_from_game(@gameChoice); 
+	CALL select_dice_choice_from_game(@gameChoice);
 
-CALL select_game_snakes(@gameChoice);
-CALL select_game_ladders(@gameChoice);
-CALL select_game_boosts(@gameChoice);
+	CALL select_game_snakes(@gameChoice);
+	CALL select_game_ladders(@gameChoice);
+	CALL select_game_boosts(@gameChoice);
+    
+    SET @snakeResult = snake_count_landed_in_game(@gameChoice);
+	SET @ladderResult = ladder_count_landed_in_game(@gameChoice);
+	SET @boostResult = boost_count_landed_in_game(@gameChoice);
 
-SET @snakeResult = snake_count_landed_in_game(@gameChoice);
-SET @ladderResult = ladder_count_landed_in_game(@gameChoice);
-SET @boostResult = boost_count_landed_in_game(@gameChoice);
+	SELECT @snakeResult AS 'Snakes hit in game 1', @ladderResult AS 'Ladders hit in game 1', @boostResult AS 'Boosts hit in game 1';
 
-SELECT @snakeResult AS 'Snakes hit in game 1', @ladderResult AS 'Ladders hit in game 1', @boostResult AS 'Boosts hit in game 1';
+	SET @longestGame = find_longest_game();
+	SET @shortestGame = find_shortest_game();
+	SELECT @shortestGame AS 'Shortest Game (turns)',  @longestGame AS 'Longest Game (turns)';
 
-SET @longestGame = find_longest_game();
-SET @shortestGame = find_shortest_game();
-SELECT @shortestGame AS 'Shortest Game (turns)',  @longestGame AS 'Longest Game (turns)';
+	SET @highestGameWins = find_highest_win_player();
+	SET @lowestGameWins = find_lowest_win_player();
+	SELECT @highestGameWins AS 'Highest Win Count', @lowestGameWins AS 'Lowest Win Count';
 
-SET @highestGameWins = find_highest_win_player();
-SET @lowestGameWins = find_lowest_win_player();
-SELECT @highestGameWins AS 'Highest Win Count', @lowestGameWins AS 'Lowest Win Count';
+	SET @averageGameMoves = average_moves_per_game();
+	SET @averagePlayerMoves1 = average_player_moves_per_game(1);
+	SET @averagePlayerMoves2 = average_player_moves_per_game(3);
+	SET @highestMoveCount = find_most_player_moves();
+	SET @highestMoveAverage = best_player_move_average();
 
-SET @averageGameMoves = average_moves_per_game();
-SET @averagePlayerMoves1 = average_player_moves_per_game(1);
-SET @averagePlayerMoves2 = average_player_moves_per_game(3);
-SET @highestMoveCount = find_most_player_moves();
-SET @highestMoveAverage = best_player_move_average();
+	SELECT @averageGameMoves AS 'Average Game Moves', @averagePlayerMoves1 AS 'Average moves made by player 1', @averagePlayerMoves2 AS 'Average moves made by player 3', @HighestMoveCount AS 'Highest Player Move Count',
+	@highestMoveAverage AS 'Best Move Average' ;
 
-SELECT @averageGameMoves AS 'Average Game Moves', @averagePlayerMoves1 AS 'Average moves made by player 1', @averagePlayerMoves2 AS 'Average moves made by player 3', @HighestMoveCount AS 'Highest Player Move Count',
-@highestMoveAverage AS 'Best Move Average' ;
+END !!
+DELIMITER ;
 
+-- CALL test();
 
+SELECT * FROM game;
 
+call select_dice_choice_from_game(1);
+
+call select_game_snakes(1);
+call select_game_ladders(1);
+call select_game_boosts(1);
+call select_players_from_game(1);
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
