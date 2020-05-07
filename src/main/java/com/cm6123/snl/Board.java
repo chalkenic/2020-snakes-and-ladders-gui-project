@@ -18,6 +18,18 @@ public final class Board {
    * Internal set of special (snake or ladder) squares.
    */
   private final Set<Integer> specials;
+  /**
+   * List of positions where snake head squares reside.
+   */
+  private final List<Integer> snakeHeadList;
+  /**
+   * List of positions where ladder foot squares reside.
+   */
+  private final List<Integer> ladderFootList;
+  /**
+   * List of positions where boost squares reside.
+   */
+  private final List<Integer> boostList;
 
     /**
      * States default dice size for determining boost squares.
@@ -45,6 +57,10 @@ public final class Board {
     setLastSquareAsWinner();
 
     specials = new HashSet<>();
+
+    snakeHeadList = new ArrayList<>();
+    ladderFootList = new ArrayList<>();
+    boostList = new ArrayList<>();
 
 
     addSnakesAndLadders(snakes, ladders);
@@ -74,6 +90,10 @@ public final class Board {
     setLastSquareAsWinner();
 
     specials = new HashSet<>();
+
+    snakeHeadList = new ArrayList<>();
+    ladderFootList = new ArrayList<>();
+    boostList = new ArrayList<>();
     addInteractiveSquares(snakes, ladders, boosts);
   }
 
@@ -209,6 +229,7 @@ public final class Board {
     }
 
     specials.add(boost);
+    boostList.add(boost);
     Square boostSquare = squares.get(boost);
     Square newBoost = new BoostSquare(this, boost);
 
@@ -231,7 +252,7 @@ public final class Board {
       throw new IllegalStateException("Snake can't go up");
 
     }
-
+    snakeHeadList.add(head);
     specials.add(head);
     specials.add(tail);
 
@@ -254,7 +275,7 @@ public final class Board {
       throw new IllegalStateException("Ladder can't go down");
     }
 
-
+    ladderFootList.add(foot);
     specials.add(foot);
     specials.add(top);
     Square topSquare = squares.get(top);
@@ -267,5 +288,38 @@ public final class Board {
     squares.set(index, newSquare);
   }
 
+  /**
+   * method parses all snake head squares created.
+   * @return list of snake head squares.
+   */
+  public List<Integer> getSnakeHeadList() {
+    return snakeHeadList;
+  }
+  /**
+   * method parses all ladder foot squares created.
+   * @return list of ladder foot squares.
+   */
+  public List<Integer> getLadderFootList() {
+    return ladderFootList;
+  }
+  /**
+   * method parses all boost squares created.
+   * @return list of boost squares.
+   */
+  public List<Integer> getBoostList() {
+    return boostList;
+  }
 
+  public Integer getSquareDestination(final Integer choice) {
+    Integer squareChoice = null;
+    for (Square s : squares) {
+      if (s.getNumber() == choice) {
+        squareChoice = squares.get(choice).destination().getNumber();
+      }
+    } return squareChoice;
+  }
+
+  public Integer getWinningSquare() {
+    return squares.get(size() - 1).getNumber();
+  }
 }

@@ -20,10 +20,20 @@ public class Square {
   private Boolean isBoostSquare = false;
 
   /**
+   * Does this square start a snake move?
+   */
+  private Boolean isSnakeStart = false;
+
+  /**
+   * Does this square start a ladder move?
+   */
+  private Boolean isLadderStart = false;
+
+  /**
    * Construct a Square.
    *
    * @param aBoard - the board of the which the square is part
-   * @param num - the number of the square
+   * @param num    - the number of the square
    */
   Square(final Board aBoard, final Integer num) {
     board = aBoard;
@@ -32,9 +42,9 @@ public class Square {
   }
 
 
-
   /**
    * Get the number of the square.
+   *
    * @return the number of the square
    */
   public Integer getNumber() {
@@ -43,6 +53,7 @@ public class Square {
 
   /**
    * Get the destination of the Player should they land on this square.
+   *
    * @return the destination square.
    */
   protected Square destination() {
@@ -53,6 +64,7 @@ public class Square {
    * Return a string representation of the number of the Square.
    * Given that Java is 0 based, the label will be the number + 1;
    * Feels like there is a better solution.
+   *
    * @return the label of the Square.
    */
   public String getLabel() {
@@ -61,6 +73,7 @@ public class Square {
 
   /**
    * True if this is a winning square.
+   *
    * @return true if this is a winning square.
    */
   Boolean isWinningSquare() {
@@ -76,12 +89,12 @@ public class Square {
 
   /**
    * True if this is a boost square.
+   *
    * @return true if this is a boost square.
    */
-  Boolean isBoostSquare() {
+  public Boolean isBoostSquare() {
     return isBoostSquare;
   }
-
   /**
    * Assigns square as Boost for determining player roll.
    */
@@ -89,3 +102,8 @@ public class Square {
     isBoostSquare = true;
   }
 }
+
+
+
+
+

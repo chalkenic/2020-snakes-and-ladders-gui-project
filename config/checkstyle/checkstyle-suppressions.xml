@@ -1,0 +1,16 @@
+<?xml version= "1.0"?>
+
+<!DOCTYPE suppressions PUBLIC
+        "-//Checkstyle//DTD SuppresionsFilter Configuration 1.2//EN"
+        "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+
+<suppressions>
+
+    <suppress checks = "MagicNumber"
+              files = "com[\\/]cm6123[\\/]snl[\\/]GUI[\\/]"/>
+
+    <suppress checks = "AvoidStarImport"
+              files = "com[\\/]cm6123[\\/]snl[\\/]GUI[\\/]"/>
+
+</suppressions>
+
