@@ -76,11 +76,7 @@ public class MainMenuPanel extends JPanel {
                 GameDBManager newDatabase = new GameDBManager();
                 Connection connect = GameDBUtils.connectGuiToDatabase();
                 newDatabase.createDatabase(connect);
-                loadGameButton.setEnabled(true);
-                editorButton.setEnabled(true);
-                databaseLoadedLabel.setEnabled(true);
-                databaseLoadedLabel.setText("Database Loaded!");
-                gameGui.setDataBaseConnection(true);
+                enableFrontPage();
                 gameGui.getGameMenu().enableDatabaseNavigation();
                 //                gridStructure.gridy = 4;
 //                add(databaseLoadedLabel, gridStructure);
@@ -191,6 +187,14 @@ public class MainMenuPanel extends JPanel {
 
 
         return this;
+    }
+
+    public void enableFrontPage() {
+        loadGameButton.setEnabled(true);
+        editorButton.setEnabled(true);
+        databaseLoadedLabel.setEnabled(true);
+        databaseLoadedLabel.setText("Database Loaded!");
+        gameGui.setDataBaseConnection(true);
     }
 }
 

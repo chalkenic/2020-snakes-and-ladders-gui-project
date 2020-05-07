@@ -271,8 +271,13 @@ public final class Game {
     return accumulatedPlayerRoll;
   }
 
-  public Player firstplayer() {
-    return players.get(0);
+  /**
+   * Grab the specific player in game.
+   * @param player - the number specified.
+   * @return Player object
+   */
+  public Player getPlayer(final Integer player) {
+    return players.get(player);
   }
 }
 

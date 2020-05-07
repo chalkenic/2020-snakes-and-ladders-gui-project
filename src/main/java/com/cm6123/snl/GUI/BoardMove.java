@@ -1,9 +1,6 @@
 package com.cm6123.snl.GUI;
 
-import com.cm6123.snl.Board;
-import com.cm6123.snl.Game;
-import com.cm6123.snl.Player;
-import com.cm6123.snl.Square;
+import com.cm6123.snl.*;
 
 import java.util.List;
 
@@ -140,5 +137,10 @@ public class BoardMove {
 
             }
         } return noBoost;
+    }
+
+    public void moveLoadedGamePlayer(final Player player, final Integer position) {
+        Position startingSquare = new Position(position);
+        player.moveTo(startingSquare);
     }
 }

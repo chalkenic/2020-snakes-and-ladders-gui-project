@@ -1,6 +1,7 @@
-package com.cm6123.snl.GUI;
+package com.cm6123.snl.GUI.Panels;
 
-import com.cm6123.snl.GUI.Panels.SidePanel;
+import com.cm6123.snl.GUI.BoardMove;
+import com.cm6123.snl.GUI.GUIFrame;
 import com.cm6123.snl.Game;
 import com.cm6123.snl.Player;
 import com.cm6123.snl.dice.DiceSet;
@@ -44,10 +45,16 @@ public class RunGamePanel extends SidePanel {
     private String boostFeature;
     private Player currentPlayer;
 
+    private Player[] loadedPlayers;
+    private Integer[] loadedPlayerPostions;
+
     public RunGamePanel(final GUIFrame gui, final Game newGame, final DiceSet diceChoice) {
         this.currentGame = newGame;
         this.gameGui = gui;
         this.dice = diceChoice;
+
+//        addLoadedPlayers();
+//        addLoadedPlayerPositions();
 
 
 
@@ -289,8 +296,15 @@ public class RunGamePanel extends SidePanel {
 
     public void launchGame() {
         boardMovement = new BoardMove(currentGame, gameGui);
-        currentPlayer = currentGame.firstplayer();
-        highLightCurrentPlayer(currentGame.firstplayer());
+
+
+        if (loadedPlayerPostions != null) {
+            for (int i = 0; i < loadedPlayerPostions.length; i++) {
+                boardMovement.moveLoadedGamePlayer(currentGame.getPlayer(i), loadedPlayerPostions[i]);
+            }
+        }
+        currentPlayer = currentGame.getPlayer(0);
+        highLightCurrentPlayer(currentGame.getPlayer(0));
 
     }
 
@@ -360,4 +374,12 @@ public class RunGamePanel extends SidePanel {
             }
         }
     }
+
+//    private void addLoadedPlayers(final );
+    public void addLoadedPlayerPositions(final Integer[] playerPositions) {
+        loadedPlayerPostions = new Integer[playerPositions.length];
+        for (int i = 0; i < playerPositions.length; i++) {
+            loadedPlayerPostions[i] = playerPositions[i];
+        }
+    };
 }

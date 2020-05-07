@@ -70,7 +70,7 @@ public class GameFile {
                     id = result.getInt("gameID");
                     gamePlayerTurn = result.getInt("gamePlayerTurn");
                     gameRound = result.getInt("gameRound");
-                    boardSize = result.getInt("boardSize");
+                    boardSize = result.getInt("boardGridSize");
                     gameOver = result.getBoolean("gameHasEnded");
                     boostSquareFeature = result.getBoolean("boostSquareFeature");
                     winningSquareFeature = result.getBoolean("winningSquareOnlyFeature");

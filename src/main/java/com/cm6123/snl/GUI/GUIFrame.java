@@ -116,6 +116,10 @@ public class GUIFrame extends JFrame {
 
     public void selectWindow(final String windowChoice) {
 
+
+
+
+
 //
 //        if (currentPanel != null) {
 //            getContentPane().remove(currentPanel);
@@ -131,10 +135,17 @@ public class GUIFrame extends JFrame {
 
 
 
+
                 getContentPane().remove(textPanel);
 //                getContentPane().remove(toolbar);
 //                revalidate();
                 mainMenuPanel = new MainMenuPanel(this);
+
+                if (dataBaseConnection) {
+                    mainMenuPanel.enableFrontPage();
+                }
+
+
 //               mainMenuPanel.setLayout(sidePanel);
 
                 if (currentPanel == null) {
@@ -241,9 +252,12 @@ public class GUIFrame extends JFrame {
                             .withLadders(3, 12, 13, 17)
                             .build();
                 } else {
-                    customGame.getCustomGameData(newGamePanel);
-
-                    newGame = customGame.buildGame();
+                    try {
+                        customGame.getCustomGameData(newGamePanel);
+                        newGame = customGame.buildGame();
+                    } catch (NullPointerException n) {
+                        newGame = customGame.buildGame();
+                    }
                 }
 
                 duplicateGamePanel = new RunGamePanel(this, newGame, diceSet);
@@ -288,6 +302,29 @@ public class GUIFrame extends JFrame {
                         }
                     }
                 });
+
+                break;
+
+            case "runloadedgame":
+                textPanel.wipeTextBox();
+                getContentPane().remove(currentPanel);
+                revalidate();
+
+                newGame = customGame.buildGame();
+
+
+                diceSet = new DiceSet(customGame.getDiceFaces(), customGame.getDiceCount());
+
+                runGamePanel = new RunGamePanel(this, newGame, diceSet);
+//                runGamePanel.addLoadedPlayers(customGame.getPlayers());
+                runGamePanel.addLoadedPlayerPositions(customGame.getPlayerPositions());
+                swapPanel(this,
+                        currentPanel,
+                        runGamePanel.createRunGamePanel(),
+                        BorderLayout.WEST);
+
+                currentPanel = runGamePanel;
+
 
                 break;
 
@@ -428,6 +465,10 @@ public class GUIFrame extends JFrame {
 
     public MenuBar getGameMenu() {
         return gameMenu;
+    }
+
+    public void setCreatedGame(final CreateGame loadedGameData) {
+        customGame = loadedGameData;
     }
 }
 //    }

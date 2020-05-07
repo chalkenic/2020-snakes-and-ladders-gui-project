@@ -15,7 +15,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema snakesAndLaddersData
 -- -----------------------------------------------------
--- DROP SCHEMA IF EXISTS `snakesAndLaddersDatabase`;
+DROP SCHEMA IF EXISTS `snakesAndLaddersDatabase`;
 CREATE SCHEMA IF NOT EXISTS `snakesAndLaddersDatabase` DEFAULT CHARACTER SET utf8 ;
 USE `snakesAndLaddersDatabase` ;
 
@@ -51,6 +51,7 @@ CREATE TABLE IF NOT EXISTS `snakesAndLaddersDatabase`.`Game` (
   `gameID` INT NOT NULL AUTO_INCREMENT,
   `gamePlayerTurn` INT NOT NULL DEFAULT 1,
   `gameRound` INT NOT NULL DEFAULT 1,
+  `boardGridSize` INT NOT NULL,
   `boardSize` INT NOT NULL,
 --   `winningSquare` INT NULL,
   `gameHasEnded` TINYINT NULL DEFAULT false,
@@ -497,8 +498,8 @@ DELIMITER //
 CREATE PROCEDURE add_new_game(IN chosenBoardSize INT, IN chosenDice INT)
 BEGIN
 
-	INSERT INTO Game(boardSize, dice_diceID)
-    VALUES(chosenBoardSize, chosenDice);
+	INSERT INTO Game(boardSize,boardGridSize, dice_diceID)
+    VALUES(chosenBoardSize*chosenBoardSize,chosenBoardSize, chosenDice);
 END //
 DELIMITER ;
 
@@ -932,12 +933,12 @@ INSERT INTO dice (diceCount, diceFaces) VALUES (1, 10);
 
 
 
+insert into Game(boardGridSize, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
+values ( 5, false, false, 1);
+insert into Game(boardGridSize, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
+values (6,  true, false, 1);
 insert into Game(boardSize, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
-values ( 25, false, false, 1);
-insert into Game(boardSize, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
-values (36,  true, false, 1);
-insert into Game(boardSize, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
-values (100,  true, true, 2);
+values (10,  true, true, 2);
 
 CALL add_new_game(50, 1);
 
@@ -1063,14 +1064,14 @@ BEGIN
 END !!
 DELIMITER ;
 
--- CALL test();
+CALL test();
 
 SELECT * FROM game;
 
 call select_dice_choice_from_game(1);
 
 call select_game_snakes(1);
-call select_game_ladders(1);
+call select_game_ladders(2);
 call select_game_boosts(1);
 call select_players_from_game(1);
 

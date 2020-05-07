@@ -44,6 +44,8 @@ public class EditorChoicePanel extends SidePanel {
 //        this.setBackground(Color.WHITE);
 
         if (newAddition == Edit.SNAKE) {
+
+
             additionFirstEntryLabel = new JLabel("Snake Head: ");
             additionSecondEntryLabel = new JLabel("Snake Tail: ");
         } else if (newAddition == Edit.LADDER) {
