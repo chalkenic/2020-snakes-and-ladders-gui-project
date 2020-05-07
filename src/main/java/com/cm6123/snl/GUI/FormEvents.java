@@ -12,38 +12,38 @@ public class FormEvents extends EventObject {
 //    private Integer boostSquare;
     private String playerNameEntry;
     private int boardCategory;
-    private NewAddition additionChoice;
+    private Edit editChoice;
 
     public FormEvents(final Object source) {
         super(source);
     }
 
-    public FormEvents(final Object source, Integer loadGameChoice) {
+    public FormEvents(final Object source, final Integer loadGameChoice) {
         super(source);
         this.loadGameEntry = loadGameChoice;
     }
 
 
-    public FormEvents(final Object source, final Integer newBoostSquare, final NewAddition addition) {
+    public FormEvents(final Object source, final Integer newBoostSquare, final Edit addition) {
         super(source);
         this.firstEntry = newBoostSquare;
-        this.additionChoice = addition;
+        this.editChoice = addition;
     }
 
     public FormEvents(final Object source, final Integer newSpecialSquareStart,
-                      final Integer newSpecialSquareEnd, final NewAddition addition) {
+                      final Integer newSpecialSquareEnd, final Edit edit) {
         super(source);
 
         this.firstEntry = newSpecialSquareStart;
         this.secondEntry = newSpecialSquareEnd;
-        this.additionChoice = addition;
+        this.editChoice = edit;
     }
 
-    public FormEvents(final Object source, final String newPlayerEntry, final NewAddition addition) {
+    public FormEvents(final Object source, final String newPlayerEntry, final Edit addition) {
         super(source);
 
         this.playerNameEntry = newPlayerEntry;
-        this.additionChoice = addition;
+        this.editChoice = addition;
     }
 
     public Integer getFirstEntry() {
@@ -69,8 +69,8 @@ public class FormEvents extends EventObject {
 //        return boostSquare;
 //    }
 //
-    public NewAddition getAdditionChoice() {
-        return additionChoice;
+    public Edit getEditChoice() {
+        return editChoice;
     }
 //    public void setBoostSquare(final Integer newBoostSquare) {
 //        this.boostSquare = boostSquare;

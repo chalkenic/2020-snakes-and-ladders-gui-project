@@ -270,5 +270,9 @@ public final class Game {
   public Integer getAccumulatedPlayerRoll() {
     return accumulatedPlayerRoll;
   }
+
+  public Player firstplayer() {
+    return players.get(0);
+  }
 }
 

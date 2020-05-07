@@ -43,7 +43,6 @@ public class BoardMove {
          }
 
          if (!hitSnakeSquare(temporaryBoardPosition)) {
-             System.out.println("test1");
              hitLadderSquare(temporaryBoardPosition);
          }
 
@@ -86,14 +85,12 @@ public class BoardMove {
                     hitSnake = true;
                 }
 //            } else if (((currentPlayer.getPosition().get()) + diceRoll) == s) {
-//                System.out.println("hello part 2?");
 //            }
             }
         } return hitSnake;
     }
 
     public void hitLadderSquare(final Integer position) {
-        System.out.println("test2");
 
         for (Integer s : currentBoard.getLadderFootList()) {
             if (boostAccumulator < 1) {

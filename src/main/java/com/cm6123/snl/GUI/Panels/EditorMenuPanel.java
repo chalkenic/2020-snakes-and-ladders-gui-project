@@ -10,7 +10,7 @@ package com.cm6123.snl.GUI.Panels;
         import java.awt.event.ActionEvent;
         import java.awt.event.ActionListener;
 
-public class CreationMenuPanel extends SidePanel {
+public class EditorMenuPanel extends SidePanel {
 
     private JButton createNewSnakeButton;
     private JButton createNewLadderButton;
@@ -24,9 +24,9 @@ public class CreationMenuPanel extends SidePanel {
     private FormListener formListener;
     private GridBagConstraints gridStructure;
     private GUIFrame gameGui;
-    private NewAddition additionChoice;
+    private Edit additionChoice;
 
-    public CreationMenuPanel(final GUIFrame gui) {
+    public EditorMenuPanel(final GUIFrame gui) {
         this.gameGui = gui;
 
         setPanelSize(350, 200);
@@ -54,39 +54,39 @@ public class CreationMenuPanel extends SidePanel {
 
         createNewSnakeButton.addActionListener(new ActionListener() {
             public void actionPerformed(final ActionEvent e) {
-                additionChoice = NewAddition.SNAKE;
-                gameGui.selectWindow("newaddition");
+                additionChoice = Edit.SNAKE;
+                gameGui.selectWindow("newedit");
 
             }
         });
         createNewLadderButton.addActionListener(new ActionListener() {
             public void actionPerformed(final ActionEvent e) {
-                additionChoice = NewAddition.LADDER;
-                gameGui.selectWindow("newaddition");
+                additionChoice = Edit.LADDER;
+                gameGui.selectWindow("newedit");
 
             }
         });
 
         createNewBoostButton.addActionListener(new ActionListener() {
             public void actionPerformed(final ActionEvent e) {
-                additionChoice = NewAddition.BOOST;
-                gameGui.selectWindow("newaddition");
+                additionChoice = Edit.BOOST;
+                gameGui.selectWindow("newedit");
 
             }
         });
 
         createNewPlayerButton.addActionListener(new ActionListener() {
             public void actionPerformed(final ActionEvent e) {
-                additionChoice = NewAddition.PLAYER;
-                gameGui.selectWindow("newaddition");
+                additionChoice = Edit.PLAYER;
+                gameGui.selectWindow("newedit");
 
             }
         });
 
         createNewDieButton.addActionListener(new ActionListener() {
             public void actionPerformed(final ActionEvent e) {
-                additionChoice = NewAddition.DIE;
-                gameGui.selectWindow("newaddition");
+                additionChoice = Edit.DIE;
+                gameGui.selectWindow("newedit");
 
             }
         });
@@ -97,7 +97,7 @@ public class CreationMenuPanel extends SidePanel {
 
             //Code adapted from TitledBorder.CENTER : TitledBorder « javax.swing.border « Java by API
             //Available at: http://www.java2s.com/Code/JavaAPI/javax.swing.border/TitledBorderCENTER.htm
-            TitledBorder innerGameBarBorder = BorderFactory.createTitledBorder("Creation tool");
+            TitledBorder innerGameBarBorder = BorderFactory.createTitledBorder("Editor tool");
             Border outerGameBarBorder = BorderFactory.createEmptyBorder(10, 10, 10, 10);
             innerGameBarBorder.setTitleJustification(TitledBorder.CENTER);
 
@@ -170,7 +170,7 @@ public class CreationMenuPanel extends SidePanel {
             return this;
         }
 
-        public NewAddition getAdditionChoice() {
+        public Edit getAdditionChoice() {
             return additionChoice;
         }
 

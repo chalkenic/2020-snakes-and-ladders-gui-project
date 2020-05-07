@@ -33,12 +33,16 @@ public class RunGamePanel extends SidePanel {
     private JButton rollDiceButton;
     private JButton newGameButton;
     private JButton saveGameButton;
+    private JButton restartGameButton;
+    private JButton confirmRestartGameButton;
+    private JButton declineRestartGameButton;
     private GridBagConstraints gridStructure;
     private Border currentPlayerBorder;
     private BoardMove boardMovement;
     private DiceSet dice;
     private String winningSquareFeature;
     private String boostFeature;
+    private Player currentPlayer;
 
     public RunGamePanel(final GUIFrame gui, final Game newGame, final DiceSet diceChoice) {
         this.currentGame = newGame;
@@ -108,11 +112,23 @@ public class RunGamePanel extends SidePanel {
         newGameButton.setEnabled(false);
         saveGameButton = new JButton("Save current game");
 
+        restartGameButton = new JButton("Restart Game");
+        confirmRestartGameButton = new JButton("Yes");
+        declineRestartGameButton = new JButton("No");
+        confirmRestartGameButton.setVisible(false);
+        declineRestartGameButton.setVisible(false);
+
+        if  (gameGui.getDatabaseConnection()) {
+            saveGameButton.setEnabled(true);
+        } else {
+            saveGameButton.setEnabled(false);
+        }
+
         rollDiceButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 if (!currentGame.isGameOver()) {
-                    settlePlayerMove();
+                    settlePlayerMove(currentPlayer);
                 }
             }
         });
@@ -127,10 +143,52 @@ public class RunGamePanel extends SidePanel {
         saveGameButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                gameGui.selectWindow("runduplicateGame");
+                gameGui.selectWindow("runrepeatgame");
+            }
+        });
+
+        restartGameButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                restartGameButton.setEnabled(false);
+                restartGameButton.setText("Really restart?");
+
+                gridStructure.weighty = 1;
+                gridStructure.gridy = 9;
+
+                gridStructure.anchor = GridBagConstraints.LINE_START;
+                confirmRestartGameButton.setVisible(true);
+                confirmRestartGameButton.setBackground(Color.green);
+                declineRestartGameButton.setVisible(true);
+                declineRestartGameButton.setBackground(Color.red);
+
+
+                add(confirmRestartGameButton, gridStructure);
+                gridStructure.insets = new Insets(0, 0, 0, 100);
+                gridStructure.anchor = GridBagConstraints.CENTER;
+                add(declineRestartGameButton, gridStructure);
+            }
+        });
+
+        confirmRestartGameButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                gameGui.selectWindow("runrepeatgame");
+            }
+        });
+
+        declineRestartGameButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                confirmRestartGameButton.setVisible(false);
+                declineRestartGameButton.setVisible(false);
+                restartGameButton.setEnabled(true);
+                restartGameButton.setText("Restart Game");
+
             }
         });
     }
+
 
     public JPanel createRunGamePanel() {
 
@@ -203,10 +261,19 @@ public class RunGamePanel extends SidePanel {
         gridStructure.gridy = 8;
 
         gridStructure.anchor = GridBagConstraints.LINE_START;
-        add(saveGameButton, gridStructure);
+
+
+        add(restartGameButton, gridStructure);
+
+
 
         gridStructure.anchor = GridBagConstraints.LINE_END;
         add(newGameButton, gridStructure);
+
+        gridStructure.gridy = 9;
+
+        gridStructure.anchor = GridBagConstraints.LINE_END;
+        add(saveGameButton, gridStructure);
 
 
         launchGame();
@@ -221,15 +288,16 @@ public class RunGamePanel extends SidePanel {
     }
 
     public void launchGame() {
-        System.out.println(currentGame.isWinningSquareOn());
         boardMovement = new BoardMove(currentGame, gameGui);
-        playerTurnStart();
+        currentPlayer = currentGame.firstplayer();
+        highLightCurrentPlayer(currentGame.firstplayer());
+
     }
 
-    private void settlePlayerMove() {
+    private void settlePlayerMove(final Player movingPlayer) {
         Integer diceRoll = dice.roll().getValue();
-        Player currentPlayer = currentGame.getCurrentPlayer();
-        Integer currentPosition = currentPlayer.getPosition().get();
+        currentPlayer = movingPlayer;
+        Integer currentPosition = movingPlayer.getPosition().get();
 
         gameGui.appendTextToPanel(currentPlayer.getColour() + " player starts their turn at position "
                 + currentPosition + ".\n");
@@ -251,11 +319,13 @@ public class RunGamePanel extends SidePanel {
                             + (currentPlayer.getPosition().get() - currentPosition) + " squares\n");
 
                     gameGui.appendTextToPanel("|---------------------------------------------------------|\n");
-
                 }
             }
 
-            playerTurnStart();
+            highLightCurrentPlayer(currentGame.getCurrentPlayer());
+            currentPlayer = currentGame.getCurrentPlayer();
+
+
         } else {
             for (int i = 0; i < gamePlayerList.getModel().getSize(); i++) {
                 Object player = gamePlayerList.getModel().getElementAt(i);
@@ -275,13 +345,13 @@ public class RunGamePanel extends SidePanel {
 //                + currentGame.getCurrentPlayer().getPosition().get());
     }
 
-    private void playerTurnStart() {
-        Player currentPlayer = currentGame.getCurrentPlayer();
-        Integer position = currentGame.getCurrentPlayer().getPosition().get();
+    private void highLightCurrentPlayer(final Player player) {
+        currentPlayer = player;
+        Integer position = player.getPosition().get();
 
         for (int i = 0; i < gamePlayerList.getModel().getSize(); i++) {
-            Object player = gamePlayerList.getModel().getElementAt(i);
-            if (player.toString() == currentPlayer.getColour().toString()) {
+            Object playerTurn = gamePlayerList.getModel().getElementAt(i);
+            if (playerTurn.toString() == currentPlayer.getColour().toString()) {
                 gamePlayerList.setSelectedIndex(i);
                 gamePlayerList.setSelectionBackground(Color.CYAN);
                 playerColourTurnResultLabel.setText(currentPlayer.getColour().toString());

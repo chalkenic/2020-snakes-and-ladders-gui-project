@@ -9,9 +9,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class NewAdditionPanel extends SidePanel {
+public class EditorChoicePanel extends SidePanel {
 
-    private NewAddition additionChoice;
+    private Edit additionChoice;
     private JLabel additionFirstEntryLabel;
     private JLabel additionSecondEntryLabel;
     private JTextField additionFirstField;
@@ -30,7 +30,7 @@ public class NewAdditionPanel extends SidePanel {
 
     /////////////////END TEST CODE//////////////////
 
-    public NewAdditionPanel(final GUIFrame gui, final NewAddition newAddition) {
+    public EditorChoicePanel(final GUIFrame gui, final Edit newAddition) {
         this.additionChoice = newAddition;
         this.gameGui = gui;
 
@@ -43,24 +43,24 @@ public class NewAdditionPanel extends SidePanel {
 //        this.setLayout(layout);
 //        this.setBackground(Color.WHITE);
 
-        if (newAddition == NewAddition.SNAKE) {
+        if (newAddition == Edit.SNAKE) {
             additionFirstEntryLabel = new JLabel("Snake Head: ");
             additionSecondEntryLabel = new JLabel("Snake Tail: ");
-        } else if (newAddition == NewAddition.LADDER) {
+        } else if (newAddition == Edit.LADDER) {
             additionFirstEntryLabel = new JLabel("Ladder Base: ");
             additionSecondEntryLabel = new JLabel("Ladder Top: ");
-        } else if (newAddition == NewAddition.BOOST) {
+        } else if (newAddition == Edit.BOOST) {
             additionFirstEntryLabel = new JLabel("Boost location: ");
-        } else if (newAddition == NewAddition.PLAYER) {
-            additionFirstEntryLabel = new JLabel("New Player name: ");
-        } else if (newAddition == NewAddition.DIE) {
+        } else if (newAddition == Edit.PLAYER) {
+            additionFirstEntryLabel = new JLabel("Edit Player name: ");
+        } else if (newAddition == Edit.DIE) {
             additionFirstEntryLabel = new JLabel("Dice Count: ");
             additionSecondEntryLabel = new JLabel("Die faces: ");
         }
 
         additionFirstField = new JTextField(10);
 
-        if (additionChoice != NewAddition.PLAYER) {
+        if (additionChoice != Edit.PLAYER) {
             additionSecondField = new JTextField(10);
         }
 
@@ -81,7 +81,7 @@ public class NewAdditionPanel extends SidePanel {
 
             /////////////////END TEST CODE//////////////////
 
-            createAdditionButton = new JButton("Create " + newAddition.toString().toLowerCase());
+            createAdditionButton = new JButton("Edit " + newAddition.toString().toLowerCase());
 //        rollDiceButton.setPreferredSize(new Dimension(300, 200));
 
             createAdditionButton.addActionListener(new ActionListener() {
@@ -92,10 +92,10 @@ public class NewAdditionPanel extends SidePanel {
 
                     FormEvents newEntry = null;
 
-                    if (additionChoice != NewAddition.PLAYER) {
-                        if (! additionFirstField.getText().equals("")) {
+                    if (additionChoice != Edit.PLAYER) {
+                        if (!additionFirstField.getText().equals("")) {
 
-                            if (! additionSecondField.getText().equals("")) {
+                            if (!additionSecondField.getText().equals("")) {
                                 try {
                                     Integer squareStart = Integer.parseInt(additionFirstField.getText());
 
@@ -107,7 +107,7 @@ public class NewAdditionPanel extends SidePanel {
                                         newEntry = new FormEvents(this, squareStart, additionChoice);
                                     }
                                 } catch (NumberFormatException stringEntered) {
-                                    System.out.println("ERROR - incorrect entry.");
+                                    System.out.println("ERROR - incorrect edit.");
                                     formListener.incorrectEntryMessage();
                                 }
 
@@ -116,7 +116,7 @@ public class NewAdditionPanel extends SidePanel {
                                     Integer squareStart = Integer.parseInt(additionFirstField.getText());
                                     newEntry = new FormEvents(this, squareStart, additionChoice);
                                 } catch (NumberFormatException stringEntered) {
-                                    System.out.println("ERROR - incorrect entry.");
+                                    System.out.println("ERROR - incorrect edit.");
                                     formListener.incorrectEntryMessage();
                                 }
                             }
@@ -152,11 +152,12 @@ public class NewAdditionPanel extends SidePanel {
 
 
 //    @Override
-    public JPanel createAdditionPanel() {
+    public JPanel editChoicePanel() {
 
         //Code adapted from TitledBorder.CENTER : TitledBorder « javax.swing.border « Java by API
         //Available at: http://www.java2s.com/Code/JavaAPI/javax.swing.border/TitledBorderCENTER.htm
-        TitledBorder innerGameBarBorder = BorderFactory.createTitledBorder("New " + additionChoice.toString().toLowerCase());
+        TitledBorder innerGameBarBorder =
+                BorderFactory.createTitledBorder("Edit " + additionChoice.toString().toLowerCase());
         Border outerGameBarBorder = BorderFactory.createEmptyBorder(2, 10, 10, 10);
         innerGameBarBorder.setTitleJustification(TitledBorder.CENTER);
 
@@ -234,22 +235,22 @@ public class NewAdditionPanel extends SidePanel {
 
 
 //    @Override
-    public Boolean entryValidation(final NewAddition newSquare, final int... values) {
+    public Boolean entryValidation(final Edit newSquare, final int... values) {
         Boolean validEntry = false;
         try {
-            if (newSquare == NewAddition.SNAKE) {
+            if (newSquare == Edit.SNAKE) {
                 if (values[0] > values[1]) {
                     validEntry = true;
                 }
-            } else if (newSquare == NewAddition.LADDER) {
+            } else if (newSquare == Edit.LADDER) {
                 if (values[0] < values[1]) {
                     validEntry = true;
                 }
-            } else if (newSquare == NewAddition.BOOST) {
+            } else if (newSquare == Edit.BOOST) {
                 validEntry = true;
-            } else if (newSquare == NewAddition.PLAYER) {
+            } else if (newSquare == Edit.PLAYER) {
                 validEntry = true;
-            } else if (newSquare == NewAddition.DIE) {
+            } else if (newSquare == Edit.DIE) {
                 validEntry = true;
             }
         } catch (ArrayIndexOutOfBoundsException missingEnd) {
@@ -260,7 +261,7 @@ public class NewAdditionPanel extends SidePanel {
     }
 
 //    @Override
-    public final NewAddition getAdditionChoice() {
+    public final Edit getAdditionChoice() {
         return additionChoice;
     }
     }

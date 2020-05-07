@@ -1,6 +1,8 @@
 package com.cm6123.snl.GUI.Panels;
 
 import com.cm6123.snl.GUI.*;
+import com.cm6123.snl.gameDB.GameDBUtils;
+import com.cm6123.snl.gameDB.LoadGameDBManager;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -10,6 +12,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
 
 public class LoadGamePanel extends JPanel {
 
@@ -21,26 +24,24 @@ public class LoadGamePanel extends JPanel {
     private String currentSelection;
     private FormListener formListener;
     private JScrollPane scrollPane;
+    private LoadGameDBManager loadDatabase;
 
     public LoadGamePanel(final GUIFrame gui) {
         this.gameGui = gui;
-
+        this.loadDatabase = new LoadGameDBManager();
+        savedGames = new DefaultListModel();
+        loadDBGames();
 
         gameList = new JList();
-        savedGames = new DefaultListModel();
-        savedGames.addElement(new LoadGameFile(0, "First"));
-        for (Integer i = 1; i < 6; i++) {
-            savedGames.addElement(new LoadGameFile(i, "File " + Integer.toString(i)));
-        }
         gameList.setModel(savedGames);
 
         scrollPane = new JScrollPane(gameList);
 
-//        savedGames.addElement(new LoadGameFile(gameList.getSelectedIndex(0).);
+//        savedGames.addElement(new GameFile(gameList.getSelectedIndex(0).);
 
 
 
-        scrollPane.setPreferredSize(new Dimension(400, 300));
+        scrollPane.setPreferredSize(new Dimension(200, 300));
         gameList.setBorder(BorderFactory.createEtchedBorder(1));
         gameList.setSelectedIndex(0);
 
@@ -71,7 +72,7 @@ public class LoadGamePanel extends JPanel {
 
                 FormEvents loadGameEvent = null;
 
-                LoadGameFile loadGameChoice = (LoadGameFile) gameList.getSelectedValue();
+                GameFile loadGameChoice = (GameFile) gameList.getSelectedValue();
                 loadGameEvent = new FormEvents(this, loadGameChoice.getGameID());
 
                 if (formListener != null) {
@@ -123,6 +124,16 @@ public class LoadGamePanel extends JPanel {
         return this;
     }
 
+
+
+    private void loadDBGames() {
+        Connection connect = GameDBUtils.connectGuiToDatabase();
+        Integer totalGames = LoadGameDBManager.countGamesInDatabase(connect);
+        for (Integer i = 1; i < totalGames + 1; i++) {
+            System.out.println(i);
+            savedGames.addElement(new GameFile(i, "File " + i));
+        }
+    }
     public void setFormListener(final FormListener listener) {
         this.formListener = listener;
     }

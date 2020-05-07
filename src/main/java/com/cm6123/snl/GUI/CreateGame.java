@@ -54,7 +54,6 @@ public class CreateGame {
             try {
                 snakes[i] = Integer.parseInt((tempValues[i].trim()));
             } catch (NumberFormatException additionError) {
-                System.out.println(tempValues[i] + " could not be added.");
             }
         }
 
@@ -66,7 +65,6 @@ public class CreateGame {
             try {
                 ladders[i] = Integer.parseInt((tempValues[i].trim()));
             } catch (NumberFormatException additionError) {
-                System.out.println(tempValues[i] + " could not be added.");
             }
         }
         try {
@@ -80,15 +78,14 @@ public class CreateGame {
             diceCount = westPanel.getDiceCountChoiceField();
         } catch (NumberFormatException dc) {
             diceCount = 1;
-            gameGui.appendTextToPanel("No player count entered. Dice count set to 1.\n");
+            gameGui.appendTextToPanel("No die amount entered. Dice count set to 1.\n");
         }
         try {
             diceFaces = westPanel.getDiceFaceChoiceField();
         } catch (NumberFormatException df) {
             diceFaces = 6;
-            gameGui.appendTextToPanel("No player count entered. Dice face count set to 6.\n");
+            gameGui.appendTextToPanel("No Dice face count entered. Dice face count set to 6.\n");
         }
-        System.out.println(snakes.length);
 
         if (snakes.length == 1) {
             gameGui.appendTextToPanel("No snakes have been added into game.\n");
@@ -110,7 +107,6 @@ public class CreateGame {
                 try {
                     boosts[i] = Integer.parseInt((tempValues[i].trim()));
                 } catch (NumberFormatException additionError) {
-                    System.out.println(tempValues[i] + " could not be added.");
                 }
             }
         }
@@ -120,38 +116,6 @@ public class CreateGame {
 
         this.tempBoardSize = southPanel.getBoardSize();
         gameGui.appendTextToPanel("Board size set to " + tempBoardSize + "x" + tempBoardSize + ".\n");
-
-//        System.out.println(tempPlayerCount);
-//
-//        for (int i = 0; i < snakes.length ; i++) {
-//            System.out.println(snakes[i]);
-//        }
-//
-//        for (int i = 0; i < ladders.length ; i++) {
-//            System.out.println(ladders[i]);
-//        }
-//
-//        System.out.println(diceCount);
-//
-//        System.out.println(diceFaces);
-//
-//        for (int i = 0; i < boosts.length ; i++) {
-//            System.out.println(boosts[i]);
-//        }
-//
-//        System.out.println(tempBoardSize);
-//
-//
-//
-//         //works
-//         //works
-//
-//        System.out.println(boostGameFeature); //works?
-//        System.out.println(winningSquareOnlyFeature); //works
-//        System.out.println(recordGame);
-//
-//        //works
-
 
     }
     public Game getGame() {
@@ -194,12 +158,7 @@ public class CreateGame {
                         .withLadders(ladders)
                         .build();
             }
-
-//        } catch (NumberFormatException failedBuild) {
-//            System.out.println("Game failed to build. Returning to main menu.");
-//            newCustomGame = null;
-//            gameGui.selectWindow("menu");
-//            }
+            
         return newCustomGame;
     }
 

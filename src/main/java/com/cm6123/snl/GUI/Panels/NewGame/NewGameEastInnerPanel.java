@@ -24,11 +24,13 @@ public class NewGameEastInnerPanel extends SidePanel {
 
     private JCheckBox winningCheckBox;
     private JCheckBox recordCheckBox;
+    private Boolean dataBaseEnabled;
 
 
 
 
     public NewGameEastInnerPanel(final String borderTitle, final GUIFrame gui) {
+        this.dataBaseEnabled = gui.getDatabaseConnection();
 
         winningSquareOnlyOnLabel = new JLabel("Winning Square Feature: ");
         winningSquareOnlyOnLabel.setPreferredSize(new Dimension(250, 62));
@@ -43,6 +45,12 @@ public class NewGameEastInnerPanel extends SidePanel {
         boostCheckBox = new JCheckBox();
         winningCheckBox = new JCheckBox();
         recordCheckBox = new JCheckBox();
+        if (dataBaseEnabled == true) {
+            recordCheckBox.setEnabled(true);
+        } else {
+            recordCheckBox.setEnabled(false);
+        }
+
 //        boostCheckBox = new JCheckBox("allow Boost Squares", false);
 
         boostChoiceField = new JTextField(6);

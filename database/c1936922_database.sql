@@ -15,8 +15,8 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema snakesAndLaddersData
 -- -----------------------------------------------------
-DROP SCHEMA IF EXISTS `snakesAndLaddersData`;
-CREATE SCHEMA IF NOT EXISTS `snakesAndLaddersData` DEFAULT CHARACTER SET utf8 ;
+DROP SCHEMA IF EXISTS `snakesAndLaddersDatabase`;
+CREATE SCHEMA IF NOT EXISTS `snakesAndLaddersDatabase` DEFAULT CHARACTER SET utf8 ;
 USE `snakesAndLaddersData` ;
 
 
