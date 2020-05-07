@@ -48,29 +48,30 @@ public class EditorChoicePanel extends SidePanel {
 
         if (newAddition == Edit.SNAKE) {
 
-            loadDBGames(Edit.SNAKE);
+            loadDBGames(Edit.SNAKE, dbEntryList);
 
             additionFirstEntryLabel = new JLabel("Snake Head: ");
             additionSecondEntryLabel = new JLabel("Snake Tail: ");
-        } else if (newAddition == Edit.LADDER) {
-
-            loadDBGames(Edit.LADDER);
-            additionFirstEntryLabel = new JLabel("Ladder Base: ");
-            additionSecondEntryLabel = new JLabel("Ladder Top: ");
-        } else if (newAddition == Edit.BOOST) {
-
-            loadDBGames(Edit.BOOST);
-            additionFirstEntryLabel = new JLabel("Boost location: ");
-        } else if (newAddition == Edit.PLAYER) {
-
-            loadDBGames(Edit.PLAYER);
-            additionFirstEntryLabel = new JLabel("Edit Player name: ");
-        } else if (newAddition == Edit.DIE) {
-
-            loadDBGames(Edit.DIE);
-            additionFirstEntryLabel = new JLabel("Dice Count: ");
-            additionSecondEntryLabel = new JLabel("Die faces: ");
         }
+//        } else if (newAddition == Edit.LADDER) {
+//
+//            loadDBGames(Edit.LADDER);
+//            additionFirstEntryLabel = new JLabel("Ladder Base: ");
+//            additionSecondEntryLabel = new JLabel("Ladder Top: ");
+//        } else if (newAddition == Edit.BOOST) {
+//
+//            loadDBGames(Edit.BOOST);
+//            additionFirstEntryLabel = new JLabel("Boost location: ");
+//        } else if (newAddition == Edit.PLAYER) {
+//
+//            loadDBGames(Edit.PLAYER);
+//            additionFirstEntryLabel = new JLabel("Edit Player name: ");
+//        } else if (newAddition == Edit.DIE) {
+//
+//            loadDBGames(Edit.DIE);
+//            additionFirstEntryLabel = new JLabel("Dice Count: ");
+//            additionSecondEntryLabel = new JLabel("Die faces: ");
+//        }
 
         additionFirstField = new JTextField(10);
 
@@ -86,11 +87,11 @@ public class EditorChoicePanel extends SidePanel {
 //            newGameList.addElement(new BoardCategory(0, "1x1 Board"));
 //            newGameList.addElement(new BoardCategory(1, "5x5 Board"));
 //            newGameList.addElement(new BoardCategory(2, "10X10 Board"));
-//            newGame.setModel(newGameList);
+        dbEntries.setModel(dbEntryList);
 //
-//            newGame.setPreferredSize(new Dimension(115, 57));
-//            newGame.setBorder(BorderFactory.createEtchedBorder());
-//            newGame.setSelectedIndex(0);
+//        dbEntries.setPreferredSize(new Dimension(400, 60));
+        dbEntries.setBorder(BorderFactory.createEtchedBorder());
+        dbEntries.setSelectedIndex(0);
 
         /////////////////END TEST CODE//////////////////
 
@@ -155,14 +156,16 @@ public class EditorChoicePanel extends SidePanel {
 //        gameGui.add(this, BorderLayout.WEST);
     }
 
+//    public void setPanelSize(final Integer width, final Integer height) {
+//        Dimension dim = getPreferredSize();
+//        dim.width = width;
+//        dim.height = height;
+//        setPreferredSize(dim);
+//    }
     public void setPanelSize(final Integer width, final Integer height) {
-        Dimension dim = getPreferredSize();
-        dim.width = width;
-        dim.height = height;
-        setPreferredSize(dim);
+
     }
 
-    ;
 
 
     //    @Override
@@ -185,17 +188,24 @@ public class EditorChoicePanel extends SidePanel {
 
         gridStructure.weightx = 1;
         gridStructure.weighty = 0.1;
-        gridStructure.gridx = 0;
         gridStructure.gridy = 0;
+
+        gridStructure.insets = new Insets(0, 0, 0, 5);
+        add(dbEntries, gridStructure);
+
+        gridStructure.weightx = 1;
+        gridStructure.weighty = 0.1;
+        gridStructure.gridx = 0;
+        gridStructure.gridy = 1;
         gridStructure.fill = GridBagConstraints.NONE;
 
-        gridStructure.anchor = GridBagConstraints.LINE_END;
+        gridStructure.anchor = GridBagConstraints.LINE_START;
         gridStructure.insets = new Insets(0, 0, 0, 5);
         add(additionFirstEntryLabel, gridStructure);
 
-        gridStructure.gridx = 1;
+//        gridStructure.gridx = 1;
 
-        gridStructure.anchor = GridBagConstraints.LINE_START;
+        gridStructure.anchor = GridBagConstraints.LINE_END;
         gridStructure.insets = new Insets(0, 0, 0, 0);
         add(additionFirstField, gridStructure);
 
@@ -203,16 +213,16 @@ public class EditorChoicePanel extends SidePanel {
 
             gridStructure.weightx = 1;
             gridStructure.weighty = 0.1;
-            gridStructure.gridy = 1;
+            gridStructure.gridy = 2;
             gridStructure.gridx = 0;
 
-            gridStructure.anchor = GridBagConstraints.LINE_END;
+            gridStructure.anchor = GridBagConstraints.LINE_START;
             gridStructure.insets = new Insets(0, 0, 0, 5);
             add(additionSecondEntryLabel, gridStructure);
 
-            gridStructure.gridx = 1;
+//            gridStructure.gridx = 1;
 
-            gridStructure.anchor = GridBagConstraints.LINE_START;
+            gridStructure.anchor = GridBagConstraints.LINE_END;
             gridStructure.insets = new Insets(0, 0, 0, 0);
             add(additionSecondField, gridStructure);
         }
@@ -220,22 +230,16 @@ public class EditorChoicePanel extends SidePanel {
         /////////////////THIRD ROW////////////////
 
         /////////////////BEGIN TEST CODE////////////////
-//        gridStructure.weightx = 1;
-//        gridStructure.weighty = 0.2;
-//        gridStructure.gridy = 2;
-//
-//        gridStructure.anchor = GridBagConstraints.FIRST_LINE_START;
-//        gridStructure.insets = new Insets(0, 0, 0, 5);
-//        add(newGame, gridStructure);
+
         /////////////////END TEST CODE//////////////////
 
         /////////////////FOURTH ROW////////////////
 
         gridStructure.weightx = 2;
         gridStructure.weighty = 2.0;
-        gridStructure.gridy = 2;
+        gridStructure.gridy = 3;
 
-        gridStructure.anchor = GridBagConstraints.FIRST_LINE_START;
+        gridStructure.anchor = GridBagConstraints.LINE_END;
         gridStructure.insets = new Insets(0, 0, 0, 0);
         add(createAdditionButton, gridStructure);
 
@@ -279,12 +283,21 @@ public class EditorChoicePanel extends SidePanel {
         return additionChoice;
     }
 
-    private void loadDBGames(final Edit choice) {
+    private void loadDBGames(final Edit choice, final DefaultListModel jlist) {
         Connection connect = GameDBUtils.connectGuiToDatabase();
 
         if (choice == Edit.SNAKE) {
             LoadDataDBManager dbLoader = new LoadDataDBManager();
             dbLoader.countSnakesInDatabase(connect);
+
+            for (Integer i = 0; i < dbLoader.getSelectionSize(); i++) {
+                jlist.addElement("|   ID: " + dbLoader.getTableID(i)
+                        + "   |   save file: " + dbLoader.getGameInclusionID(i)
+                        + "   |   head: " + dbLoader.getTotalFirstEntries(i)
+                        + "   |   tail: " + dbLoader.getTotalSecondEntries(i)
+                        + "   |");
+
+            }
 //            System.out.println(totalentries);
         }
 //        } else if (choice == Edit.LADDER) {
@@ -304,8 +317,6 @@ public class EditorChoicePanel extends SidePanel {
 //            Integer totalentries = LoadDataDBManager.countDiceInDatabase(connect);
 //            System.out.println(totalentries);
 //        }
-//        for (Integer i = 1; i < totalGames + 1; i++) {
-//         savedGames.addElement(new GameFile(i, "File " + i));
     }
 }
 

@@ -11,7 +11,8 @@ import java.util.ArrayList;
  */
 public class LoadDataDBManager {
 
-    private ArrayList<Integer> gameID;
+    private ArrayList<Integer> gameInclusionID;
+    private ArrayList<Integer> tableID;
     private ArrayList<Integer> totalFirstEntries;
     private ArrayList<Integer> totalSecondEntries;
     private ArrayList<String> players;
@@ -73,19 +74,18 @@ public class LoadDataDBManager {
             statement = connection.createStatement();
             result = statement.executeQuery(query);
 
-            gameID = new ArrayList<>();
+            tableID = new ArrayList<>();
+            gameInclusionID =  new ArrayList<>();
             totalFirstEntries = new ArrayList<>();
             totalSecondEntries = new ArrayList<>();
 
             while (result.next()) {
-                gameID.add(result.getInt("game_gameID"));
+                tableID.add(result.getInt("snakeID"));
+                gameInclusionID.add(result.getInt("game_gameID"));
                 totalFirstEntries.add(result.getInt("snakeHead"));
                 totalSecondEntries.add(result.getInt("snakeTail"));
 
             }
-            System.out.println(gameID.get(0));
-            System.out.println(totalFirstEntries.get(0));
-            System.out.println(totalSecondEntries.get(0));
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -115,12 +115,15 @@ public class LoadDataDBManager {
             statement = connection.createStatement();
             result = statement.executeQuery(query);
 
-            gameID = new ArrayList<>();
+            tableID = new ArrayList<>();
+            gameInclusionID =  new ArrayList<>();
             totalFirstEntries = new ArrayList<>();
             totalSecondEntries = new ArrayList<>();
 
             while (result.next()) {
-                gameID.add(result.getInt("game_gameID"));
+                tableID.add(result.getInt("ladderID"));
+
+                gameInclusionID.add(result.getInt("game_gameID"));
                 totalFirstEntries.add(result.getInt("snakeHead"));
                 totalSecondEntries.add(result.getInt("snakeTail"));
             }
@@ -244,15 +247,27 @@ public class LoadDataDBManager {
         return gameCount;
     }
 
-    public ArrayList<Integer> getTotalFirstEntries() {
-        return totalFirstEntries;
+    public Integer getSelectionSize() {
+        return tableID.size();
     }
 
-    public ArrayList<Integer> getTotalSecondEntries() {
-        return totalSecondEntries;
+    public Integer getGameInclusionID(final Integer choice) {
+        return gameInclusionID.get(choice);
     }
 
-    public ArrayList<String> getPlayers() {
-        return players;
+    public Integer getTableID(final Integer choice) {
+        return tableID.get(choice);
+    }
+
+    public Integer getTotalFirstEntries(final Integer choice) {
+        return totalFirstEntries.get(choice);
+    }
+
+    public Integer getTotalSecondEntries(final Integer choice) {
+        return totalSecondEntries.get(choice);
+    }
+
+    public String getPlayers(final Integer choice) {
+        return players.get(choice);
     }
 }
