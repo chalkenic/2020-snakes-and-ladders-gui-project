@@ -49,6 +49,10 @@ public class DBGameFile {
             addBoostData();
         }
 
+        System.out.println("winning square: " + winningSquareFeature);
+        System.out.println("boost square: " + boostSquareFeature);
+        System.out.println("record game: " + recordGameFeature);
+
     }
 
     private void addDatabaseGameData() {
@@ -108,14 +112,14 @@ public class DBGameFile {
 
                 statement = connect.prepareCall(procedure);
 
-                statement.setInt(1, diceChoice);
+                statement.setInt(1, id);
                 result = statement.executeQuery();
 
                 while (result.next()) {
-                    diceCount = result.getInt("diceCount");
                     diceFaces = result.getInt("diceFaces");
+                    diceCount = result.getInt("diceCount");
                 }
-                System.out.println("Die count: " + diceChoice);
+                System.out.println("Die count: " + diceCount);
                 System.out.println("Dice faces: " + diceFaces);
 
             } catch (SQLException e) {

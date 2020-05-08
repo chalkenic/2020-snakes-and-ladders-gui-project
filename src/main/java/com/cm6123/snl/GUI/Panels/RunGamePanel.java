@@ -50,7 +50,6 @@ public class RunGamePanel extends SidePanel {
     private String boostFeature;
     private Player currentPlayer;
 
-    private Player[] loadedPlayers;
     private Integer[] loadedPlayerPostions;
     private Integer gridSize;
     private ArrayList allSpecials;

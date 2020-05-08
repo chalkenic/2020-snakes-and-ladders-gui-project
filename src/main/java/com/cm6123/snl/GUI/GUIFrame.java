@@ -5,6 +5,7 @@ import com.cm6123.snl.GUI.PanelBackgroundLogic.CreateGame;
 import com.cm6123.snl.GUI.Panels.*;
 import com.cm6123.snl.GUI.Panels.NewGamePanels.NewGameParentPanel;
 import com.cm6123.snl.dice.DiceSet;
+import com.cm6123.snl.gameDB.DBGameFile;
 //import com.cm6123.snl.GUI.Panels.EditorChoicePanel;
 //import com.cm6123.snl.GUI.Panels.GameTextPanel;
 //import com.cm6123.snl.GUI.Panels.SidePanel;
@@ -35,6 +36,7 @@ public class GUIFrame extends JFrame {
 
     private Game newGame;
     private DiceSet diceSet;
+    private DBGameFile dbGameFile;
 
     private CreateGame customGame;
 
@@ -185,12 +187,15 @@ public class GUIFrame extends JFrame {
 
             case "runrepeatgame":
 
+                System.out.println("am i working?");
+
                 textPanel.wipeTextBox();
                 getContentPane().remove(currentPanel);
                 revalidate();
                 RunGamePanel duplicateGamePanel;
                 Integer repeatGridChoice = null;
                 TreeMap repeatSpecials = null;
+
 
 //                for (int i = 0; i < newGame.numberOfPlayers(); i++) {
 //                    Player player = newGame.getCurrentPlayer();
@@ -199,8 +204,9 @@ public class GUIFrame extends JFrame {
 
                 if (customGame == null) {
                     repeatGridChoice = 5;
+                    System.out.println("null: " + repeatGridChoice);
                     repeatSpecials = addTestDefaultValues();
-                    newGame = new GameBuilder()
+                    Game loadGame = new GameBuilder()
                             .withBoardSize(repeatGridChoice)
                             .withPlayers(2)
                             .withSnakes(14, 5, 20, 11)
@@ -208,12 +214,20 @@ public class GUIFrame extends JFrame {
                             .build();
                 } else {
                     try {
-                        customGame.getCustomGameData(newGamePanel);
-                        newGame = customGame.buildGame();
-                        repeatGridChoice = customGame.getBoardSize();
-                        repeatSpecials = customGame.getAllSpecials();
-                    } catch (NullPointerException n) {
-                        newGame = customGame.buildGame();
+                        try {
+                            customGame.getCustomGameData(newGamePanel);
+                        } catch (NullPointerException f) {
+                            customGame.getLoadedGameData(dbGameFile);
+                        }
+                            System.out.println("test2");
+                            newGame = customGame.buildGame();
+                            System.out.println("test3");
+                            repeatGridChoice = customGame.getBoardSize();
+                            System.out.println(repeatGridChoice);
+                            repeatSpecials = customGame.getAllSpecials();
+                        }
+                     catch (NullPointerException n) {
+                        System.out.println("am i going here?");
                     }
                 }
 
@@ -268,8 +282,13 @@ public class GUIFrame extends JFrame {
                 revalidate();
                 Integer loadedGridChoice;
                 TreeMap loadedSpecials;
+//                CreateGame loadGame = new CreateGame(this);
+
+//                loadGame = customGame.getLoadedGameData(customGame);
+//                this.dbGameFile = loadGame.getGameFile();
 
                 newGame = customGame.buildGame();
+                this.dbGameFile = customGame.getGamefile();
                 loadedGridChoice = customGame.getBoardSize();
                 loadedSpecials = customGame.getAllSpecials();
 

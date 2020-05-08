@@ -40,6 +40,8 @@ public class CreateGame {
     private Boolean noPlayersGiven = false;
     private Boolean noDiceFacesGiven = false;
     private Boolean noDiceCountgiven = false;
+    private DBGameFile gamefile;
+
 
 
     public CreateGame(final GUIFrame gui) {
@@ -118,9 +120,19 @@ public class CreateGame {
         this.boardSize = southPanel.getBoardSize();
 
         allSpecials = new TreeMap();
-        allSpecials.put("snakes", snakes);
-        allSpecials.put("ladders", ladders);
+        if (snakes.length > 1) {
+            allSpecials.put("snakes", snakes);
+        }
 
+        if (ladders.length > 1) {
+            allSpecials.put("ladders", ladders);
+        }
+
+        if (boosts != null) {
+            if (boosts.length > 0) {
+                allSpecials.put("boosts", boosts);
+            }
+        }
     }
 
     public Game buildGame() {
@@ -197,6 +209,7 @@ public class CreateGame {
     }
 
     public CreateGame getLoadedGameData(final DBGameFile loadGameChoice) {
+        this.gamefile = loadGameChoice;
         snakes = new Integer[loadGameChoice.getGameSnakes().size()];
         ladders = new Integer[loadGameChoice.getGameLadders().size()];
         positions = new Integer[loadGameChoice.getPlayerPositions().size()];
@@ -259,6 +272,10 @@ public class CreateGame {
 
 
     }
+    public DBGameFile getGamefile() {
+        return gamefile;
+    }
+
 
 
     public TreeMap<String, Integer[]> getAllSpecials() {

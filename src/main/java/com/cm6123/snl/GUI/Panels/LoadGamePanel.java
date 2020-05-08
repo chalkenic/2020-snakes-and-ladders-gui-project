@@ -134,7 +134,7 @@ public class LoadGamePanel extends JPanel {
     private void loadDBGames() {
         Connection connect = GameDBUtils.connectGuiToDatabase();
         Integer totalGames = LoadDataDBManager.countGamesInDatabase(connect);
-        for (Integer i = 1; i < totalGames + 1; i++) {
+        for (Integer i = 1; i < (totalGames + 1); i++) {
             savedGames.addElement(new DBGameFile(i, "File " + i));
         }
     }
