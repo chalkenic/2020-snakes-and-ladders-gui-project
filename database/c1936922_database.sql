@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `snakesAndLaddersDatabase`.`Game` (
   `gamePlayerTurn` INT NOT NULL DEFAULT 1,
   `gameRound` INT NOT NULL DEFAULT 1,
   `boardGridSize` INT NOT NULL,
-  `boardSize` INT NOT NULL,
+  `boardSize` INT NOT NULL DEFAULT (boardGridSize * boardGridSize),
 --   `winningSquare` INT NULL,
   `gameHasEnded` TINYINT NULL DEFAULT false,
   `boostSquareFeature` TINYINT NULL DEFAULT false,
@@ -525,10 +525,10 @@ DELIMITER //
 CREATE PROCEDURE add_new_dice(IN newDiceCount INT, IN newDiceFaces INT)
 BEGIN
 
-	DECLARE incorrectDiceEntry CONDITION FOR 1357;
-    
-    DECLARE CONTINUE HANDLER FOR incorrectDiceEntry
-	SELECT 'INCORRECT dice choice made for new game.';
+-- 	DECLARE incorrectDiceEntry CONDITION FOR 1357;
+--     
+--     DECLARE CONTINUE HANDLER FOR incorrectDiceEntry
+-- 	SELECT 'INCORRECT dice choice made for new game.';
 
 	INSERT INTO Dice (diceCount, diceFaces)
     VALUES (newDiceCount, newDiceFaces);
@@ -937,7 +937,7 @@ insert into Game(boardGridSize, boostSquarefeature, winningSquareOnlyFeature, Di
 values ( 5, false, false, 1);
 insert into Game(boardGridSize, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
 values (6,  true, false, 1);
-insert into Game(boardSize, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
+insert into Game(boardGridSize, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
 values (10,  true, true, 2);
 
 CALL add_new_game(50, 1);
@@ -1064,15 +1064,17 @@ BEGIN
 END !!
 DELIMITER ;
 
-CALL test();
+-- CALL test();
 
 SELECT * FROM game;
+
+SELECT * FROM dice;
 
 call select_dice_choice_from_game(1);
 
 call select_game_snakes(1);
 call select_game_ladders(2);
-call select_game_boosts(1);
+call select_gameboost_boosts(1);
 call select_players_from_game(1);
 
 

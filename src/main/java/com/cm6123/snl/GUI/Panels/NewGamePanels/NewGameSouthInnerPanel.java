@@ -1,4 +1,4 @@
-package com.cm6123.snl.GUI.Panels.NewGame;
+package com.cm6123.snl.GUI.Panels.NewGamePanels;
 
 import com.cm6123.snl.GUI.GUIFrame;
 import com.cm6123.snl.GUI.Panels.SidePanel;
@@ -44,7 +44,7 @@ public class NewGameSouthInnerPanel extends SidePanel implements ActionListener 
         boardSizeBox = new JComboBox();
 
 //        JButton boardSize = new JButton("Board Size");
-        boardSize = new JSlider(4, 15, 4);
+        boardSize = new JSlider(5, 15, 5);
         boardSize.setPreferredSize(new Dimension(600, 50));
         boardSize.setPaintLabels(true);
         boardSize.setPaintTicks(true);

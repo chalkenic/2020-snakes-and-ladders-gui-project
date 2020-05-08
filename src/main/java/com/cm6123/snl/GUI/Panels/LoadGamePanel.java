@@ -2,7 +2,7 @@ package com.cm6123.snl.GUI.Panels;
 
 import com.cm6123.snl.GUI.*;
 import com.cm6123.snl.GUI.PanelBackgroundLogic.CreateGame;
-import com.cm6123.snl.GUI.PanelBackgroundLogic.GameFile;
+import com.cm6123.snl.gameDB.DBGameFile;
 import com.cm6123.snl.gameDB.GameDBUtils;
 import com.cm6123.snl.gameDB.LoadDataDBManager;
 
@@ -39,7 +39,7 @@ public class LoadGamePanel extends JPanel {
 
         scrollPane = new JScrollPane(gameList);
 
-//        savedGames.addElement(new GameFile(gameList.getSelectedIndex(0).);
+//        savedGames.addElement(new DBGameFile(gameList.getSelectedIndex(0).);
 
 
 
@@ -74,7 +74,7 @@ public class LoadGamePanel extends JPanel {
 
                 FormEvents loadGameEvent = null;
 
-                GameFile loadGameChoice = (GameFile) gameList.getSelectedValue();
+                DBGameFile loadGameChoice = (DBGameFile) gameList.getSelectedValue();
 //                loadGameEvent = new FormEvents(this, loadGameChoice.getId());
 
                 if (formListener != null) {
@@ -135,7 +135,7 @@ public class LoadGamePanel extends JPanel {
         Connection connect = GameDBUtils.connectGuiToDatabase();
         Integer totalGames = LoadDataDBManager.countGamesInDatabase(connect);
         for (Integer i = 1; i < totalGames + 1; i++) {
-            savedGames.addElement(new GameFile(i, "File " + i));
+            savedGames.addElement(new DBGameFile(i, "File " + i));
         }
     }
     public void setFormListener(final FormListener listener) {

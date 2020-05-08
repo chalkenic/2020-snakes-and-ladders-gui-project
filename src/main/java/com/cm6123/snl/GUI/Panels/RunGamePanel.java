@@ -15,6 +15,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.TreeMap;
 
 public class RunGamePanel extends SidePanel {
 
@@ -50,11 +52,17 @@ public class RunGamePanel extends SidePanel {
 
     private Player[] loadedPlayers;
     private Integer[] loadedPlayerPostions;
+    private Integer gridSize;
+    private ArrayList allSpecials;
+    private TreeMap allTestSpecials;
 
-    public RunGamePanel(final GUIFrame gui, final Game newGame, final DiceSet diceChoice) {
+    public RunGamePanel(final GUIFrame gui, final Game newGame, final DiceSet diceChoice,
+                        final Integer boardGridSize, final TreeMap specialList) {
         this.currentGame = newGame;
         this.gameGui = gui;
         this.dice = diceChoice;
+        this.gridSize = boardGridSize;
+        this.allTestSpecials = specialList;
 
 //        addLoadedPlayers();
 //        addLoadedPlayerPositions();
@@ -138,6 +146,7 @@ public class RunGamePanel extends SidePanel {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 if (!currentGame.isGameOver()) {
+                    saveGameButton.setEnabled(true);
                     settlePlayerMove(currentPlayer);
                 }
             }
@@ -153,9 +162,10 @@ public class RunGamePanel extends SidePanel {
         saveGameButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e){
-                SaveDataDBManager saveGame = new SaveDataDBManager(currentGame, dice);
+                SaveDataDBManager saveGame = new SaveDataDBManager(currentGame, dice, gridSize, allTestSpecials);
                 Connection connect = GameDBUtils.connectGuiToDatabase();
                 saveGame.saveCurrentGame(connect);
+                saveGameButton.setEnabled(false);
             }
         });
 

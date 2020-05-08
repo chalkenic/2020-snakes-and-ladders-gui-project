@@ -22,11 +22,13 @@ public class DiceSet {
   /**
    * Construct a set of Dice.  Each dice has the same number of faces.
    *
-   * @param newface - how many faces on each dice.
+   * @param newFace - how many faces on each dice.
    * @param newCount - how many dice in the set.
    */
-  public DiceSet(final Integer newface, final Integer newCount) {
-    this(newface, newCount, new RandomDiceFactory());
+  public DiceSet(final Integer newFace, final Integer newCount) {
+    this(newFace, newCount, new RandomDiceFactory());
+    this.count = newCount;
+    this.faces = newFace;
   }
 
   /**
@@ -41,6 +43,8 @@ public class DiceSet {
                  final DiceFactory factory) {
 
     dice = factory.makeDice(newFace, newCount);
+    this.count = newCount;
+    this.faces = newFace;
 
   }
 

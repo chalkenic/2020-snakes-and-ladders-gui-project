@@ -1,12 +1,15 @@
 package com.cm6123.snl.GUI.PanelBackgroundLogic;
 
 import com.cm6123.snl.GUI.GUIFrame;
-import com.cm6123.snl.GUI.Panels.NewGame.NewGameEastInnerPanel;
-import com.cm6123.snl.GUI.Panels.NewGame.NewGamePanel;
-import com.cm6123.snl.GUI.Panels.NewGame.NewGameSouthInnerPanel;
-import com.cm6123.snl.GUI.Panels.NewGame.NewGameWestInnerPanel;
+import com.cm6123.snl.GUI.Panels.NewGamePanels.NewGameEastInnerPanel;
+import com.cm6123.snl.GUI.Panels.NewGamePanels.NewGameParentPanel;
+import com.cm6123.snl.GUI.Panels.NewGamePanels.NewGameSouthInnerPanel;
+import com.cm6123.snl.GUI.Panels.NewGamePanels.NewGameWestInnerPanel;
 import com.cm6123.snl.Game;
 import com.cm6123.snl.GameBuilder;
+import com.cm6123.snl.gameDB.DBGameFile;
+
+import java.util.TreeMap;
 
 public class CreateGame {
 
@@ -15,6 +18,8 @@ public class CreateGame {
     private Integer[] ladders;
 
     private Integer[] boosts;
+
+    private TreeMap<String, Integer[]> allSpecials;
 
     private Integer[] positions;
 
@@ -41,7 +46,7 @@ public class CreateGame {
         this.gameGui = gui;
     }
 
-    public void getCustomGameData(final NewGamePanel newGamePanel) {
+    public void getCustomGameData(final NewGameParentPanel newGamePanel) {
         this.westPanel = newGamePanel.getLeftPanel();
         this.eastPanel = newGamePanel.getRightPanel();
         this.southPanel = newGamePanel.getSouthPanel();
@@ -112,8 +117,12 @@ public class CreateGame {
 
         this.boardSize = southPanel.getBoardSize();
 
+        allSpecials = new TreeMap();
+        allSpecials.put("snakes", snakes);
+        allSpecials.put("ladders", ladders);
 
     }
+
     public Game buildGame() {
 
         if (noPlayersGiven) {
@@ -187,7 +196,7 @@ public class CreateGame {
         return newCustomGame;
     }
 
-    public CreateGame getLoadedGameData(final GameFile loadGameChoice) {
+    public CreateGame getLoadedGameData(final DBGameFile loadGameChoice) {
         snakes = new Integer[loadGameChoice.getGameSnakes().size()];
         ladders = new Integer[loadGameChoice.getGameLadders().size()];
         positions = new Integer[loadGameChoice.getPlayerPositions().size()];
@@ -246,21 +255,14 @@ public class CreateGame {
         this.boardSize = loadGameChoice.getBoardSize();
         gameGui.appendTextToPanel("Board size set to " + boardSize + "x" + boardSize + ".\n");
 
-        System.out.println(snakes.length);
-        System.out.println(ladders.length);
-//        System.out.println(boosts.length);
-        System.out.println(playerCount);
-        System.out.println(diceCount);
-        System.out.println(diceFaces);
-        System.out.println(recordGame);
-        System.out.println(winningSquareOnlyFeature);
-        System.out.println(boardSize * boardSize);
-
-
-
         return this;
 
 
+    }
+
+
+    public TreeMap<String, Integer[]> getAllSpecials() {
+        return allSpecials;
     }
 
     public Integer getDiceFaces() {
@@ -270,6 +272,7 @@ public class CreateGame {
     public Integer getDiceCount() {
         return diceCount;
     }
+    public Integer getBoardSize() { return boardSize; }
 
 //
 //    public Object getPlayers() {

@@ -1,4 +1,4 @@
-package com.cm6123.snl.GUI.PanelBackgroundLogic;
+package com.cm6123.snl.gameDB;
 
 import com.cm6123.snl.gameDB.GameDBUtils;
 
@@ -6,7 +6,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameFile {
+public class DBGameFile {
 
     private String gameText;
 
@@ -29,7 +29,7 @@ public class GameFile {
     private ArrayList<Integer> gameBoosts;
 
 
-    public GameFile(final int newID, final String text) {
+    public DBGameFile(final int newID, final String text) {
         this.id = newID;
         this.gameText = text;
 

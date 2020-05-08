@@ -3,7 +3,7 @@ package com.cm6123.snl.GUI;
 import com.cm6123.snl.*;
 import com.cm6123.snl.GUI.PanelBackgroundLogic.CreateGame;
 import com.cm6123.snl.GUI.Panels.*;
-import com.cm6123.snl.GUI.Panels.NewGame.NewGamePanel;
+import com.cm6123.snl.GUI.Panels.NewGamePanels.NewGameParentPanel;
 import com.cm6123.snl.dice.DiceSet;
 //import com.cm6123.snl.GUI.Panels.EditorChoicePanel;
 //import com.cm6123.snl.GUI.Panels.GameTextPanel;
@@ -11,6 +11,8 @@ import com.cm6123.snl.dice.DiceSet;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.TreeMap;
 
 public class GUIFrame extends JFrame {
 
@@ -27,7 +29,7 @@ public class GUIFrame extends JFrame {
     private EditorMenuPanel creationMenuPanel;
     private MainMenuPanel mainMenuPanel;
     private LoadGamePanel loadGamePanel;
-    private NewGamePanel newGamePanel;
+    private NewGameParentPanel newGamePanel;
     private RunGamePanel runGamePanel;
     private MenuBar gameMenu;
 
@@ -38,104 +40,39 @@ public class GUIFrame extends JFrame {
 
     private Boolean dataBaseConnection;
 
-
-
     public GUIFrame() {
         super("Snakes & Ladders");
         dataBaseConnection = false;
 
 
-
-
-//        setLayout(new BorderLayout());
         panelContainer = new JPanel();
-//        toolbar = new GameToolbarPanel(this);
+
         textPanel = new GameTextPanel();
 
         gameMenu = new MenuBar(this);
-//
-//
-////        setJMenuBar(gameMenu.createMenuBar());
-//
+
         setJMenuBar(gameMenu.getMenuBar());
 
-//        gameMenu = new MenuBar(this);
-//
-//        setJMenuBar(gameMenu.createMenuBar());
-//
-//
-//        gameMenu.addActionListener(new ActionListener() {
-//           @Override
-//           public void actionPerformed(final ActionEvent e) {
-//               if (e.getSource() == gameMenu.getMainMenu()) {
-//                   System.out.println("hello");
-//               }
-//           }
-//       });
 
 
-//        newSquarePanel = new SidePanel("Snake");
-
-//        toolbar.setTextPanel(textPanel);
-
-//        textArea = new JTextArea();
-//
-//        frame = new JFrame();
-
-
-//        button = new JButton(" Click me");
-//
-//        button.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(final ActionEvent e) {
-//                counter++;
-//                textPanel.appendText("Number of clicks innit: " + counter + "\n");
-//            }
-//        });
-
-
-                setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Snakes & Ladders Game");
-//        cardLayout = new CardLayout();
-//        panelContainer.setLayout(cardLayout);
-//        add(panelContainer);
 
         selectWindow("menu");
         pack();
         setVisible(true);
         frame = this;
-//        setSize(800, 650);
         setMinimumSize(new Dimension(800, 600));
-
-//        toolbar.setStringListener(new StringListener() {
-//            public void textEmitted(final String text) {
-//                textPanel.appendText(text);
-//            }
-//        });
 
     }
 
     public void selectWindow(final String windowChoice) {
-
-
-
-
-
-//
-//        if (currentPanel != null) {
-//            getContentPane().remove(currentPanel);
-//        }
-//        if (windowChoice != "menu" && windowChoice != "loadgame") {
-
 
             if (windowChoice != "loadgame" && windowChoice != "newgame") {
                 add(textPanel, BorderLayout.CENTER);
         }
         switch (windowChoice.toLowerCase()) {
             case "menu":
-
-
-
 
                 getContentPane().remove(textPanel);
 //                getContentPane().remove(toolbar);
@@ -145,9 +82,6 @@ public class GUIFrame extends JFrame {
                 if (dataBaseConnection) {
                     mainMenuPanel.enableFrontPage();
                 }
-
-
-//               mainMenuPanel.setLayout(sidePanel);
 
                 if (currentPanel == null) {
                     currentPanel = mainMenuPanel;
@@ -171,7 +105,7 @@ public class GUIFrame extends JFrame {
                 getContentPane().remove(textPanel);
                 getContentPane().remove(currentPanel);
                 revalidate();
-                newGamePanel = new NewGamePanel(this);
+                newGamePanel = new NewGameParentPanel(this);
 
 //                panelContainer.add(creationMenuPanel.createCreationPanel(), "2");
                 swapPanel(this,
@@ -188,8 +122,14 @@ public class GUIFrame extends JFrame {
                 getContentPane().remove(currentPanel);
                 revalidate();
 
+                Integer defaultGridChoice = 5;
+                TreeMap defaultSpecials = addTestDefaultValues();
+//                TreeMap<Integer, Integer[]> defaultSpecials = new TreeMap<>();
+//                defaultSpecials.put(0, snakes);
+//                defaultSpecials.put(1, ladders);
+
                 newGame = new GameBuilder()
-                        .withBoardSize(5)
+                        .withBoardSize(defaultGridChoice)
                         .withPlayers(2)
                         .withSnakes(14, 5, 20, 11)
                         .withLadders(3, 12, 13, 17)
@@ -197,7 +137,7 @@ public class GUIFrame extends JFrame {
 
                 diceSet = new DiceSet(6, 1);
 
-                runGamePanel = new RunGamePanel(this, newGame, diceSet);
+                runGamePanel = new RunGamePanel(this, newGame, diceSet, defaultGridChoice, defaultSpecials);
 
 //                panelContainer.add(creationMenuPanel.createCreationPanel(), "2");
                 swapPanel(this,
@@ -212,16 +152,20 @@ public class GUIFrame extends JFrame {
                 textPanel.wipeTextBox();
                 getContentPane().remove(currentPanel);
                 revalidate();
+                Integer customGridChoice;
+                TreeMap customSpecials;
 
                 customGame = new CreateGame(this);
                 customGame.getCustomGameData(newGamePanel);
+                customGridChoice = customGame.getBoardSize();
+                customSpecials = customGame.getAllSpecials();
 
                 try {
                     newGame = customGame.buildGame();
 
                     diceSet = new DiceSet(customGame.getDiceFaces(), customGame.getDiceCount());
 
-                    runGamePanel = new RunGamePanel(this, newGame, diceSet);
+                    runGamePanel = new RunGamePanel(this, newGame, diceSet, customGridChoice, customSpecials);
                     swapPanel(this,
                             currentPanel,
                             runGamePanel.createRunGamePanel(),
@@ -245,6 +189,8 @@ public class GUIFrame extends JFrame {
                 getContentPane().remove(currentPanel);
                 revalidate();
                 RunGamePanel duplicateGamePanel;
+                Integer repeatGridChoice = null;
+                TreeMap repeatSpecials = null;
 
 //                for (int i = 0; i < newGame.numberOfPlayers(); i++) {
 //                    Player player = newGame.getCurrentPlayer();
@@ -252,8 +198,10 @@ public class GUIFrame extends JFrame {
 //                }
 
                 if (customGame == null) {
+                    repeatGridChoice = 5;
+                    repeatSpecials = addTestDefaultValues();
                     newGame = new GameBuilder()
-                            .withBoardSize(5)
+                            .withBoardSize(repeatGridChoice)
                             .withPlayers(2)
                             .withSnakes(14, 5, 20, 11)
                             .withLadders(3, 12, 13, 17)
@@ -262,12 +210,14 @@ public class GUIFrame extends JFrame {
                     try {
                         customGame.getCustomGameData(newGamePanel);
                         newGame = customGame.buildGame();
+                        repeatGridChoice = customGame.getBoardSize();
+                        repeatSpecials = customGame.getAllSpecials();
                     } catch (NullPointerException n) {
                         newGame = customGame.buildGame();
                     }
                 }
 
-                duplicateGamePanel = new RunGamePanel(this, newGame, diceSet);
+                duplicateGamePanel = new RunGamePanel(this, newGame, diceSet, repeatGridChoice, repeatSpecials);
 
                 swapPanel(this,
                         currentPanel,
@@ -316,13 +266,17 @@ public class GUIFrame extends JFrame {
                 textPanel.wipeTextBox();
                 getContentPane().remove(currentPanel);
                 revalidate();
+                Integer loadedGridChoice;
+                TreeMap loadedSpecials;
 
                 newGame = customGame.buildGame();
+                loadedGridChoice = customGame.getBoardSize();
+                loadedSpecials = customGame.getAllSpecials();
 
 
                 diceSet = new DiceSet(customGame.getDiceFaces(), customGame.getDiceCount());
 
-                runGamePanel = new RunGamePanel(this, newGame, diceSet);
+                runGamePanel = new RunGamePanel(this, newGame, diceSet, loadedGridChoice, loadedSpecials);
 //                runGamePanel.addLoadedPlayers(customGame.getPlayers());
                 runGamePanel.addLoadedPlayerPositions(customGame.getPlayerPositions());
                 swapPanel(this,
@@ -341,17 +295,13 @@ public class GUIFrame extends JFrame {
                 revalidate();
                 creationMenuPanel = new EditorMenuPanel(this);
 
-//                panelContainer.add(creationMenuPanel.createCreationPanel(), "2");
                 swapPanel(this,
                         currentPanel,
                         creationMenuPanel.createCreationPanel(),
                         BorderLayout.WEST);
                 currentPanel = creationMenuPanel;
-//                cardLayout.show(panelContainer, "2");
-
 
                 break;
-
 
             case "newedit":
                 getContentPane().remove(currentPanel);
@@ -359,23 +309,15 @@ public class GUIFrame extends JFrame {
                 Edit newAdditionChoice = creationMenuPanel.getAdditionChoice();
                 EditorChoicePanel additionPanel = new EditorChoicePanel(this, newAdditionChoice);
 
-//                layout = (BorderLayout) additionPanel.getLayout();
 
-//                panelContainer.add(additionPanel, "3");
                 swapPanel(this,
                         currentPanel,
                         additionPanel.editChoicePanel(),
                         BorderLayout.WEST);
 
                 currentPanel = additionPanel;
-//                cardLayout.show(panelContainer, "3");
 
                 additionPanel.setFormListener(new FormListener() {
-
-
-//                    public void appendTextToPanel(final String text) {
-//                        textPanel.appendText(text);
-//                    }
 
                     public void incorrectEntryMessage() {
                         textPanel.appendText("|------------------------------------------------------|"
@@ -426,22 +368,13 @@ public class GUIFrame extends JFrame {
                                 System.out.println("is this the error?");
                                 incorrectEntryMessage();
                             }
-//                            else {
-////                                appendTextToPanel("\nERROR - values in incorrect positions or identical.");
-//                            }
-//                        } else {
-//                            appendTextToPanel("\nERROR - no value(s) entered.");
-//                        }
+
                         } else {
                             String playerFieldEntry = data.getPlayerNameEntry();
                             appendTextToPanel("player changed to name: " + playerFieldEntry + "\n");
                             System.out.println("JDBC LINK TO GO HERE");
                         }
                     }
-
-//                public void formBoostSquareEntry(final FormEvents data) {
-//                    Integer boostSquareLocation = Integer.parseInt(data.getBoostSquare());
-//                }
                 });
                 break;
         }
@@ -457,6 +390,24 @@ public class GUIFrame extends JFrame {
         currentFrame.revalidate();
 
     }
+
+    public ArrayList addDefaultValues() {
+        ArrayList<Integer[]> values = new ArrayList<>();
+
+        values.add(new Integer[] {14, 5, 20, 11});
+        values.add(new Integer[] {3, 12, 13, 17});
+        return values;
+    }
+
+    public TreeMap<String, Integer[]> addTestDefaultValues() {
+        TreeMap<String, Integer[]> values = new TreeMap<>();
+
+        values.put("snakes", new Integer[]{14, 5, 20, 11});
+        values.put("ladders", new Integer[]{3, 12, 13, 17});
+
+        return values;
+    }
+
 
     public void appendTextToPanel(final String text) {
         textPanel.appendText(text);
