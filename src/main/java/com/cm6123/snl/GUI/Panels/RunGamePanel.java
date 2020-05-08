@@ -5,6 +5,8 @@ import com.cm6123.snl.GUI.GUIFrame;
 import com.cm6123.snl.Game;
 import com.cm6123.snl.Player;
 import com.cm6123.snl.dice.DiceSet;
+import com.cm6123.snl.gameDB.GameDBUtils;
+import com.cm6123.snl.gameDB.SaveDataDBManager;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -12,6 +14,7 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
 
 public class RunGamePanel extends SidePanel {
 
@@ -149,8 +152,10 @@ public class RunGamePanel extends SidePanel {
 
         saveGameButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(final ActionEvent e) {
-                gameGui.selectWindow("runrepeatgame");
+            public void actionPerformed(final ActionEvent e){
+                SaveDataDBManager saveGame = new SaveDataDBManager(currentGame, dice);
+                Connection connect = GameDBUtils.connectGuiToDatabase();
+                saveGame.saveCurrentGame(connect);
             }
         });
 

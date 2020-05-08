@@ -64,7 +64,6 @@ public class LoadDataDBManager {
 
     public void countSnakesInDatabase(final Connection connection) {
         String query = "SELECT * FROM Snakes ";
-        Integer gameCount = null;
         Statement statement = null;
         ResultSet result = null;
 
@@ -105,7 +104,6 @@ public class LoadDataDBManager {
 
     public void countLaddersInDatabase(final Connection connection) {
         String query = "SELECT * FROM Ladders ";
-        Integer gameCount = null;
         Statement statement = null;
         ResultSet result = null;
 
@@ -145,7 +143,6 @@ public class LoadDataDBManager {
 
     public void countBoostsInDatabase(final Connection connection) {
         String query = "SELECT * FROM Boosts ";
-        Integer gameCount = null;
         Statement statement = null;
         ResultSet result = null;
 
@@ -183,7 +180,6 @@ public class LoadDataDBManager {
 
     public void countPlayersInDatabase(final Connection connection) {
         String query = "SELECT * FROM PlayerList ";
-        Integer gameCount = null;
         Statement statement = null;
         ResultSet result = null;
 
@@ -218,7 +214,6 @@ public class LoadDataDBManager {
     }
     public void countDiceInDatabase(final Connection connection) {
         String query = "SELECT * FROM Dice ";
-        Integer gameCount = null;
         Statement statement = null;
         ResultSet result = null;
 
