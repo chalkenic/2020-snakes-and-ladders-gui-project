@@ -68,8 +68,6 @@ public class LoadDataDBManager {
         Statement statement = null;
         ResultSet result = null;
 
-
-
         try {
             statement = connection.createStatement();
             result = statement.executeQuery(query);
@@ -106,7 +104,7 @@ public class LoadDataDBManager {
     }
 
     public void countLaddersInDatabase(final Connection connection) {
-        String query = "SELECT COUNT(*) AS totalCount FROM Ladders ";
+        String query = "SELECT * FROM Ladders ";
         Integer gameCount = null;
         Statement statement = null;
         ResultSet result = null;
@@ -122,10 +120,9 @@ public class LoadDataDBManager {
 
             while (result.next()) {
                 tableID.add(result.getInt("ladderID"));
-
                 gameInclusionID.add(result.getInt("game_gameID"));
-                totalFirstEntries.add(result.getInt("snakeHead"));
-                totalSecondEntries.add(result.getInt("snakeTail"));
+                totalFirstEntries.add(result.getInt("ladderFoot"));
+                totalSecondEntries.add(result.getInt("ladderTop"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -146,8 +143,8 @@ public class LoadDataDBManager {
         }
     }
 
-    public static Integer countBoostsInDatabase(final Connection connection) {
-        String query = "SELECT COUNT(*) AS totalCount FROM Boosts ";
+    public void countBoostsInDatabase(final Connection connection) {
+        String query = "SELECT * FROM Boosts ";
         Integer gameCount = null;
         Statement statement = null;
         ResultSet result = null;
@@ -156,9 +153,14 @@ public class LoadDataDBManager {
             statement = connection.createStatement();
             result = statement.executeQuery(query);
 
+            tableID = new ArrayList<>();
+            gameInclusionID =  new ArrayList<>();
+            totalFirstEntries = new ArrayList<>();
+
             while (result.next()) {
-                gameCount = result.getInt("totalCount");
-                System.out.println(gameCount);
+                tableID.add(result.getInt("boostID"));
+                gameInclusionID.add(result.getInt("game_gameID"));
+                totalFirstEntries.add(result.getInt("boostLocation"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -177,11 +179,10 @@ public class LoadDataDBManager {
                 e.printStackTrace();
             }
         }
-        return gameCount;
     }
 
-    public static Integer countPlayersInDatabase(final Connection connection) {
-        String query = "SELECT COUNT(*) AS totalCount FROM PlayerList ";
+    public void countPlayersInDatabase(final Connection connection) {
+        String query = "SELECT * FROM PlayerList ";
         Integer gameCount = null;
         Statement statement = null;
         ResultSet result = null;
@@ -190,9 +191,12 @@ public class LoadDataDBManager {
             statement = connection.createStatement();
             result = statement.executeQuery(query);
 
+            tableID = new ArrayList<>();
+            players = new ArrayList<>();
+
             while (result.next()) {
-                gameCount = result.getInt("totalCount");
-                System.out.println(gameCount);
+                tableID.add(result.getInt("playerListID"));
+                players.add(result.getString("playerName"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -211,10 +215,9 @@ public class LoadDataDBManager {
                 e.printStackTrace();
             }
         }
-        return gameCount;
     }
-    public static Integer countDiceInDatabase(final Connection connection) {
-        String query = "SELECT COUNT(*) AS totalCount FROM Dice ";
+    public void countDiceInDatabase(final Connection connection) {
+        String query = "SELECT * FROM Dice ";
         Integer gameCount = null;
         Statement statement = null;
         ResultSet result = null;
@@ -223,9 +226,15 @@ public class LoadDataDBManager {
             statement = connection.createStatement();
             result = statement.executeQuery(query);
 
+            tableID = new ArrayList<>();
+            totalFirstEntries = new ArrayList<>();
+            totalSecondEntries = new ArrayList<>();
+
             while (result.next()) {
-                gameCount = result.getInt("totalCount");
-                System.out.println(gameCount);
+                tableID.add(result.getInt("diceID"));
+                totalFirstEntries.add(result.getInt("diceCount"));
+                totalSecondEntries.add(result.getInt("diceFaces"));
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -244,7 +253,6 @@ public class LoadDataDBManager {
                 e.printStackTrace();
             }
         }
-        return gameCount;
     }
 
     public Integer getSelectionSize() {

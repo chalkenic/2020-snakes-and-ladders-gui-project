@@ -141,14 +141,17 @@ public class CreateGame {
         gameGui.appendTextToPanel("-----------------------------------------------------------------------|\n");
             if (winningSquareOnlyFeature) {
                 if (boosts != null) {
-                    if (boosts.length > 0) {
-                        newCustomGame = new GameBuilder()
-                                .withBoardSize(boardSize)
-                                .withPlayers(playerCount)
-                                .withSnakes(snakes)
-                                .withLadders(ladders)
-                                .withBoosts(boosts)
-                                .buildWithWinningSquare();
+                    try {
+                        if (boosts.length > 0) {
+                            newCustomGame = new GameBuilder()
+                                    .withBoardSize(boardSize)
+                                    .withPlayers(playerCount)
+                                    .withSnakes(snakes)
+                                    .withLadders(ladders)
+                                    .withBoosts(boosts)
+                                    .buildWithWinningSquare();
+                        }
+                    }  catch (NullPointerException n) {
                     }
                 } else {
                     newCustomGame = new GameBuilder()
@@ -159,14 +162,18 @@ public class CreateGame {
                             .buildWithWinningSquare();
                 }
             } else if (boosts != null) {
-                if (boosts.length > 0) {
-                    newCustomGame = new GameBuilder()
-                            .withBoardSize(boardSize)
-                            .withPlayers(playerCount)
-                            .withSnakes(snakes)
-                            .withLadders(ladders)
-                            .withBoosts(boosts)
-                            .build();
+                try {
+                    if (boosts.length > 0) {
+                        newCustomGame = new GameBuilder()
+                                .withBoardSize(boardSize)
+                                .withPlayers(playerCount)
+                                .withSnakes(snakes)
+                                .withLadders(ladders)
+                                .withBoosts(boosts)
+                                .build();
+                    }
+
+                }  catch (NullPointerException n) {
                 }
             } else {
                 newCustomGame = new GameBuilder()

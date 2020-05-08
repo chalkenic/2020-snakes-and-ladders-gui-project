@@ -214,21 +214,27 @@ public class GUIFrame extends JFrame {
                 revalidate();
 
                 customGame = new CreateGame(this);
-//                try {
                 customGame.getCustomGameData(newGamePanel);
 
-                newGame = customGame.buildGame();
+                try {
+                    newGame = customGame.buildGame();
+
+                    diceSet = new DiceSet(customGame.getDiceFaces(), customGame.getDiceCount());
+
+                    runGamePanel = new RunGamePanel(this, newGame, diceSet);
+                    swapPanel(this,
+                            currentPanel,
+                            runGamePanel.createRunGamePanel(),
+                            BorderLayout.WEST);
+
+                    currentPanel = runGamePanel;
+
+                } catch (NullPointerException n) {
+                    selectWindow("newgame");
+                    newGamePanel.getSouthPanel().appendErrorLabel("Boost ticked with no entry! please try again.");
+                }
 
 
-                diceSet = new DiceSet(customGame.getDiceFaces(), customGame.getDiceCount());
-
-                runGamePanel = new RunGamePanel(this, newGame, diceSet);
-                swapPanel(this,
-                        currentPanel,
-                        runGamePanel.createRunGamePanel(),
-                        BorderLayout.WEST);
-
-                currentPanel = runGamePanel;
 
 
                 break;

@@ -15,6 +15,7 @@ public class NewGameSouthInnerPanel extends SidePanel implements ActionListener 
 
     private JLabel defaultGameLabel;
     private JLabel boardSizeLabel;
+    private JLabel errorlabel;
     private JButton defaultGameButton;
     private JButton customGameButton;
     private JComboBox boardSizeBox;
@@ -26,9 +27,11 @@ public class NewGameSouthInnerPanel extends SidePanel implements ActionListener 
         this.gameGui = gui;
 
         boardSizeLabel = new JLabel("Board Size ");
+        errorlabel = new JLabel("____________________________");
         boardSizeLabel.setPreferredSize(new Dimension(400, 30));
+        errorlabel.setEnabled(false);
 
-        defaultGameLabel = new JLabel("Start default game (2 players, example snakes/ladders/dice, no features)");
+        defaultGameLabel = new JLabel("Start default game (2 players, ex. basic features, no extra features)");
         defaultGameLabel.setPreferredSize(new Dimension(400, 30));
 
 
@@ -124,7 +127,7 @@ public class NewGameSouthInnerPanel extends SidePanel implements ActionListener 
 
         gridStructure.gridx = 0;
         gridStructure.gridy = 3;
-        gridStructure.anchor = GridBagConstraints.FIRST_LINE_START;
+        gridStructure.anchor = GridBagConstraints.LINE_START;
 //        Insets westInsets = new Insets (5, 0, 5, 5);
 //        Insets eastInsets = new Insets (5, 5, 5, 0);
 
@@ -139,6 +142,21 @@ public class NewGameSouthInnerPanel extends SidePanel implements ActionListener 
 //        gridStructure.insets = new Insets(0, 0, 0, 5);
         add(customGameButton, gridStructure);
 
+        gridStructure.ipadx = 1;
+        gridStructure.ipady = 1;
+
+        gridStructure.gridy = 4;
+//        gridStructure.insets = new Insets(5, 200, 5, 5);
+        gridStructure.anchor = GridBagConstraints.CENTER;
+        add(errorlabel, gridStructure);
+
+
+
+    }
+
+    public void appendErrorLabel(final String s) {
+        errorlabel.setEnabled(true);
+        errorlabel.setText(s);
     }
 
     public void setPanelSize(final Integer width, final Integer height) {

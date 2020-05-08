@@ -352,6 +352,7 @@ public class RunGamePanel extends SidePanel {
                     gameGui.appendTextToPanel(currentPlayer.getColour() + " player wins the "
                             + "game!\n");
                     gameGui.appendTextToPanel("|---------------------------------------------------------|\n");
+                    playerPositionResultLabel.setText(currentPlayer.getPosition().get().toString());
                 }
             }
         }

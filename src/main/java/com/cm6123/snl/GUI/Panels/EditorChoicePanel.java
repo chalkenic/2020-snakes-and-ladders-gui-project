@@ -52,26 +52,26 @@ public class EditorChoicePanel extends SidePanel {
 
             additionFirstEntryLabel = new JLabel("Snake Head: ");
             additionSecondEntryLabel = new JLabel("Snake Tail: ");
+
+        } else if (newAddition == Edit.LADDER) {
+
+            loadDBGames(Edit.LADDER, dbEntryList);
+            additionFirstEntryLabel = new JLabel("Ladder Base: ");
+            additionSecondEntryLabel = new JLabel("Ladder Top: ");
+        } else if (newAddition == Edit.BOOST) {
+
+            loadDBGames(Edit.BOOST, dbEntryList);
+            additionFirstEntryLabel = new JLabel("Boost location: ");
+        } else if (newAddition == Edit.PLAYER) {
+
+            loadDBGames(Edit.PLAYER, dbEntryList);
+            additionFirstEntryLabel = new JLabel("Edit Player name: ");
+        } else if (newAddition == Edit.DIE) {
+
+            loadDBGames(Edit.DIE, dbEntryList);
+            additionFirstEntryLabel = new JLabel("Dice Count: ");
+            additionSecondEntryLabel = new JLabel("Die faces: ");
         }
-//        } else if (newAddition == Edit.LADDER) {
-//
-//            loadDBGames(Edit.LADDER);
-//            additionFirstEntryLabel = new JLabel("Ladder Base: ");
-//            additionSecondEntryLabel = new JLabel("Ladder Top: ");
-//        } else if (newAddition == Edit.BOOST) {
-//
-//            loadDBGames(Edit.BOOST);
-//            additionFirstEntryLabel = new JLabel("Boost location: ");
-//        } else if (newAddition == Edit.PLAYER) {
-//
-//            loadDBGames(Edit.PLAYER);
-//            additionFirstEntryLabel = new JLabel("Edit Player name: ");
-//        } else if (newAddition == Edit.DIE) {
-//
-//            loadDBGames(Edit.DIE);
-//            additionFirstEntryLabel = new JLabel("Dice Count: ");
-//            additionSecondEntryLabel = new JLabel("Die faces: ");
-//        }
 
         additionFirstField = new JTextField(10);
 
@@ -296,27 +296,51 @@ public class EditorChoicePanel extends SidePanel {
                         + "   |   head: " + dbLoader.getTotalFirstEntries(i)
                         + "   |   tail: " + dbLoader.getTotalSecondEntries(i)
                         + "   |");
-
             }
-//            System.out.println(totalentries);
+        } else if (choice == Edit.LADDER) {
+            LoadDataDBManager dbLoader = new LoadDataDBManager();
+            dbLoader.countLaddersInDatabase(connect);
+
+            for (Integer i = 0; i < dbLoader.getSelectionSize(); i++) {
+                jlist.addElement("|   ID: " + dbLoader.getTableID(i)
+                        + "   |   save file: " + dbLoader.getGameInclusionID(i)
+                        + "   |   foot: " + dbLoader.getTotalFirstEntries(i)
+                        + "   |   top: " + dbLoader.getTotalSecondEntries(i)
+                        + "   |");
+            }
+
+        } else if (choice == Edit.BOOST) {
+                LoadDataDBManager dbLoader = new LoadDataDBManager();
+                dbLoader.countBoostsInDatabase(connect);
+
+                for (Integer i = 0; i < dbLoader.getSelectionSize(); i++) {
+                    jlist.addElement("|   ID: " + dbLoader.getTableID(i)
+                            + "   |   save file: " + dbLoader.getGameInclusionID(i)
+                            + "   |   location: " + dbLoader.getTotalFirstEntries(i)
+                            + "   |");
+            }
+
+        } else if (choice == Edit.PLAYER) {
+            LoadDataDBManager dbLoader = new LoadDataDBManager();
+            dbLoader.countPlayersInDatabase(connect);
+
+            for (Integer i = 0; i < dbLoader.getSelectionSize(); i++) {
+                jlist.addElement("|   ID: " + dbLoader.getTableID(i)
+                        + "   |   player: " + dbLoader.getPlayers(i)
+                        + "   |");
+            }
+
+        } else if (choice == Edit.DIE) {
+            LoadDataDBManager dbLoader = new LoadDataDBManager();
+            dbLoader.countDiceInDatabase(connect);
+
+            for (Integer i = 0; i < dbLoader.getSelectionSize(); i++) {
+                jlist.addElement("|   ID: " + dbLoader.getTableID(i)
+                        + "   |   count: " + dbLoader.getTotalFirstEntries(i)
+                        + "   |   faces: " + dbLoader.getTotalSecondEntries(i)
+                        + "   |");
+            }
         }
-//        } else if (choice == Edit.LADDER) {
-//            Integer totalentries = LoadDataDBManager.countLaddersInDatabase(connect);
-//            System.out.println(totalentries);
-//
-//        } else if (choice == Edit.BOOST) {
-//            Integer totalentries = LoadDataDBManager.countBoostsInDatabase(connect);
-//            System.out.println(totalentries);
-//
-//
-//        } else if (choice == Edit.PLAYER) {
-//            Integer totalentries = LoadDataDBManager.countPlayersInDatabase(connect);
-//            System.out.println(totalentries);
-//
-//        } else if (choice == Edit.DIE) {
-//            Integer totalentries = LoadDataDBManager.countDiceInDatabase(connect);
-//            System.out.println(totalentries);
-//        }
     }
 }
 
