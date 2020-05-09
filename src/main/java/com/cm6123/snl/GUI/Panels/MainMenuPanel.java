@@ -1,6 +1,8 @@
 package com.cm6123.snl.GUI.Panels;
 
 import com.cm6123.snl.GUI.*;
+import com.cm6123.snl.gameDB.GameDBManager;
+import com.cm6123.snl.gameDB.GameDBUtils;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -8,13 +10,16 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
 
 public class MainMenuPanel extends JPanel {
 
     private JButton newGameButton;
     private JButton loadGameButton;
-    private JButton creationButton;
+    private JButton editorButton;
+    private JButton loadDatabaseButton;
     private JLabel welcomeLabel;
+    private JLabel databaseLoadedLabel;
 
     private FormListener formListener;
     private GridBagConstraints gridStructure;
@@ -34,26 +39,47 @@ public class MainMenuPanel extends JPanel {
 
         loadGameButton = new JButton("Load Game");
         loadGameButton.setPreferredSize(new Dimension(400, 60));
+        loadGameButton.setEnabled(false);
 
-        creationButton = new JButton("Creation Tool");
-        creationButton.setPreferredSize(new Dimension(400, 60));
+        editorButton = new JButton("Game Editor Tool");
+        editorButton.setPreferredSize(new Dimension(400, 60));
+        editorButton.setEnabled(false);
+
+        loadDatabaseButton = new JButton("Load Database");
+        loadDatabaseButton.setPreferredSize(new Dimension(200, 60));
+        databaseLoadedLabel = new JLabel("Database not loaded");
+        databaseLoadedLabel.setEnabled(false);
 
         newGameButton.addActionListener(new ActionListener() {
-            public void actionPerformed(final ActionEvent e) {
+            public void actionPerformed(final ActionEvent a) {
                 gameGui.selectWindow("newgame");
 
             }
         });
         loadGameButton.addActionListener(new ActionListener() {
-            public void actionPerformed(final ActionEvent e) {
+            public void actionPerformed(final ActionEvent a) {
                 gameGui.selectWindow("loadgame");
 
             }
         });
 
-        creationButton.addActionListener(new ActionListener() {
-            public void actionPerformed(final ActionEvent e) {
-                gameGui.selectWindow("creationmenu");
+        editorButton.addActionListener(new ActionListener() {
+            public void actionPerformed(final ActionEvent a) {
+                gameGui.selectWindow("editormenu");
+
+            }
+        });
+
+        loadDatabaseButton.addActionListener(new ActionListener() {
+            public void actionPerformed(final ActionEvent a) {
+
+                GameDBManager newDatabase = new GameDBManager();
+                Connection connect = GameDBUtils.connectGuiToDatabase();
+                newDatabase.createDatabase(connect);
+                enableFrontPage();
+                gameGui.getGameMenu().enableDatabaseNavigation();
+                //                gridStructure.gridy = 4;
+//                add(databaseLoadedLabel, gridStructure);
 
             }
         });
@@ -80,7 +106,7 @@ public class MainMenuPanel extends JPanel {
         gridStructure.weightx = 1;
         gridStructure.weighty = 1;
         gridStructure.gridx = 0;
-        gridStructure.gridy = 1;
+        gridStructure.gridy = 0;
 //        gridStructure.fill = GridBagConstraints.NONE;
 //
 //        gridStructure.anchor = GridBagConstraints.LINE_END;
@@ -90,7 +116,7 @@ public class MainMenuPanel extends JPanel {
         gridStructure.weightx = 1;
         gridStructure.weighty = 1;
         gridStructure.gridx = 0;
-        gridStructure.gridy = 2;
+        gridStructure.gridy = 1;
 //        gridStructure.fill = GridBagConstraints.NONE;
 //
 //        gridStructure.anchor = GridBagConstraints.LINE_END;
@@ -108,7 +134,7 @@ public class MainMenuPanel extends JPanel {
             gridStructure.weightx = 1;
             gridStructure.weighty = 1;
             gridStructure.gridx = 0;
-            gridStructure.gridy = 3;
+            gridStructure.gridy = 2;
 
 
 //            gridStructure.anchor = GridBagConstraints.LINE_END;
@@ -139,14 +165,36 @@ public class MainMenuPanel extends JPanel {
         gridStructure.weightx = 1;
         gridStructure.weighty = 1;
         gridStructure.gridx = 0;
-        gridStructure.gridy = 4;
+        gridStructure.gridy = 3;
 
 
 //        gridStructure.anchor = GridBagConstraints.FIRST_LINE_START;
         gridStructure.insets = new Insets(0, 0, 0, 0);
-        add(creationButton, gridStructure);
+        add(editorButton, gridStructure);
+
+
+        gridStructure.gridy = 4;
+//        gridStructure.anchor = GridBagConstraints.LINE_START;
+        gridStructure.insets = new Insets(0, 0, 0, 200);
+        add(loadDatabaseButton, gridStructure);
+
+
+//        gridStructure.anchor = GridBagConstraints.CENTER;
+       gridStructure.insets = new Insets(0, 300, 0, 0);
+        gridStructure.gridy = 4;
+        add(databaseLoadedLabel, gridStructure);
+
+
 
         return this;
+    }
+
+    public void enableFrontPage() {
+        loadGameButton.setEnabled(true);
+        editorButton.setEnabled(true);
+        databaseLoadedLabel.setEnabled(true);
+        databaseLoadedLabel.setText("Database Loaded!");
+        gameGui.setDataBaseConnection(true);
     }
 }
 

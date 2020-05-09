@@ -1,5 +1,7 @@
 package com.cm6123.snl;
 
+import com.cm6123.snl.GUI.GUIFrame;
+
 /**
  * Application root.
  */
@@ -17,8 +19,10 @@ public final class Application {
    *
    * @param args command-line arguments
    */
+  /**
+   * @param args
+   */
   public static void main(final String[] args) {
-    System.out.println("Welcome to Snakes and Ladders");
-    //TODO
+    GUIFrame snakesAndLaddersGui = new GUIFrame();
   }
 }

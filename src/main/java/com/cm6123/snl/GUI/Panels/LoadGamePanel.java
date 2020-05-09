@@ -1,6 +1,10 @@
 package com.cm6123.snl.GUI.Panels;
 
 import com.cm6123.snl.GUI.*;
+import com.cm6123.snl.GUI.PanelBackgroundLogic.CreateGame;
+import com.cm6123.snl.gameDB.DBGameFile;
+import com.cm6123.snl.gameDB.GameDBUtils;
+import com.cm6123.snl.gameDB.LoadDataDBManager;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -10,6 +14,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
 
 public class LoadGamePanel extends JPanel {
 
@@ -21,26 +26,28 @@ public class LoadGamePanel extends JPanel {
     private String currentSelection;
     private FormListener formListener;
     private JScrollPane scrollPane;
+    private LoadDataDBManager loadDatabase;
+    private JLabel errorLabel;
 
     public LoadGamePanel(final GUIFrame gui) {
         this.gameGui = gui;
-
+        this.loadDatabase = new LoadDataDBManager();
+        savedGames = new DefaultListModel();
+        loadDBGames();
 
         gameList = new JList();
-        savedGames = new DefaultListModel();
-        savedGames.addElement(new LoadGameFile(0, "First"));
-        for (Integer i = 1; i < 6; i++) {
-            savedGames.addElement(new LoadGameFile(i, "File " + Integer.toString(i)));
-        }
         gameList.setModel(savedGames);
 
         scrollPane = new JScrollPane(gameList);
+        errorLabel = new JLabel("");
+        errorLabel.setEnabled(false);
 
-//        savedGames.addElement(new LoadGameFile(gameList.getSelectedIndex(0).);
+
+//        savedGames.addElement(new DBGameFile(gameList.getSelectedIndex(0).);
 
 
 
-        scrollPane.setPreferredSize(new Dimension(400, 300));
+        scrollPane.setPreferredSize(new Dimension(200, 300));
         gameList.setBorder(BorderFactory.createEtchedBorder(1));
         gameList.setSelectedIndex(0);
 
@@ -57,7 +64,7 @@ public class LoadGamePanel extends JPanel {
                     //Code adapted from Sebastien: changing a JButton text when clicked.
                     //Available at: https://stackoverflow.com/questions/9412620/changing-a-jbutton-text-when-clicked
 
-                    //Code adapted from K0pernikus: New Line \n is not working in JButton.setText(“fnord\nfoo”) ; [duplicate]
+                    //Code adapted from K0pernikus: New Line \n is not working in JButton.setText; [duplicate]
                     //available at: https://stackoverflow.com/questions/13503280/new-line-n-is-not-working-in-jbutton-settextfnord-nfoo
 
                     loadGameButton.setText("<html>Load Game <br />" + currentSelection + "</html>");
@@ -69,16 +76,22 @@ public class LoadGamePanel extends JPanel {
             @Override
             public void actionPerformed(final ActionEvent e) {
 
-                FormEvents loadGameEvent = null;
 
-                LoadGameFile loadGameChoice = (LoadGameFile) gameList.getSelectedValue();
-                loadGameEvent = new FormEvents(this, loadGameChoice.getGameID());
+                    LoadingFormEvent loadGameEvent = null;
 
-                if (formListener != null) {
-                    formListener.formDatabaseEntry(loadGameEvent);
-                }
+                    DBGameFile loadGameChoice = (DBGameFile) gameList.getSelectedValue();
+    //                loadGameEvent = new LoadingFormEvent(this, loadGameChoice.getId());
 
-
+                    if (formListener != null) {
+    //                    formListener.formDatabaseEntry(loadGameEvent);
+                        CreateGame loadedGame = new CreateGame(gameGui);
+                        gameGui.setCreatedGame(loadedGame.getLoadedGameData(loadGameChoice));
+                        gameGui.setID(loadedGame.getGameID());
+                        System.out.println("file number: " + loadedGame.getGameID());
+                        System.out.println(loadedGame.getAllSpecials());
+                        System.out.println(loadedGame.getDiceFaces());
+                        gameGui.selectWindow("runloadedgame");
+                    }
 
             }
         });
@@ -118,11 +131,37 @@ public class LoadGamePanel extends JPanel {
         gridStructure.insets = new Insets(5, 5, 5, 5);
         add(loadGameButton, gridStructure);
 
+        gridStructure.gridy = 3;
+
+        gridStructure.insets = new Insets(5, 5, 5, 5);
+        add(errorLabel, gridStructure);
+
+
+
 
 
         return this;
     }
 
+    public void setErrorLabel(final String s) {
+        errorLabel.setEnabled(true);
+        errorLabel.setText(s);
+    }
+
+
+
+    private void loadDBGames() {
+        Connection connect = GameDBUtils.connectGuiToDatabase();
+        Integer totalGames = LoadDataDBManager.countGamesInDatabase(connect);
+        System.out.println("total games: " + totalGames);
+        for (Integer i = 1; i < (totalGames + 1); i++) {
+            DBGameFile newFile = new DBGameFile(i, "File " + i);
+            System.out.println("Game: " + newFile.getId());
+            if (!newFile.getGameOver()) {
+                savedGames.addElement(newFile);
+            }
+        }
+    }
     public void setFormListener(final FormListener listener) {
         this.formListener = listener;
     }

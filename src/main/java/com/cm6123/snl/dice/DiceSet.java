@@ -4,6 +4,15 @@ import java.util.Iterator;
 import java.util.List;
 
 public class DiceSet {
+  /**
+   * amount of dice rolled when using object.
+   */
+  private Integer count;
+
+  /**
+   * potential number rolled when rolling each dice in object.
+   */
+  private Integer faces;
 
   /**
    * List of Dice objects in the set.
@@ -13,25 +22,29 @@ public class DiceSet {
   /**
    * Construct a set of Dice.  Each dice has the same number of faces.
    *
-   * @param faces - how many faces on each dice.
-   * @param count - how many dice in the set.
+   * @param newFace - how many faces on each dice.
+   * @param newCount - how many dice in the set.
    */
-  public DiceSet(final Integer faces, final Integer count) {
-    this(faces, count, new RandomDiceFactory());
+  public DiceSet(final Integer newFace, final Integer newCount) {
+    this(newFace, newCount, new RandomDiceFactory());
+    this.count = newCount;
+    this.faces = newFace;
   }
 
   /**
    * Construct a set of Dice providing a Factory to control the Dice.
    * Default factory is a RandomDiceFactory.
-   * @param faces - how many faces on each Dice.
-   * @param count - how many dice.
+   * @param newFace - how many faces on each Dice.
+   * @param newCount - how many dice.
    * @param factory - factory that constrains the type of Dice included
    */
-  public DiceSet(final Integer faces,
-                 final Integer count,
+  public DiceSet(final Integer newFace,
+                 final Integer newCount,
                  final DiceFactory factory) {
 
-    dice = factory.makeDice(faces, count);
+    dice = factory.makeDice(newFace, newCount);
+    this.count = newCount;
+    this.faces = newFace;
 
   }
 
@@ -64,6 +77,22 @@ public class DiceSet {
 
     return new DiceResult(value, isDouble);
 
+  }
+
+  /**
+   * Getter to source stored count value.
+   * @return count - number of dice used in object.
+   */
+  public Integer getCount() {
+    return count;
+  }
+
+  /**
+   * Source face count of each die.
+   * @return faces - potential value of each die.
+   */
+  public Integer getFaces() {
+    return faces;
   }
 
 }

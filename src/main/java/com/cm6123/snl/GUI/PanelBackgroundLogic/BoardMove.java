@@ -1,9 +1,7 @@
-package com.cm6123.snl.GUI;
+package com.cm6123.snl.GUI.PanelBackgroundLogic;
 
-import com.cm6123.snl.Board;
-import com.cm6123.snl.Game;
-import com.cm6123.snl.Player;
-import com.cm6123.snl.Square;
+import com.cm6123.snl.*;
+import com.cm6123.snl.GUI.GUIFrame;
 
 import java.util.List;
 
@@ -43,7 +41,6 @@ public class BoardMove {
          }
 
          if (!hitSnakeSquare(temporaryBoardPosition)) {
-             System.out.println("test1");
              hitLadderSquare(temporaryBoardPosition);
          }
 
@@ -86,14 +83,12 @@ public class BoardMove {
                     hitSnake = true;
                 }
 //            } else if (((currentPlayer.getPosition().get()) + diceRoll) == s) {
-//                System.out.println("hello part 2?");
 //            }
             }
         } return hitSnake;
     }
 
     public void hitLadderSquare(final Integer position) {
-        System.out.println("test2");
 
         for (Integer s : currentBoard.getLadderFootList()) {
             if (boostAccumulator < 1) {
@@ -143,5 +138,10 @@ public class BoardMove {
 
             }
         } return noBoost;
+    }
+
+    public void moveLoadedGamePlayer(final Player player, final Integer position) {
+        Position startingSquare = new Position(position);
+        player.moveTo(startingSquare);
     }
 }

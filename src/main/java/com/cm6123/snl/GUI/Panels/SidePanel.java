@@ -16,9 +16,9 @@ public abstract class SidePanel extends JPanel {
 
 //    public abstract void setFormListener(FormListener listener);
 
-//    public abstract Integer entryValidation(NewAddition value, int... othervalues);
+//    public abstract Integer entryValidation(Edit value, int... othervalues);
 
-//    public abstract NewAddition getAdditionChoice();
+//    public abstract Edit getEditChoice();
 
 //    public abstract void createSidePanel();
 

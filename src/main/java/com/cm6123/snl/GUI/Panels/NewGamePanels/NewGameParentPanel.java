@@ -1,4 +1,4 @@
-package com.cm6123.snl.GUI.Panels.NewGame;
+package com.cm6123.snl.GUI.Panels.NewGamePanels;
 
 import com.cm6123.snl.GUI.GUIFrame;
 
@@ -7,7 +7,7 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class NewGamePanel extends JPanel {
+public class NewGameParentPanel extends JPanel {
 
     private NewGameWestInnerPanel leftPanel;
     private NewGameEastInnerPanel rightPanel;
@@ -40,7 +40,7 @@ public class NewGamePanel extends JPanel {
 
     private ArrayList<Integer> snakeChoices = new ArrayList<Integer>();
 
-    public NewGamePanel(final GUIFrame gui) {
+    public NewGameParentPanel(final GUIFrame gui) {
         this.gameGui = gui;
         leftPanel = new NewGameWestInnerPanel("Basic Features", gameGui);
         rightPanel = new NewGameEastInnerPanel("Additional Features",gameGui);

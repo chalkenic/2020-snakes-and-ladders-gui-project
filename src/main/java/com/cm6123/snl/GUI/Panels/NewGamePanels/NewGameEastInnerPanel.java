@@ -1,4 +1,4 @@
-package com.cm6123.snl.GUI.Panels.NewGame;
+package com.cm6123.snl.GUI.Panels.NewGamePanels;
 
 import com.cm6123.snl.GUI.GUIFrame;
 import com.cm6123.snl.GUI.Panels.SidePanel;
@@ -14,7 +14,7 @@ public class NewGameEastInnerPanel extends SidePanel {
 
     private JLabel winningSquareOnlyOnLabel;
     private JLabel boostSquareOnLabel;
-    private JLabel recordGameLabel;
+//    private JLabel recordGameLabel;
 
     private GridBagConstraints gridStructure;
 
@@ -23,12 +23,14 @@ public class NewGameEastInnerPanel extends SidePanel {
     private JTextField boostChoiceField;
 
     private JCheckBox winningCheckBox;
-    private JCheckBox recordCheckBox;
+//    private JCheckBox recordCheckBox;
+    private Boolean dataBaseEnabled;
 
 
 
 
     public NewGameEastInnerPanel(final String borderTitle, final GUIFrame gui) {
+        this.dataBaseEnabled = gui.getDatabaseConnection();
 
         winningSquareOnlyOnLabel = new JLabel("Winning Square Feature: ");
         winningSquareOnlyOnLabel.setPreferredSize(new Dimension(250, 62));
@@ -36,14 +38,13 @@ public class NewGameEastInnerPanel extends SidePanel {
         boostSquareOnLabel.setPreferredSize(new Dimension(250, 62));
         boostSquareChoiceLabel = new JLabel("Boost Squares (e.g. 7, 15): ");
         boostSquareChoiceLabel.setPreferredSize(new Dimension(250, 62));
-        recordGameLabel = new JLabel("Check to record game ");
-        recordGameLabel.setPreferredSize(new Dimension(250, 64));
+//        recordGameLabel = new JLabel("Check to record game ");
+//        recordGameLabel.setPreferredSize(new Dimension(250, 64));
 
 
         boostCheckBox = new JCheckBox();
         winningCheckBox = new JCheckBox();
-        recordCheckBox = new JCheckBox();
-//        boostCheckBox = new JCheckBox("allow Boost Squares", false);
+
 
         boostChoiceField = new JTextField(6);
 
@@ -79,20 +80,20 @@ public class NewGameEastInnerPanel extends SidePanel {
 
         gridStructure.weightx = 3;
         gridStructure.weighty = 1;
+//        gridStructure.gridx = 0;
+//        gridStructure.gridy = 0;
+//        gridStructure.insets = new Insets(0, 5, 0, 0);
+//        add(recordGameLabel, gridStructure);
+//
+//
+//        gridStructure.gridx = 5;
+//        gridStructure.anchor = GridBagConstraints.LINE_END;
+//        gridStructure.insets = new Insets(0, 0, 0, 30);
+//        add(recordCheckBox, gridStructure);
+
+
         gridStructure.gridx = 0;
         gridStructure.gridy = 0;
-        gridStructure.insets = new Insets(0, 5, 0, 0);
-        add(recordGameLabel, gridStructure);
-
-
-        gridStructure.gridx = 5;
-        gridStructure.anchor = GridBagConstraints.LINE_END;
-        gridStructure.insets = new Insets(0, 0, 0, 30);
-        add(recordCheckBox, gridStructure);
-
-
-        gridStructure.gridx = 0;
-        gridStructure.gridy = 1;
         gridStructure.insets = new Insets(0, 5, 0, 0);
         add(winningSquareOnlyOnLabel, gridStructure);
 
@@ -103,7 +104,7 @@ public class NewGameEastInnerPanel extends SidePanel {
         add(winningCheckBox, gridStructure);
 
         gridStructure.gridx = 0;
-        gridStructure.gridy = 2;
+        gridStructure.gridy = 1;
         gridStructure.insets = new Insets(0, 5, 0, 0);
         add(boostSquareOnLabel, gridStructure);
 
@@ -114,7 +115,7 @@ public class NewGameEastInnerPanel extends SidePanel {
         add(boostCheckBox, gridStructure);
 
         gridStructure.gridx = 0;
-        gridStructure.gridy = 3;
+        gridStructure.gridy = 2;
         gridStructure.insets = new Insets(0, 5, 0, 0);
         add(boostSquareChoiceLabel, gridStructure);
 
@@ -134,14 +135,6 @@ public class NewGameEastInnerPanel extends SidePanel {
     public Boolean getWinningCheckBox() {
         Boolean entry = false;
         if (winningCheckBox.isSelected()) {
-            entry = true;
-        }
-        return entry;
-    }
-
-    public Boolean getRecordCheckBox() {
-        Boolean entry = false;
-        if (recordCheckBox.isSelected()) {
             entry = true;
         }
         return entry;

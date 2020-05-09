@@ -1,9 +1,12 @@
-package com.cm6123.snl.GUI;
+package com.cm6123.snl.GUI.Panels;
 
-import com.cm6123.snl.GUI.Panels.SidePanel;
+import com.cm6123.snl.GUI.PanelBackgroundLogic.BoardMove;
+import com.cm6123.snl.GUI.GUIFrame;
 import com.cm6123.snl.Game;
 import com.cm6123.snl.Player;
 import com.cm6123.snl.dice.DiceSet;
+import com.cm6123.snl.gameDB.GameDBUtils;
+import com.cm6123.snl.gameDB.SaveDataDBManager;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -11,9 +14,14 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class RunGamePanel extends SidePanel {
 
+    private final Boolean loaded;
     private GUIFrame gameGui;
     private Game currentGame;
     private JList gamePlayerList;
@@ -33,19 +41,54 @@ public class RunGamePanel extends SidePanel {
     private JButton rollDiceButton;
     private JButton newGameButton;
     private JButton saveGameButton;
+    private JButton restartGameButton;
+    private JButton confirmRestartGameButton;
+    private JButton declineRestartGameButton;
     private GridBagConstraints gridStructure;
     private Border currentPlayerBorder;
     private BoardMove boardMovement;
     private DiceSet dice;
     private String winningSquareFeature;
     private String boostFeature;
+    private Player currentPlayer;
+    private Integer gameID;
 
-    public RunGamePanel(final GUIFrame gui, final Game newGame, final DiceSet diceChoice) {
+    private Integer[] loadedPlayerPostions;
+    private Integer gridSize;
+    private ArrayList allSpecials;
+    private TreeMap<String, Integer[]> allTestSpecials;
+
+    public RunGamePanel(final GUIFrame gui, final Game newGame, final DiceSet diceChoice,
+                        final Integer boardGridSize, final TreeMap specialList, final Boolean isLoaded,
+                        final Integer id) {
         this.currentGame = newGame;
         this.gameGui = gui;
         this.dice = diceChoice;
+        this.gridSize = boardGridSize;
+        this.allTestSpecials = specialList;
+        this.loaded = isLoaded;
+        this.gameID = id;
 
+//        addLoadedPlayers();
+//        addLoadedPlayerPositions();
+        if (currentGame == null) {
+            System.out.println("null1");
+        }
+        if (gameGui == null) {
+            System.out.println("null2");
+        }
 
+        if (dice == null) {
+            System.out.println("null3");
+        }
+
+        if (gridSize == null) {
+            System.out.println("null4");
+        }
+
+        if (allTestSpecials == null) {
+            System.out.println("null5");
+        }
 
         setPanelSize(350, 200);
         currentPlayerBorder = BorderFactory.createLineBorder(Color.BLACK);
@@ -108,11 +151,28 @@ public class RunGamePanel extends SidePanel {
         newGameButton.setEnabled(false);
         saveGameButton = new JButton("Save current game");
 
+        restartGameButton = new JButton("Restart Game");
+        confirmRestartGameButton = new JButton("Yes");
+        declineRestartGameButton = new JButton("No");
+        confirmRestartGameButton.setVisible(false);
+        declineRestartGameButton.setVisible(false);
+
+        if  (gameGui.getDatabaseConnection()) {
+            saveGameButton.setEnabled(true);
+        } else {
+            saveGameButton.setEnabled(false);
+        }
+
         rollDiceButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 if (!currentGame.isGameOver()) {
-                    settlePlayerMove();
+                    if  (gameGui.getDatabaseConnection()) {
+                        saveGameButton.setEnabled(true);
+                    }
+                    settlePlayerMove(currentPlayer);
+                } else {
+                    saveGameButton.setEnabled(false);
                 }
             }
         });
@@ -127,12 +187,59 @@ public class RunGamePanel extends SidePanel {
         saveGameButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                gameGui.selectWindow("runduplicateGame");
+
+                SaveDataDBManager saveGame = new SaveDataDBManager(currentGame, dice, gridSize,
+                        allTestSpecials, loaded, gameID);
+                Connection connect = GameDBUtils.connectGuiToDatabase();
+                saveGame.saveCurrentGame(connect);
+                saveGameButton.setEnabled(false);
+            }
+        });
+
+        restartGameButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                restartGameButton.setEnabled(false);
+                restartGameButton.setText("Really restart?");
+
+                gridStructure.weighty = 1;
+                gridStructure.gridy = 9;
+
+                gridStructure.anchor = GridBagConstraints.LINE_START;
+                confirmRestartGameButton.setVisible(true);
+                confirmRestartGameButton.setBackground(Color.green);
+                declineRestartGameButton.setVisible(true);
+                declineRestartGameButton.setBackground(Color.red);
+
+
+                add(confirmRestartGameButton, gridStructure);
+                gridStructure.insets = new Insets(0, 0, 0, 100);
+                gridStructure.anchor = GridBagConstraints.CENTER;
+                add(declineRestartGameButton, gridStructure);
+            }
+        });
+
+        confirmRestartGameButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                gameGui.selectWindow("runrepeatgame");
+            }
+        });
+
+        declineRestartGameButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                confirmRestartGameButton.setVisible(false);
+                declineRestartGameButton.setVisible(false);
+                restartGameButton.setEnabled(true);
+                restartGameButton.setText("Restart Game");
             }
         });
     }
 
+
     public JPanel createRunGamePanel() {
+        System.out.println(currentGame);
 
         TitledBorder innerGameBarBorder = BorderFactory.createTitledBorder("Current Game");
         Border outerGameBarBorder = BorderFactory.createEmptyBorder(2, 10, 10, 10);
@@ -203,10 +310,19 @@ public class RunGamePanel extends SidePanel {
         gridStructure.gridy = 8;
 
         gridStructure.anchor = GridBagConstraints.LINE_START;
-        add(saveGameButton, gridStructure);
+
+
+        add(restartGameButton, gridStructure);
+
+
 
         gridStructure.anchor = GridBagConstraints.LINE_END;
         add(newGameButton, gridStructure);
+
+        gridStructure.gridy = 9;
+
+        gridStructure.anchor = GridBagConstraints.LINE_END;
+        add(saveGameButton, gridStructure);
 
 
         launchGame();
@@ -221,15 +337,23 @@ public class RunGamePanel extends SidePanel {
     }
 
     public void launchGame() {
-        System.out.println(currentGame.isWinningSquareOn());
         boardMovement = new BoardMove(currentGame, gameGui);
-        playerTurnStart();
+
+
+        if (loadedPlayerPostions != null) {
+            for (int i = 0; i < loadedPlayerPostions.length; i++) {
+                boardMovement.moveLoadedGamePlayer(currentGame.getPlayer(i), loadedPlayerPostions[i]);
+            }
+        }
+        currentPlayer = currentGame.getPlayer(0);
+        highLightCurrentPlayer(currentGame.getPlayer(0));
+
     }
 
-    private void settlePlayerMove() {
+    private void settlePlayerMove(final Player movingPlayer) {
         Integer diceRoll = dice.roll().getValue();
-        Player currentPlayer = currentGame.getCurrentPlayer();
-        Integer currentPosition = currentPlayer.getPosition().get();
+        currentPlayer = movingPlayer;
+        Integer currentPosition = movingPlayer.getPosition().get();
 
         gameGui.appendTextToPanel(currentPlayer.getColour() + " player starts their turn at position "
                 + currentPosition + ".\n");
@@ -251,11 +375,13 @@ public class RunGamePanel extends SidePanel {
                             + (currentPlayer.getPosition().get() - currentPosition) + " squares\n");
 
                     gameGui.appendTextToPanel("|---------------------------------------------------------|\n");
-
                 }
             }
 
-            playerTurnStart();
+            highLightCurrentPlayer(currentGame.getCurrentPlayer());
+            currentPlayer = currentGame.getCurrentPlayer();
+
+
         } else {
             for (int i = 0; i < gamePlayerList.getModel().getSize(); i++) {
                 Object player = gamePlayerList.getModel().getElementAt(i);
@@ -268,20 +394,31 @@ public class RunGamePanel extends SidePanel {
                     gameGui.appendTextToPanel(currentPlayer.getColour() + " player wins the "
                             + "game!\n");
                     gameGui.appendTextToPanel("|---------------------------------------------------------|\n");
+                    playerPositionResultLabel.setText(currentPlayer.getPosition().get().toString());
                 }
             }
+            Connection connect = GameDBUtils.connectGuiToDatabase();
+            SaveDataDBManager markGameEnded = new SaveDataDBManager(gameID);
+
+
+            if (gameGui.getDatabaseConnection()) {
+                markGameEnded.markGameAsEnded(connect);
+            }
+
+
+
         }
 //        gameGui.appendTextToPanel("\nplayer " + currentGame.getCurrentPlayer() + " has moved to position "
 //                + currentGame.getCurrentPlayer().getPosition().get());
     }
 
-    private void playerTurnStart() {
-        Player currentPlayer = currentGame.getCurrentPlayer();
-        Integer position = currentGame.getCurrentPlayer().getPosition().get();
+    private void highLightCurrentPlayer(final Player player) {
+        currentPlayer = player;
+        Integer position = player.getPosition().get();
 
         for (int i = 0; i < gamePlayerList.getModel().getSize(); i++) {
-            Object player = gamePlayerList.getModel().getElementAt(i);
-            if (player.toString() == currentPlayer.getColour().toString()) {
+            Object playerTurn = gamePlayerList.getModel().getElementAt(i);
+            if (playerTurn.toString() == currentPlayer.getColour().toString()) {
                 gamePlayerList.setSelectedIndex(i);
                 gamePlayerList.setSelectionBackground(Color.CYAN);
                 playerColourTurnResultLabel.setText(currentPlayer.getColour().toString());
@@ -290,4 +427,12 @@ public class RunGamePanel extends SidePanel {
             }
         }
     }
+
+//    private void addLoadedPlayers(final );
+    public void addLoadedPlayerPositions(final Integer[] playerPositions) {
+        loadedPlayerPostions = new Integer[playerPositions.length];
+        for (int i = 0; i < playerPositions.length; i++) {
+            loadedPlayerPostions[i] = playerPositions[i];
+        }
+    };
 }

@@ -1,4 +1,4 @@
-package com.cm6123.snl.GUI.Panels.NewGame;
+package com.cm6123.snl.GUI.Panels.NewGamePanels;
 
 import com.cm6123.snl.GUI.GUIFrame;
 import com.cm6123.snl.GUI.Panels.SidePanel;

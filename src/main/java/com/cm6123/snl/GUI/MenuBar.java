@@ -1,7 +1,6 @@
 package com.cm6123.snl.GUI;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -17,10 +16,9 @@ public class MenuBar extends JMenu implements ActionListener {
     private JMenuItem mainMenu;
     private JMenuItem newGame;
     private JMenuItem loadGame;
-    private JMenuItem saveGame;
     private JMenuItem exitGame;
 
-    private JMenuItem creationMenu;
+    private JMenuItem editorMenu;
 
 
     public MenuBar(final GUIFrame gui) {
@@ -35,18 +33,19 @@ public class MenuBar extends JMenu implements ActionListener {
         mainMenu.addActionListener(this);
 //        mainMenu.setPreferredSize(new Dimension(50, 30));
 
-        creationMenu = new JMenuItem("Creation Menu");
-        creationMenu.addActionListener(this);
-//        creationMenu.setPreferredSize(new Dimension(50, 30));
+        editorMenu = new JMenuItem("Editor Menu");
+        editorMenu.addActionListener(this);
+        editorMenu.setEnabled(false);
+
+//        editorMenu.setPreferredSize(new Dimension(50, 30));
 
         newGame = new JMenuItem("New game");
         newGame.addActionListener(this);
 
         loadGame = new JMenuItem("Load Game...");
         loadGame.addActionListener(this);
+        loadGame.setEnabled(false);
 
-        saveGame = new JMenuItem("Save Game...");
-        saveGame.addActionListener(this);
 
         exitGame = new JMenuItem("Exit Program");
         exitGame.addActionListener(this);
@@ -55,16 +54,18 @@ public class MenuBar extends JMenu implements ActionListener {
         fileMenu.addSeparator();
         fileMenu.add(newGame);
         fileMenu.add(loadGame);
-        fileMenu.add(saveGame);
         fileMenu.addSeparator();
         fileMenu.add(exitGame);
 
         menuNav.add(mainMenu);
-        menuNav.add(creationMenu);
+        menuNav.add(editorMenu);
 
 
         gameMenu.add(fileMenu);
         gameMenu.add(menuNav);
+
+
+
 
 
 //        exportData.addActionListener(this);
@@ -82,7 +83,7 @@ public class MenuBar extends JMenu implements ActionListener {
 //        showEditPlayers.addActionListener(this);
 //        showEditDice.addActionListener(this);
 //        showMenu.add(mainMenu);
-//        showMenu.add(creationMenu);
+//        showMenu.add(editorMenu);
 //        fileMenu.addSeparator();
 //        showMenu.add(newGame);
 //        showMenu.add(loadGame);
@@ -107,8 +108,8 @@ public class MenuBar extends JMenu implements ActionListener {
         if (click.getSource().equals(mainMenu)) {
             gameGui.selectWindow("menu");
 
-        } else if (click.getSource().equals(creationMenu)) {
-            gameGui.selectWindow("creationmenu");
+        } else if (click.getSource().equals(editorMenu)) {
+            gameGui.selectWindow("editormenu");
 
         } else if (click.getSource().equals(newGame)) {
             gameGui.selectWindow("newgame");
@@ -116,12 +117,17 @@ public class MenuBar extends JMenu implements ActionListener {
         } else if (click.getSource().equals(loadGame)) {
             gameGui.selectWindow("loadgame");
 
-        } else if (click.getSource().equals(saveGame)) {
-//            gameGui.selectWindow("menu");
 
         } else if (click.getSource().equals(exitGame)) {
             System.exit(0);
         }
 
     }
-}
+
+    public void enableDatabaseNavigation() {
+            editorMenu.setEnabled(true);
+            loadGame.setEnabled(true);
+
+        }
+    }
+

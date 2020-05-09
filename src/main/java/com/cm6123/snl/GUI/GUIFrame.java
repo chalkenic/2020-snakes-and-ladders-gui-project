@@ -1,18 +1,20 @@
 package com.cm6123.snl.GUI;
 
+import com.cm6123.snl.*;
+import com.cm6123.snl.GUI.PanelBackgroundLogic.CreateGame;
 import com.cm6123.snl.GUI.Panels.*;
-import com.cm6123.snl.GUI.Panels.NewGame.NewGamePanel;
-import com.cm6123.snl.Game;
-import com.cm6123.snl.GameBuilder;
+import com.cm6123.snl.GUI.Panels.NewGamePanels.NewGameParentPanel;
 import com.cm6123.snl.dice.DiceSet;
-//import com.cm6123.snl.GUI.Panels.NewAdditionPanel;
+import com.cm6123.snl.gameDB.DBGameFile;
+import com.cm6123.snl.gameDB.EditDataDBManager;
+//import com.cm6123.snl.GUI.Panels.EditorChoicePanel;
 //import com.cm6123.snl.GUI.Panels.GameTextPanel;
 //import com.cm6123.snl.GUI.Panels.SidePanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.TreeMap;
 
 public class GUIFrame extends JFrame {
 
@@ -26,98 +28,50 @@ public class GUIFrame extends JFrame {
     private JPanel panelContainer;
     private JPanel currentPanel;
 //    private LayoutManager layout;
-    private CreationMenuPanel creationMenuPanel;
+    private EditorMenuPanel creationMenuPanel;
     private MainMenuPanel mainMenuPanel;
     private LoadGamePanel loadGamePanel;
-    private NewGamePanel newGamePanel;
+    private NewGameParentPanel newGamePanel;
     private RunGamePanel runGamePanel;
     private MenuBar gameMenu;
 
     private Game newGame;
     private DiceSet diceSet;
+    private DBGameFile dbGameFile;
+
+    private CreateGame customGame;
+
+    private Boolean dataBaseConnection;
+    private Boolean loaded;
+    private Integer loadedGameId;
 
     public GUIFrame() {
         super("Snakes & Ladders");
+        dataBaseConnection = false;
 
 
-
-
-//        setLayout(new BorderLayout());
         panelContainer = new JPanel();
-//        toolbar = new GameToolbarPanel(this);
+
         textPanel = new GameTextPanel();
 
         gameMenu = new MenuBar(this);
-//
-//
-////        setJMenuBar(gameMenu.createMenuBar());
-//
+
         setJMenuBar(gameMenu.getMenuBar());
 
-//        gameMenu = new MenuBar(this);
-//
-//        setJMenuBar(gameMenu.createMenuBar());
-//
-//
-//        gameMenu.addActionListener(new ActionListener() {
-//           @Override
-//           public void actionPerformed(final ActionEvent e) {
-//               if (e.getSource() == gameMenu.getMainMenu()) {
-//                   System.out.println("hello");
-//               }
-//           }
-//       });
 
 
-//        newSquarePanel = new SidePanel("Snake");
-
-//        toolbar.setTextPanel(textPanel);
-
-//        textArea = new JTextArea();
-//
-//        frame = new JFrame();
-
-
-//        button = new JButton(" Click me");
-//
-//        button.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(final ActionEvent e) {
-//                counter++;
-//                textPanel.appendText("Number of clicks innit: " + counter + "\n");
-//            }
-//        });
-
-
-                setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Snakes & Ladders Game");
-//        cardLayout = new CardLayout();
-//        panelContainer.setLayout(cardLayout);
-//        add(panelContainer);
 
         selectWindow("menu");
         pack();
         setVisible(true);
         frame = this;
-//        setSize(800, 650);
         setMinimumSize(new Dimension(800, 600));
-
-//        toolbar.setStringListener(new StringListener() {
-//            public void textEmitted(final String text) {
-//                textPanel.appendText(text);
-//            }
-//        });
 
     }
 
     public void selectWindow(final String windowChoice) {
-
-//
-//        if (currentPanel != null) {
-//            getContentPane().remove(currentPanel);
-//        }
-//        if (windowChoice != "menu" && windowChoice != "loadgame") {
-
 
             if (windowChoice != "loadgame" && windowChoice != "newgame") {
                 add(textPanel, BorderLayout.CENTER);
@@ -125,12 +79,14 @@ public class GUIFrame extends JFrame {
         switch (windowChoice.toLowerCase()) {
             case "menu":
 
-
                 getContentPane().remove(textPanel);
 //                getContentPane().remove(toolbar);
 //                revalidate();
                 mainMenuPanel = new MainMenuPanel(this);
-//               mainMenuPanel.setLayout(sidePanel);
+
+                if (dataBaseConnection) {
+                    mainMenuPanel.enableFrontPage();
+                }
 
                 if (currentPanel == null) {
                     currentPanel = mainMenuPanel;
@@ -143,20 +99,16 @@ public class GUIFrame extends JFrame {
                     currentPanel = mainMenuPanel;
 
                 }
-
-//                panelContainer.add(mainMenuPanel.createMenuPanel(), "1");
-//                cardLayout.show(panelContainer, "1");
                 break;
 
             case "newgame":
-
+                customGame = null;
 
                 getContentPane().remove(textPanel);
                 getContentPane().remove(currentPanel);
                 revalidate();
-                newGamePanel = new NewGamePanel(this);
+                newGamePanel = new NewGameParentPanel(this);
 
-//                panelContainer.add(creationMenuPanel.createCreationPanel(), "2");
                 swapPanel(this,
                         currentPanel,
                         newGamePanel.createNewGamePanel(),
@@ -170,9 +122,17 @@ public class GUIFrame extends JFrame {
                 textPanel.wipeTextBox();
                 getContentPane().remove(currentPanel);
                 revalidate();
+                loaded = false;
 
-                Game defaultGame = new GameBuilder()
-                        .withBoardSize(5)
+
+                Integer defaultGridChoice = 5;
+                TreeMap defaultSpecials = addTestDefaultValues();
+//                TreeMap<Integer, Integer[]> defaultSpecials = new TreeMap<>();
+//                defaultSpecials.put(0, snakes);
+//                defaultSpecials.put(1, ladders);
+
+                newGame = new GameBuilder()
+                        .withBoardSize(defaultGridChoice)
                         .withPlayers(2)
                         .withSnakes(14, 5, 20, 11)
                         .withLadders(3, 12, 13, 17)
@@ -180,7 +140,8 @@ public class GUIFrame extends JFrame {
 
                 diceSet = new DiceSet(6, 1);
 
-                runGamePanel = new RunGamePanel(this, defaultGame, diceSet);
+                runGamePanel = new RunGamePanel(this, newGame, diceSet, defaultGridChoice, defaultSpecials, loaded,
+                        loadedGameId);
 
 //                panelContainer.add(creationMenuPanel.createCreationPanel(), "2");
                 swapPanel(this,
@@ -195,51 +156,104 @@ public class GUIFrame extends JFrame {
                 textPanel.wipeTextBox();
                 getContentPane().remove(currentPanel);
                 revalidate();
+                Integer customGridChoice;
+                TreeMap customSpecials;
+                loaded = false;
 
-                CreateGame customGame = new CreateGame(this);
-//                try {
+                customGame = new CreateGame(this);
+                try {
                     customGame.getCustomGameData(newGamePanel);
+                    customGridChoice = customGame.getBoardSize();
+                    customSpecials = customGame.getAllSpecials();
 
-                    newGame = customGame.getGame();
+                    try {
+                        newGame = customGame.buildGame();
 
-                    diceSet = new DiceSet(customGame.getDiceFaces(), customGame.getDiceCount());
+                        diceSet = new DiceSet(customGame.getDiceFaces(), customGame.getDiceCount());
 
-                    runGamePanel = new RunGamePanel(this, newGame, diceSet);
-                    swapPanel(this,
-                            currentPanel,
-                            runGamePanel.createRunGamePanel(),
-                            BorderLayout.WEST);
+                        runGamePanel = new RunGamePanel(this, newGame, diceSet, customGridChoice, customSpecials, loaded,
+                                loadedGameId);
+                        swapPanel(this,
+                                currentPanel,
+                                runGamePanel.createRunGamePanel(),
+                                BorderLayout.WEST);
 
-                    currentPanel = runGamePanel;
-//                } catch (NullPointerException n) {
-//                    System.out.println("No game found. returning to main menu.");
-//                    selectWindow("menu");
-//                }
+                        currentPanel = runGamePanel;
+
+                    } catch (NullPointerException n) {
+                        selectWindow("newgame");
+                        newGamePanel.getSouthPanel().setErrorLabel("Boost ticked with no entry! Please try again.");
+                    } catch (IllegalStateException i) {
+                        selectWindow("newgame");
+                        newGamePanel.getSouthPanel().setErrorLabel("Entry error! Please try again.");
+                    }
+                } catch (IllegalStateException e) {
+                    selectWindow("newgame");
+                    newGamePanel.getSouthPanel().setErrorLabel("Illegal square entry! Please try again.");
+            }
 
 
 
 
-//
-//                runGamePanel = new RunGamePanel(this, customGame.getCustomGame());
 
-//                panelContainer.add(creationMenuPanel.createCreationPanel(), "2");
+
 
                 break;
 
-            case "runduplicateGame":
+            case "runrepeatgame":
+
+                System.out.println("am i working?");
 
                 textPanel.wipeTextBox();
                 getContentPane().remove(currentPanel);
                 revalidate();
+                RunGamePanel duplicateGamePanel;
+                Integer repeatGridChoice = null;
+                TreeMap repeatSpecials = null;
+                loaded = false;
 
-                runGamePanel = new RunGamePanel(this, newGame, diceSet);
+
+//                for (int i = 0; i < newGame.numberOfPlayers(); i++) {
+//                    Player player = newGame.getCurrentPlayer();
+//                    player.moveTo(newGame.getBoard().start());
+//                }
+
+                if (customGame == null) {
+                    repeatGridChoice = 5;
+                    repeatSpecials = addTestDefaultValues();
+                    Game loadGame = new GameBuilder()
+                            .withBoardSize(repeatGridChoice)
+                            .withPlayers(2)
+                            .withSnakes(14, 5, 20, 11)
+                            .withLadders(3, 12, 13, 17)
+                            .build();
+                } else {
+                    try {
+                        try {
+                            customGame.getCustomGameData(newGamePanel);
+                        } catch (NullPointerException f) {
+                            customGame.getLoadedGameData(dbGameFile);
+                            loaded = true;
+                        }
+                            newGame = customGame.buildGame();
+                            repeatGridChoice = customGame.getBoardSize();
+                            System.out.println(repeatGridChoice);
+                            repeatSpecials = customGame.getAllSpecials();
+                        }
+                     catch (NullPointerException n) {
+                        n.printStackTrace();
+                    }
+                }
+
+                duplicateGamePanel = new RunGamePanel(this, newGame, diceSet, repeatGridChoice, repeatSpecials,
+                        loaded, loadedGameId);
 
                 swapPanel(this,
                         currentPanel,
-                        runGamePanel.createRunGamePanel(),
+                        duplicateGamePanel.createRunGamePanel(),
                         BorderLayout.WEST);
 
-                currentPanel = runGamePanel;
+                currentPanel = duplicateGamePanel;
 
                 break;
 
@@ -267,7 +281,7 @@ public class GUIFrame extends JFrame {
                         textPanel.appendText("Cannot find file!\n");
                     }
 
-                    public void formDatabaseEntry(final FormEvents data) {
+                    public void formDatabaseEntry(final LoadingFormEvent data) {
                         if (data.getLoadGameEntry() != null) {
                             Integer loadGameEntry = data.getLoadGameEntry();
                             appendTextToPanel("loaded game " + loadGameEntry + "!\n");
@@ -277,113 +291,84 @@ public class GUIFrame extends JFrame {
 
                 break;
 
-            case "creationmenu":
+            case "runloadedgame":
+                textPanel.wipeTextBox();
                 getContentPane().remove(currentPanel);
                 revalidate();
-                creationMenuPanel = new CreationMenuPanel(this);
+                Integer loadedGridChoice;
+                TreeMap loadedSpecials;
+                loaded = true;
+                System.out.println("#2 - file number:" + loadedGameId);
+//                Game loadGame = new GameBuilder()
+//                        .withBoardSize(5)
+//                        .withPlayers(2)
+//                        .withSnakes(14, 5, 20, 11)
+//                        .withLadders(3, 12, 13, 17)
+//                        .build();
+//                this.dbGameFile = customGame.getGamefile();
+//                customGame.getLoadedGameData(dbGameFile);
 
-//                panelContainer.add(creationMenuPanel.createCreationPanel(), "2");
+                try {
+                    newGame = customGame.buildGame();
+                    loadedGridChoice = customGame.getBoardSize();
+                    loadedSpecials = customGame.getAllSpecials();
+
+                    diceSet = new DiceSet(customGame.getDiceFaces(), customGame.getDiceCount());
+
+                    runGamePanel = new RunGamePanel(this, newGame, diceSet, loadedGridChoice, loadedSpecials, loaded,
+                            loadedGameId);
+//                runGamePanel.addLoadedPlayers(customGame.getPlayers());
+                    runGamePanel.addLoadedPlayerPositions(customGame.getPlayerPositions());
+                    swapPanel(this,
+                            currentPanel,
+                            runGamePanel.createRunGamePanel(),
+                            BorderLayout.WEST);
+
+                    currentPanel = runGamePanel;
+                } catch (IllegalStateException error) {
+
+                    selectWindow("loadgame");
+                    loadGamePanel.setErrorLabel("There is an illegal square clash in the file. "
+                            + "Please amend in the editor tool.");
+
+                }
+
+
+                break;
+
+            case "editormenu":
+                textPanel.wipeTextBox();
+                getContentPane().remove(currentPanel);
+                revalidate();
+                creationMenuPanel = new EditorMenuPanel(this);
+
                 swapPanel(this,
                         currentPanel,
                         creationMenuPanel.createCreationPanel(),
                         BorderLayout.WEST);
                 currentPanel = creationMenuPanel;
-//                cardLayout.show(panelContainer, "2");
-
 
                 break;
 
-
-            case "newaddition":
+            case "newedit":
                 getContentPane().remove(currentPanel);
                 revalidate();
-                NewAddition newAdditionChoice = creationMenuPanel.getAdditionChoice();
-                NewAdditionPanel additionPanel = new NewAdditionPanel(this, newAdditionChoice);
+                Edit newAdditionChoice = creationMenuPanel.getAdditionChoice();
+                EditorChoicePanel additionPanel = new EditorChoicePanel(this, newAdditionChoice);
 
-//                layout = (BorderLayout) additionPanel.getLayout();
 
-//                panelContainer.add(additionPanel, "3");
                 swapPanel(this,
                         currentPanel,
-                        additionPanel.createAdditionPanel(),
+                        additionPanel.editChoicePanel(),
                         BorderLayout.WEST);
 
                 currentPanel = additionPanel;
-//                cardLayout.show(panelContainer, "3");
-
-                additionPanel.setFormListener(new FormListener() {
 
 
-//                    public void appendTextToPanel(final String text) {
-//                        textPanel.appendText(text);
-//                    }
 
-                    public void incorrectEntryMessage() {
-                        textPanel.appendText("|------------------------------------------------------|"
-                                + "\n| ERROR - INCORRECT ENTRY MADE  |"
-                                + "\n|------------------------------------------------------|\n");
-                    }
+                handleDbEdit(additionPanel);
 
-                    public void formDatabaseEntry(final FormEvents data) {
 
-                        if (data.getPlayerNameEntry() == null) {
-                            Integer firstFieldEntry;
-                            Integer secondFieldEntry;
-                            Boolean newSquareType;
-                            Boolean secondSquareMissing = true;
-
-                            firstFieldEntry = data.getFirstEntry();
-                            secondFieldEntry = data.getSecondEntry();
-
-                            if (secondFieldEntry == null) {
-                                newSquareType = additionPanel.entryValidation(additionPanel.getAdditionChoice(),
-                                        firstFieldEntry);
-                            } else {
-                                newSquareType = additionPanel.entryValidation(additionPanel.getAdditionChoice(),
-                                        firstFieldEntry, secondFieldEntry);
-                            }
-
-                            if (newSquareType && data.getAdditionChoice() == NewAddition.SNAKE) {
-                                appendTextToPanel("New Snake Head starts at position " + firstFieldEntry
-                                        + "\n" + "New Snake Tail ends at position " + secondFieldEntry + "\n");
-
-                                System.out.println("JDBC LINK TO GO HERE");
-                            } else if (newSquareType && data.getAdditionChoice() == NewAddition.LADDER) {
-                                appendTextToPanel("New Ladder Foot starts at position " + firstFieldEntry
-                                        + "\n" + "New Ladder Top ends at position " + secondFieldEntry + "\n");
-
-                                System.out.println("JDBC LINK TO GO HERE");
-                            } else if (newSquareType && data.getAdditionChoice() == NewAddition.BOOST) {
-                                appendTextToPanel("Boost square added at location " + firstFieldEntry + "\n");
-                                System.out.println("JDBC LINK TO GO HERE");
-
-                            } else if (newSquareType && data.getAdditionChoice() == NewAddition.DIE) {
-                                appendTextToPanel("New Die choice created:\n"
-                                + "Amount of dice: " + firstFieldEntry
-                                + "\ndice faces: " + secondFieldEntry + "\n");
-                                System.out.println("JDBC LINK TO GO HERE");
-
-                            } else {
-                                System.out.println("is this the error?");
-                                incorrectEntryMessage();
-                            }
-//                            else {
-////                                appendTextToPanel("\nERROR - values in incorrect positions or identical.");
-//                            }
-//                        } else {
-//                            appendTextToPanel("\nERROR - no value(s) entered.");
-//                        }
-                        } else {
-                            String playerFieldEntry = data.getPlayerNameEntry();
-                            appendTextToPanel("New player created: " + playerFieldEntry + "\n");
-                            System.out.println("JDBC LINK TO GO HERE");
-                        }
-                    }
-
-//                public void formBoostSquareEntry(final FormEvents data) {
-//                    Integer boostSquareLocation = Integer.parseInt(data.getBoostSquare());
-//                }
-                });
                 break;
         }
     }
@@ -399,8 +384,120 @@ public class GUIFrame extends JFrame {
 
     }
 
+    public ArrayList addDefaultValues() {
+        ArrayList<Integer[]> values = new ArrayList<>();
+
+        values.add(new Integer[] {14, 5, 20, 11});
+        values.add(new Integer[] {3, 12, 13, 17});
+        return values;
+    }
+
+    public TreeMap<String, Integer[]> addTestDefaultValues() {
+        TreeMap<String, Integer[]> values = new TreeMap<>();
+
+        values.put("snakes", new Integer[]{14, 5, 20, 11});
+        values.put("ladders", new Integer[]{3, 12, 13, 17});
+
+        return values;
+    }
+
+
     public void appendTextToPanel(final String text) {
         textPanel.appendText(text);
+    }
+
+    public void setDataBaseConnection(final Boolean b) {
+        dataBaseConnection = true;
+    }
+
+    public Boolean getDatabaseConnection() {
+        return dataBaseConnection;
+    }
+
+    public MenuBar getGameMenu() {
+        return gameMenu;
+    }
+
+    public void setCreatedGame(final CreateGame loadedGameData) {
+        customGame = loadedGameData;
+    }
+
+    public void setID(final Integer gameID) {
+        loadedGameId = gameID;
+    }
+
+    public void handleDbEdit(final EditorChoicePanel additionPanel) {
+
+        additionPanel.setFormListener(new FormListener() {
+
+            public void incorrectEntryMessage() {
+                textPanel.appendText("|------------------------------------------------------|"
+                        + "\n| ERROR - INCORRECT ENTRY MADE  |"
+                        + "\n|------------------------------------------------------|\n");
+            }
+
+            public void formDatabaseEntry(final LoadingFormEvent data) {
+
+                Integer firstFieldEntry;
+                Integer secondFieldEntry;
+                Boolean newSquareType;
+                Boolean secondSquareMissing = true;
+
+                if (data.getGameID() != null) {
+
+                    firstFieldEntry = data.getFirstEntry();
+                    secondFieldEntry = data.getSecondEntry();
+
+                    if (secondFieldEntry == null) {
+                        newSquareType = additionPanel.entryValidation(additionPanel.getAdditionChoice(),
+                                firstFieldEntry);
+                    } else {
+                        newSquareType = additionPanel.entryValidation(additionPanel.getAdditionChoice(),
+                                firstFieldEntry, secondFieldEntry);
+                    }
+
+                    if (newSquareType && data.getEditChoice() == Edit.SNAKE) {
+//                                EditDataDBManager.editSaveData(data);
+                        appendTextToPanel("Snake Head changed to position " + firstFieldEntry
+                                + "\n" + "Snake Tail changed to position " + secondFieldEntry + "\n");
+                        EditDataDBManager.editSnakeOrLadderData(data);
+                        selectWindow("newedit");
+
+                    } else if (newSquareType && data.getEditChoice() == Edit.LADDER) {
+                        appendTextToPanel("Ladder Foot changed to position " + firstFieldEntry
+                                + "\n" + "Ladder Top changed to position " + secondFieldEntry + "\n");
+                        EditDataDBManager.editSnakeOrLadderData(data);
+                        selectWindow("newedit");
+
+                        System.out.println("JDBC LADDER TO GO HERE");
+                    } else if (newSquareType && data.getEditChoice() == Edit.BOOST) {
+                        appendTextToPanel("Boost square changed to position " + firstFieldEntry + "\n");
+                        EditDataDBManager.editBoostData(data);
+                        selectWindow("newedit");
+
+                    } else {
+                        incorrectEntryMessage();
+                    }
+
+                } else if (data.getPlayerNameEntry() == null) {
+
+                    firstFieldEntry = data.getFirstEntry();
+                    secondFieldEntry = data.getSecondEntry();
+
+                    appendTextToPanel("Die Changed:\n"
+                            + "Die amount: " + firstFieldEntry
+                            + "\nDie faces: " + secondFieldEntry + "\n");
+                    EditDataDBManager.editDiceData(data);
+                    selectWindow("newedit");
+
+
+                } else {
+                    String playerFieldEntry = data.getPlayerNameEntry();
+                    appendTextToPanel("player changed to name: " + playerFieldEntry + "\n");
+                    selectWindow("newedit");
+                }
+            }
+    });
     }
 }
 //    }

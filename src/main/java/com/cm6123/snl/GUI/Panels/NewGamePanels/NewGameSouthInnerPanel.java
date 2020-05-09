@@ -1,4 +1,4 @@
-package com.cm6123.snl.GUI.Panels.NewGame;
+package com.cm6123.snl.GUI.Panels.NewGamePanels;
 
 import com.cm6123.snl.GUI.GUIFrame;
 import com.cm6123.snl.GUI.Panels.SidePanel;
@@ -15,6 +15,7 @@ public class NewGameSouthInnerPanel extends SidePanel implements ActionListener 
 
     private JLabel defaultGameLabel;
     private JLabel boardSizeLabel;
+    private JLabel errorLabel;
     private JButton defaultGameButton;
     private JButton customGameButton;
     private JComboBox boardSizeBox;
@@ -26,9 +27,11 @@ public class NewGameSouthInnerPanel extends SidePanel implements ActionListener 
         this.gameGui = gui;
 
         boardSizeLabel = new JLabel("Board Size ");
+        errorLabel = new JLabel("____________________________");
         boardSizeLabel.setPreferredSize(new Dimension(400, 30));
+        errorLabel.setEnabled(false);
 
-        defaultGameLabel = new JLabel("Start default game (2 players, example snakes/ladders/dice, no features)");
+        defaultGameLabel = new JLabel("Start default game (2 players, ex. basic features, no extra features)");
         defaultGameLabel.setPreferredSize(new Dimension(400, 30));
 
 
@@ -41,7 +44,7 @@ public class NewGameSouthInnerPanel extends SidePanel implements ActionListener 
         boardSizeBox = new JComboBox();
 
 //        JButton boardSize = new JButton("Board Size");
-        boardSize = new JSlider(4, 15, 4);
+        boardSize = new JSlider(5, 15, 5);
         boardSize.setPreferredSize(new Dimension(600, 50));
         boardSize.setPaintLabels(true);
         boardSize.setPaintTicks(true);
@@ -124,7 +127,7 @@ public class NewGameSouthInnerPanel extends SidePanel implements ActionListener 
 
         gridStructure.gridx = 0;
         gridStructure.gridy = 3;
-        gridStructure.anchor = GridBagConstraints.FIRST_LINE_START;
+        gridStructure.anchor = GridBagConstraints.LINE_START;
 //        Insets westInsets = new Insets (5, 0, 5, 5);
 //        Insets eastInsets = new Insets (5, 5, 5, 0);
 
@@ -139,6 +142,21 @@ public class NewGameSouthInnerPanel extends SidePanel implements ActionListener 
 //        gridStructure.insets = new Insets(0, 0, 0, 5);
         add(customGameButton, gridStructure);
 
+        gridStructure.ipadx = 1;
+        gridStructure.ipady = 1;
+
+        gridStructure.gridy = 4;
+//        gridStructure.insets = new Insets(5, 200, 5, 5);
+        gridStructure.anchor = GridBagConstraints.CENTER;
+        add(errorLabel, gridStructure);
+
+
+
+    }
+
+    public void setErrorLabel(final String s) {
+        errorLabel.setEnabled(true);
+        errorLabel.setText(s);
     }
 
     public void setPanelSize(final Integer width, final Integer height) {
