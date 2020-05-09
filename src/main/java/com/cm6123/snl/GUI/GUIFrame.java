@@ -6,6 +6,7 @@ import com.cm6123.snl.GUI.Panels.*;
 import com.cm6123.snl.GUI.Panels.NewGamePanels.NewGameParentPanel;
 import com.cm6123.snl.dice.DiceSet;
 import com.cm6123.snl.gameDB.DBGameFile;
+import com.cm6123.snl.gameDB.EditDataDBManager;
 //import com.cm6123.snl.GUI.Panels.EditorChoicePanel;
 //import com.cm6123.snl.GUI.Panels.GameTextPanel;
 //import com.cm6123.snl.GUI.Panels.SidePanel;
@@ -181,14 +182,14 @@ public class GUIFrame extends JFrame {
 
                     } catch (NullPointerException n) {
                         selectWindow("newgame");
-                        newGamePanel.getSouthPanel().appendErrorLabel("Boost ticked with no entry! Please try again.");
+                        newGamePanel.getSouthPanel().setErrorLabel("Boost ticked with no entry! Please try again.");
                     } catch (IllegalStateException i) {
                         selectWindow("newgame");
-                        newGamePanel.getSouthPanel().appendErrorLabel("Entry error! Please try again.");
+                        newGamePanel.getSouthPanel().setErrorLabel("Entry error! Please try again.");
                     }
                 } catch (IllegalStateException e) {
                     selectWindow("newgame");
-                    newGamePanel.getSouthPanel().appendErrorLabel("Illegal square entry! Please try again.");
+                    newGamePanel.getSouthPanel().setErrorLabel("Illegal square entry! Please try again.");
             }
 
 
@@ -306,22 +307,31 @@ public class GUIFrame extends JFrame {
 //                        .build();
 //                this.dbGameFile = customGame.getGamefile();
 //                customGame.getLoadedGameData(dbGameFile);
-                newGame = customGame.buildGame();
-                loadedGridChoice = customGame.getBoardSize();
-                loadedSpecials = customGame.getAllSpecials();
 
-                diceSet = new DiceSet(customGame.getDiceFaces(), customGame.getDiceCount());
+                try {
+                    newGame = customGame.buildGame();
+                    loadedGridChoice = customGame.getBoardSize();
+                    loadedSpecials = customGame.getAllSpecials();
 
-                runGamePanel = new RunGamePanel(this, newGame, diceSet, loadedGridChoice, loadedSpecials, loaded,
-                        loadedGameId);
+                    diceSet = new DiceSet(customGame.getDiceFaces(), customGame.getDiceCount());
+
+                    runGamePanel = new RunGamePanel(this, newGame, diceSet, loadedGridChoice, loadedSpecials, loaded,
+                            loadedGameId);
 //                runGamePanel.addLoadedPlayers(customGame.getPlayers());
-                runGamePanel.addLoadedPlayerPositions(customGame.getPlayerPositions());
-                swapPanel(this,
-                        currentPanel,
-                        runGamePanel.createRunGamePanel(),
-                        BorderLayout.WEST);
+                    runGamePanel.addLoadedPlayerPositions(customGame.getPlayerPositions());
+                    swapPanel(this,
+                            currentPanel,
+                            runGamePanel.createRunGamePanel(),
+                            BorderLayout.WEST);
 
-                currentPanel = runGamePanel;
+                    currentPanel = runGamePanel;
+                } catch (IllegalStateException error) {
+
+                    selectWindow("loadgame");
+                    loadGamePanel.setErrorLabel("There is an illegal square clash in the file. "
+                            + "Please amend in the editor tool.");
+
+                }
 
 
                 break;
@@ -354,65 +364,11 @@ public class GUIFrame extends JFrame {
 
                 currentPanel = additionPanel;
 
-                additionPanel.setFormListener(new FormListener() {
 
-                    public void incorrectEntryMessage() {
-                        textPanel.appendText("|------------------------------------------------------|"
-                                + "\n| ERROR - INCORRECT ENTRY MADE  |"
-                                + "\n|------------------------------------------------------|\n");
-                    }
 
-                    public void formDatabaseEntry(final LoadingFormEvent data) {
+                handleDbEdit(additionPanel);
 
-                        if (data.getPlayerNameEntry() == null) {
-                            Integer firstFieldEntry;
-                            Integer secondFieldEntry;
-                            Boolean newSquareType;
-                            Boolean secondSquareMissing = true;
 
-                            firstFieldEntry = data.getFirstEntry();
-                            secondFieldEntry = data.getSecondEntry();
-
-                            if (secondFieldEntry == null) {
-                                newSquareType = additionPanel.entryValidation(additionPanel.getAdditionChoice(),
-                                        firstFieldEntry);
-                            } else {
-                                newSquareType = additionPanel.entryValidation(additionPanel.getAdditionChoice(),
-                                        firstFieldEntry, secondFieldEntry);
-                            }
-
-                            if (newSquareType && data.getEditChoice() == Edit.SNAKE) {
-                                appendTextToPanel("Snake Head changed to position " + firstFieldEntry
-                                        + "\n" + "Snake Tail changed to position " + secondFieldEntry + "\n");
-
-                                System.out.println("JDBC LINK TO GO HERE");
-                            } else if (newSquareType && data.getEditChoice() == Edit.LADDER) {
-                                appendTextToPanel("Ladder Foot changed to position " + firstFieldEntry
-                                        + "\n" + "Ladder Top changed to position " + secondFieldEntry + "\n");
-
-                                System.out.println("JDBC LINK TO GO HERE");
-                            } else if (newSquareType && data.getEditChoice() == Edit.BOOST) {
-                                appendTextToPanel("Boost square changed to position " + firstFieldEntry + "\n");
-                                System.out.println("JDBC LINK TO GO HERE");
-
-                            } else if (newSquareType && data.getEditChoice() == Edit.DIE) {
-                                appendTextToPanel("Die Changed:\n"
-                                + "Die amount: " + firstFieldEntry
-                                + "\nDie faces: " + secondFieldEntry + "\n");
-                                System.out.println("JDBC LINK TO GO HERE");
-
-                            } else {
-                                System.out.println("is this the error?");
-                                incorrectEntryMessage();
-                            }
-
-                        } else {
-                            String playerFieldEntry = data.getPlayerNameEntry();
-                            appendTextToPanel("player changed to name: " + playerFieldEntry + "\n");
-                            System.out.println("JDBC LINK TO GO HERE");
-                        }
-                    }
-                });
                 break;
         }
     }
@@ -468,6 +424,80 @@ public class GUIFrame extends JFrame {
 
     public void setID(final Integer gameID) {
         loadedGameId = gameID;
+    }
+
+    public void handleDbEdit(final EditorChoicePanel additionPanel) {
+
+        additionPanel.setFormListener(new FormListener() {
+
+            public void incorrectEntryMessage() {
+                textPanel.appendText("|------------------------------------------------------|"
+                        + "\n| ERROR - INCORRECT ENTRY MADE  |"
+                        + "\n|------------------------------------------------------|\n");
+            }
+
+            public void formDatabaseEntry(final LoadingFormEvent data) {
+
+                Integer firstFieldEntry;
+                Integer secondFieldEntry;
+                Boolean newSquareType;
+                Boolean secondSquareMissing = true;
+
+                if (data.getGameID() != null) {
+
+                    firstFieldEntry = data.getFirstEntry();
+                    secondFieldEntry = data.getSecondEntry();
+
+                    if (secondFieldEntry == null) {
+                        newSquareType = additionPanel.entryValidation(additionPanel.getAdditionChoice(),
+                                firstFieldEntry);
+                    } else {
+                        newSquareType = additionPanel.entryValidation(additionPanel.getAdditionChoice(),
+                                firstFieldEntry, secondFieldEntry);
+                    }
+
+                    if (newSquareType && data.getEditChoice() == Edit.SNAKE) {
+//                                EditDataDBManager.editSaveData(data);
+                        appendTextToPanel("Snake Head changed to position " + firstFieldEntry
+                                + "\n" + "Snake Tail changed to position " + secondFieldEntry + "\n");
+                        EditDataDBManager.editSnakeOrLadderData(data);
+                        selectWindow("newedit");
+
+                    } else if (newSquareType && data.getEditChoice() == Edit.LADDER) {
+                        appendTextToPanel("Ladder Foot changed to position " + firstFieldEntry
+                                + "\n" + "Ladder Top changed to position " + secondFieldEntry + "\n");
+                        EditDataDBManager.editSnakeOrLadderData(data);
+                        selectWindow("newedit");
+
+                        System.out.println("JDBC LADDER TO GO HERE");
+                    } else if (newSquareType && data.getEditChoice() == Edit.BOOST) {
+                        appendTextToPanel("Boost square changed to position " + firstFieldEntry + "\n");
+                        EditDataDBManager.editBoostData(data);
+                        selectWindow("newedit");
+
+                    } else {
+                        incorrectEntryMessage();
+                    }
+
+                } else if (data.getPlayerNameEntry() == null) {
+
+                    firstFieldEntry = data.getFirstEntry();
+                    secondFieldEntry = data.getSecondEntry();
+
+                    appendTextToPanel("Die Changed:\n"
+                            + "Die amount: " + firstFieldEntry
+                            + "\nDie faces: " + secondFieldEntry + "\n");
+                    EditDataDBManager.editDiceData(data);
+                    selectWindow("newedit");
+
+
+                } else {
+                    String playerFieldEntry = data.getPlayerNameEntry();
+                    appendTextToPanel("player changed to name: " + playerFieldEntry + "\n");
+                    selectWindow("newedit");
+                }
+            }
+    });
     }
 }
 //    }

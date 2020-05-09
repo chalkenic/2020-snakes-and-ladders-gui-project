@@ -1,10 +1,8 @@
-package com.cm6123.snl.gameDB;
 
-import com.cm6123.snl.gameDB.GameDBUtils;
+package com.cm6123.snl.gameDB;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class DBGameFile {
 
@@ -53,6 +51,9 @@ public class DBGameFile {
 
     }
 
+    /**
+     * Method
+     */
     private void addDatabaseGameData() {
 
         Connection connect = GameDBUtils.connectGuiToDatabase();

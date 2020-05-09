@@ -84,37 +84,37 @@ public class SaveDataDBManager {
 
     }
 
-    private void updatePosition(final Connection connection) {
-        CallableStatement saveStatement = null;
-        String procedure = null;
-        String playerCol;
-        Integer playerPos;
-
-        for (int i = 0; i < newGameSave.numberOfPlayers(); i++) {
-            playerCol = newGameSave.getPlayer(i).getColour().toString();
-            playerPos = newGameSave.getPlayer(i).getPosition().get();
-
-            procedure = "{CALL update_player_position(?,?,?)}";
-
-            try {
-
-                System.out.println("colour: " + playerCol);
-                System.out.println("position: " + playerPos);
-                System.out.println("id: " + gameID);
-
-                saveStatement = connection.prepareCall(procedure);
-                saveStatement.setString(1, playerCol);
-                saveStatement.setInt(2, playerPos);
-                saveStatement.setInt(3, gameID);
-
-                saveStatement.executeQuery();
-
-
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+//    private void updatePosition(final Connection connection) {
+//        CallableStatement saveStatement = null;
+//        String procedure = null;
+//        String playerCol;
+//        Integer playerPos;
+//
+//        for (int i = 0; i < newGameSave.numberOfPlayers(); i++) {
+//            playerCol = newGameSave.getPlayer(i).getColour().toString();
+//            playerPos = newGameSave.getPlayer(i).getPosition().get();
+//
+//            procedure = "{CALL update_player_position(?,?,?)}";
+//
+//            try {
+//
+//                System.out.println("colour: " + playerCol);
+//                System.out.println("position: " + playerPos);
+//                System.out.println("id: " + gameID);
+//
+//                saveStatement = connection.prepareCall(procedure);
+//                saveStatement.setString(1, playerCol);
+//                saveStatement.setInt(2, playerPos);
+//                saveStatement.setInt(3, gameID);
+//
+//                saveStatement.executeQuery();
+//
+//
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
     private void saveDie(final Connection connection) {
 

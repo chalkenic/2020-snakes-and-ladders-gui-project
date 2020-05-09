@@ -15,7 +15,7 @@ public class NewGameSouthInnerPanel extends SidePanel implements ActionListener 
 
     private JLabel defaultGameLabel;
     private JLabel boardSizeLabel;
-    private JLabel errorlabel;
+    private JLabel errorLabel;
     private JButton defaultGameButton;
     private JButton customGameButton;
     private JComboBox boardSizeBox;
@@ -27,9 +27,9 @@ public class NewGameSouthInnerPanel extends SidePanel implements ActionListener 
         this.gameGui = gui;
 
         boardSizeLabel = new JLabel("Board Size ");
-        errorlabel = new JLabel("____________________________");
+        errorLabel = new JLabel("____________________________");
         boardSizeLabel.setPreferredSize(new Dimension(400, 30));
-        errorlabel.setEnabled(false);
+        errorLabel.setEnabled(false);
 
         defaultGameLabel = new JLabel("Start default game (2 players, ex. basic features, no extra features)");
         defaultGameLabel.setPreferredSize(new Dimension(400, 30));
@@ -148,15 +148,15 @@ public class NewGameSouthInnerPanel extends SidePanel implements ActionListener 
         gridStructure.gridy = 4;
 //        gridStructure.insets = new Insets(5, 200, 5, 5);
         gridStructure.anchor = GridBagConstraints.CENTER;
-        add(errorlabel, gridStructure);
+        add(errorLabel, gridStructure);
 
 
 
     }
 
-    public void appendErrorLabel(final String s) {
-        errorlabel.setEnabled(true);
-        errorlabel.setText(s);
+    public void setErrorLabel(final String s) {
+        errorLabel.setEnabled(true);
+        errorLabel.setText(s);
     }
 
     public void setPanelSize(final Integer width, final Integer height) {

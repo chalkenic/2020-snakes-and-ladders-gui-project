@@ -167,8 +167,12 @@ public class RunGamePanel extends SidePanel {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 if (!currentGame.isGameOver()) {
-                    saveGameButton.setEnabled(true);
+                    if  (gameGui.getDatabaseConnection()) {
+                        saveGameButton.setEnabled(true);
+                    }
                     settlePlayerMove(currentPlayer);
+                } else {
+                    saveGameButton.setEnabled(false);
                 }
             }
         });
@@ -396,7 +400,11 @@ public class RunGamePanel extends SidePanel {
             Connection connect = GameDBUtils.connectGuiToDatabase();
             SaveDataDBManager markGameEnded = new SaveDataDBManager(gameID);
 
-            markGameEnded.markGameAsEnded(connect);
+
+            if (gameGui.getDatabaseConnection()) {
+                markGameEnded.markGameAsEnded(connect);
+            }
+
 
 
         }

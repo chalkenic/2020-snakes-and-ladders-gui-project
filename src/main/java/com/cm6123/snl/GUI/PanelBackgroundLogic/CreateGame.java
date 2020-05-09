@@ -132,7 +132,7 @@ public class CreateGame {
             }
         }
 
-        this.recordGame = eastPanel.getRecordCheckBox();
+//        this.recordGame = eastPanel.getRecordCheckBox();
         this.winningSquareOnlyFeature = eastPanel.getWinningCheckBox();
 
         this.boardSize = southPanel.getBoardSize();

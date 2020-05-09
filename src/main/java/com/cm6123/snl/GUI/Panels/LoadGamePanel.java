@@ -27,6 +27,7 @@ public class LoadGamePanel extends JPanel {
     private FormListener formListener;
     private JScrollPane scrollPane;
     private LoadDataDBManager loadDatabase;
+    private JLabel errorLabel;
 
     public LoadGamePanel(final GUIFrame gui) {
         this.gameGui = gui;
@@ -38,6 +39,9 @@ public class LoadGamePanel extends JPanel {
         gameList.setModel(savedGames);
 
         scrollPane = new JScrollPane(gameList);
+        errorLabel = new JLabel("");
+        errorLabel.setEnabled(false);
+
 
 //        savedGames.addElement(new DBGameFile(gameList.getSelectedIndex(0).);
 
@@ -72,21 +76,23 @@ public class LoadGamePanel extends JPanel {
             @Override
             public void actionPerformed(final ActionEvent e) {
 
-                LoadingFormEvent loadGameEvent = null;
 
-                DBGameFile loadGameChoice = (DBGameFile) gameList.getSelectedValue();
-//                loadGameEvent = new LoadingFormEvent(this, loadGameChoice.getId());
+                    LoadingFormEvent loadGameEvent = null;
 
-                if (formListener != null) {
-//                    formListener.formDatabaseEntry(loadGameEvent);
-                    CreateGame loadedGame = new CreateGame(gameGui);
-                    gameGui.setCreatedGame(loadedGame.getLoadedGameData(loadGameChoice));
-                    gameGui.setID(loadedGame.getGameID());
-                    System.out.println("file number: " + loadedGame.getGameID());
-                    System.out.println(loadedGame.getAllSpecials());
-                    System.out.println(loadedGame.getDiceFaces());
-                    gameGui.selectWindow("runloadedgame");
-                }
+                    DBGameFile loadGameChoice = (DBGameFile) gameList.getSelectedValue();
+    //                loadGameEvent = new LoadingFormEvent(this, loadGameChoice.getId());
+
+                    if (formListener != null) {
+    //                    formListener.formDatabaseEntry(loadGameEvent);
+                        CreateGame loadedGame = new CreateGame(gameGui);
+                        gameGui.setCreatedGame(loadedGame.getLoadedGameData(loadGameChoice));
+                        gameGui.setID(loadedGame.getGameID());
+                        System.out.println("file number: " + loadedGame.getGameID());
+                        System.out.println(loadedGame.getAllSpecials());
+                        System.out.println(loadedGame.getDiceFaces());
+                        gameGui.selectWindow("runloadedgame");
+                    }
+
             }
         });
 
@@ -125,9 +131,21 @@ public class LoadGamePanel extends JPanel {
         gridStructure.insets = new Insets(5, 5, 5, 5);
         add(loadGameButton, gridStructure);
 
+        gridStructure.gridy = 3;
+
+        gridStructure.insets = new Insets(5, 5, 5, 5);
+        add(errorLabel, gridStructure);
+
+
+
 
 
         return this;
+    }
+
+    public void setErrorLabel(final String s) {
+        errorLabel.setEnabled(true);
+        errorLabel.setText(s);
     }
 
 

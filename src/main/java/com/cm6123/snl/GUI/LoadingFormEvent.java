@@ -14,37 +14,91 @@ public class LoadingFormEvent extends EventObject {
     private int boardCategory;
     private Edit editChoice;
 
-    public LoadingFormEvent(final Object source) {
+
+
+
+    private Integer gameID;
+    private Integer databaseID;
+
+    /**
+     * Constructor handles player edit entries (no gameID or number entries required by object).
+     * @param source - eventObject,
+     * @param editPlayerEntry - player name,
+     * @param edit - confirmation of addition choice to GUI frame.
+     * @param dbID - indication in database as to where to edit on table. script not 0 indexed - appended by 1.
+     */
+    public LoadingFormEvent(final Object source, final String editPlayerEntry, final Edit edit, final Integer dbID) {
         super(source);
+        this.databaseID = dbID + 1;
+        this.playerNameEntry = editPlayerEntry;
+        this.editChoice = edit;
     }
+//     Unsure of this purpose!
+//    public LoadingFormEvent(final Object source) {
+//        super(source);
+//    }
 
     public LoadingFormEvent(final Object source, final Integer loadGameChoice) {
         super(source);
         this.loadGameEntry = loadGameChoice;
     }
 
-
-    public LoadingFormEvent(final Object source, final Integer newBoostSquare, final Edit addition) {
+    /**
+     * Constructor handles boost entries - no second entry required.
+     * @param source eventObject.
+     * @param newBoostSquare -  boost to be changed.
+     * @param edit - confirmation of addition choice to GUI frame.
+     * @param id - game ID of choice.
+     * @param dbID - indication in database as to where to edit on table. script not 0 indexed - appended by 1.
+     */
+    public LoadingFormEvent(final Object source, final Integer newBoostSquare, final Edit edit, final Integer id,
+                            final Integer dbID) {
         super(source);
         this.firstEntry = newBoostSquare;
-        this.editChoice = addition;
+        this.editChoice = edit;
+        this.gameID = id;
+        this.databaseID = dbID + 1;
     }
 
+    /**
+     * Constructor handles snake & ladder entries.
+     * @param source eventObject.
+     * @param newSpecialSquareStart square trigger location.
+     * @param newSpecialSquareEnd square destination
+     * @param id game ID of choice.
+     * @param edit confirmation of addition choice to GUI frame.
+     * @param dbID - indication in database as to where to edit on table. script not 0 indexed - appended by 1.
+     */
     public LoadingFormEvent(final Object source, final Integer newSpecialSquareStart,
-                            final Integer newSpecialSquareEnd, final Edit edit) {
+                                 final Integer newSpecialSquareEnd, final Edit edit, final Integer id,
+                            final Integer dbID) {
         super(source);
+        this.gameID = id;
+        this.databaseID = dbID + 1;
+        this.firstEntry = newSpecialSquareStart;
+        this.secondEntry = newSpecialSquareEnd;
+        this.editChoice = edit;
+    }
+
+    /**
+     * Constructor handles dice entries (no gameID or playerName required).
+     * @param source - eventObject,
+     * @param newSpecialSquareStart - dice count
+     * @param newSpecialSquareEnd - dice faces
+     * @param edit - confirmation of addition choice to GUI frame.
+     * @param dbID - indication in database as to where to edit on table. script not 0 indexed - appended by 1.
+     */
+    public LoadingFormEvent(final Object source, final Integer newSpecialSquareStart,
+                            final Integer newSpecialSquareEnd, final Edit edit, final Integer dbID) {
+        super(source);
+        this.databaseID = dbID + 1;
 
         this.firstEntry = newSpecialSquareStart;
         this.secondEntry = newSpecialSquareEnd;
         this.editChoice = edit;
     }
 
-    public LoadingFormEvent(final Object source, final String newPlayerEntry, final Edit addition) {
-        super(source);
 
-        this.playerNameEntry = newPlayerEntry;
-        this.editChoice = addition;
-    }
 
     public Integer getFirstEntry() {
         return firstEntry;
@@ -68,7 +122,18 @@ public class LoadingFormEvent extends EventObject {
 //    public Integer getBoostSquare() {
 //        return boostSquare;
 //    }
-//
+    public Integer getGameID() {
+        return gameID;
+    }
+
+    public void setGameID(final Integer id) {
+        this.gameID = id;
+    }
+    //
+
+    public Integer getDatabaseID() {
+        return databaseID;
+    }
     public Edit getEditChoice() {
         return editChoice;
     }

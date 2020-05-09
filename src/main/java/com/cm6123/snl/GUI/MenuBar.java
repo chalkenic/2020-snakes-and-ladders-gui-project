@@ -16,7 +16,6 @@ public class MenuBar extends JMenu implements ActionListener {
     private JMenuItem mainMenu;
     private JMenuItem newGame;
     private JMenuItem loadGame;
-    private JMenuItem saveGame;
     private JMenuItem exitGame;
 
     private JMenuItem editorMenu;
@@ -47,9 +46,6 @@ public class MenuBar extends JMenu implements ActionListener {
         loadGame.addActionListener(this);
         loadGame.setEnabled(false);
 
-        saveGame = new JMenuItem("Save Game...");
-        saveGame.addActionListener(this);
-        saveGame.setEnabled(false);
 
         exitGame = new JMenuItem("Exit Program");
         exitGame.addActionListener(this);
@@ -58,7 +54,6 @@ public class MenuBar extends JMenu implements ActionListener {
         fileMenu.addSeparator();
         fileMenu.add(newGame);
         fileMenu.add(loadGame);
-        fileMenu.add(saveGame);
         fileMenu.addSeparator();
         fileMenu.add(exitGame);
 
@@ -122,8 +117,6 @@ public class MenuBar extends JMenu implements ActionListener {
         } else if (click.getSource().equals(loadGame)) {
             gameGui.selectWindow("loadgame");
 
-        } else if (click.getSource().equals(saveGame)) {
-//            gameGui.selectWindow("menu");
 
         } else if (click.getSource().equals(exitGame)) {
             System.exit(0);
@@ -134,7 +127,6 @@ public class MenuBar extends JMenu implements ActionListener {
     public void enableDatabaseNavigation() {
             editorMenu.setEnabled(true);
             loadGame.setEnabled(true);
-            saveGame.setEnabled(true);
 
         }
     }

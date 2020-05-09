@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
+import java.util.HashMap;
 
 public class EditorChoicePanel extends SidePanel {
 
@@ -19,7 +20,7 @@ public class EditorChoicePanel extends SidePanel {
     private JLabel additionSecondEntryLabel;
     private JTextField additionFirstField;
     private JTextField additionSecondField;
-    private JButton editsquareButton;
+    private JButton editButton;
     private GUIFrame gameGui;
 
     private GameTextPanel textPanel;
@@ -30,10 +31,12 @@ public class EditorChoicePanel extends SidePanel {
 
     /////////////////BEGIN TEST CODE////////////////
     private JList dbEntries;
+    private HashMap<Integer, EditCategory> listEntries;
 
     /////////////////END TEST CODE//////////////////
 
     public EditorChoicePanel(final GUIFrame gui, final Edit newAddition) {
+        listEntries = new HashMap<Integer, EditCategory>();
         this.additionChoice = newAddition;
         this.gameGui = gui;
 
@@ -79,14 +82,6 @@ public class EditorChoicePanel extends SidePanel {
             additionSecondField = new JTextField(10);
         }
 
-
-        /////////////////BEGIN TEST CODE////////////////
-//
-//
-//            DefaultListModel newGameList = new DefaultListModel();
-//            newGameList.addElement(new BoardCategory(0, "1x1 Board"));
-//            newGameList.addElement(new BoardCategory(1, "5x5 Board"));
-//            newGameList.addElement(new BoardCategory(2, "10X10 Board"));
         dbEntries.setModel(dbEntryList);
 //
 //        dbEntries.setPreferredSize(new Dimension(400, 60));
@@ -95,73 +90,109 @@ public class EditorChoicePanel extends SidePanel {
 
         /////////////////END TEST CODE//////////////////
 
-        editsquareButton = new JButton("Edit " + newAddition.toString().toLowerCase());
-//        rollDiceButton.setPreferredSize(new Dimension(300, 200));
+        editButton = new JButton("Edit " + newAddition.toString().toLowerCase());
 
-        editsquareButton.addActionListener(new ActionListener() {
-            //
-//            @Override
+
+        editButton.addActionListener(new ActionListener() {
+
             public void actionPerformed(final ActionEvent e) {
+
+                Integer gameID = dbEntries.getSelectedIndex();
+                System.out.println(listEntries.get(gameID).getGameID());
 
 
                 LoadingFormEvent newEntry = null;
 
-                if (additionChoice != Edit.PLAYER) {
-                    if (! additionFirstField.getText().equals("")) {
+                if (additionChoice == Edit.SNAKE || additionChoice == Edit.LADDER) {
+                    if (!additionFirstField.getText().equals("")) {
 
-                        if (! additionSecondField.getText().equals("")) {
+                        if (!additionSecondField.getText().equals("")) {
                             try {
                                 Integer squareStart = Integer.parseInt(additionFirstField.getText());
 
                                 try {
                                     Integer squareEnd = Integer.parseInt(additionSecondField.getText());
 
-                                    newEntry = new LoadingFormEvent(this, squareStart, squareEnd, additionChoice);
+                                    newEntry = new LoadingFormEvent(this, squareStart, squareEnd, additionChoice,
+                                            listEntries.get(gameID).getGameID(), listEntries.get(gameID).getListID());
                                 } catch (NumberFormatException stringEntered) {
-                                    newEntry = new LoadingFormEvent(this, squareStart, additionChoice);
+                                    formListener.incorrectEntryMessage();
+//                                    newEntry = new LoadingFormEvent(this, squareStart, additionChoice,
+//                                            listEntries.get(gameID).getGameID());
                                 }
                             } catch (NumberFormatException stringEntered) {
                                 System.out.println("ERROR - incorrect edit.");
                                 formListener.incorrectEntryMessage();
                             }
-
                         } else {
-                            try {
-                                Integer squareStart = Integer.parseInt(additionFirstField.getText());
-                                newEntry = new LoadingFormEvent(this, squareStart, additionChoice);
-                            } catch (NumberFormatException stringEntered) {
-                                System.out.println("ERROR - incorrect edit.");
-                                formListener.incorrectEntryMessage();
-                            }
+                            formListener.incorrectEntryMessage();
                         }
                     } else {
                         formListener.incorrectEntryMessage();
                     }
-                } else {
+
+                } else if (additionChoice == Edit.BOOST) {
+                    if (!additionFirstField.getText().equals("")) {
+                        try {
+                            System.out.println("hello mr boosty?");
+                            Integer squareStart = Integer.parseInt(additionFirstField.getText());
+                            newEntry = new LoadingFormEvent(this, squareStart, additionChoice,
+                                    listEntries.get(gameID).getGameID(), listEntries.get(gameID).getListID());
+                        } catch (NumberFormatException stringEntered) {
+                            System.out.println("ERROR - incorrect edit.");
+                            formListener.incorrectEntryMessage();
+                        }
+                    }
+
+                } else if (additionChoice == Edit.PLAYER) {
                     if (!additionFirstField.getText().equals("")) {
                         String newPlayerName = additionFirstField.getText();
-                        newEntry = new LoadingFormEvent(this, newPlayerName, additionChoice);
+                        newEntry = new LoadingFormEvent(this, newPlayerName, additionChoice, listEntries.get(gameID).getListID());
                     } else {
                         formListener.incorrectEntryMessage();
                     }
+                } else if (additionChoice == Edit.DIE){
+                    if (!additionFirstField.getText().equals("")) {
+                        try {
+                            Integer diceCount = Integer.parseInt(additionFirstField.getText());
+                            try {
+                                Integer diceFaces = Integer.parseInt(additionSecondField.getText());
+
+                                newEntry = new LoadingFormEvent(this, diceCount, diceFaces, additionChoice,
+                                        listEntries.get(gameID).getListID());
+                            } catch (NumberFormatException incorrect) {
+                                formListener.incorrectEntryMessage();
+                            }
+                        } catch (NumberFormatException incorrect) {
+                            formListener.incorrectEntryMessage();
+                        }
+                    }
                 }
-//                    BoardCategory chosenData = (BoardCategory) newGame.getSelectedValue();
+//                Integer listIndex = dbEntries.getSelectedIndex();
+//                System.out.println(listIndex);
+//                System.out.println(listEntries);
+//                System.out.println(listEntries.get(listIndex));
+
+
+
+
+//                EditCategory entry = (EditCategory) dbEntries.getSelectedValue();
+//                entry.getGameID();
+
+//                System.out.println("game id: " + gameID);
+//                System.out.println("class: " + listEntries.get(gameID).getClass());
+//                EditCategory entry = listEntries.get(gameID);
+//                System.out.println("game id in entry: " + entry.getListID());
+
+//                    EditCategory chosenData = (EditCategory) newGame.getSelectedValue();
 
                 if (formListener != null && newEntry != null) {
                     formListener.formDatabaseEntry(newEntry);
                 }
             }
         });
-
-//        gameGui.add(this, BorderLayout.WEST);
     }
 
-//    public void setPanelSize(final Integer width, final Integer height) {
-//        Dimension dim = getPreferredSize();
-//        dim.width = width;
-//        dim.height = height;
-//        setPreferredSize(dim);
-//    }
     public void setPanelSize(final Integer width, final Integer height) { }
 
 
@@ -227,7 +258,7 @@ public class EditorChoicePanel extends SidePanel {
 
         gridStructure.anchor = GridBagConstraints.LINE_END;
         gridStructure.insets = new Insets(0, 0, 0, 0);
-        add(editsquareButton, gridStructure);
+        add(editButton, gridStructure);
 
         return this;
     }
@@ -270,65 +301,93 @@ public class EditorChoicePanel extends SidePanel {
     }
 
     private void loadDBGames(final Edit choice, final DefaultListModel jlist) {
+
         Connection connect = GameDBUtils.connectGuiToDatabase();
 
         if (choice == Edit.SNAKE) {
             LoadDataDBManager dbLoader = new LoadDataDBManager();
             dbLoader.countSnakesInDatabase(connect);
+            Integer dataSize = dbLoader.getSelectionSize() - 1;
+            System.out.println(dataSize);
 
             for (Integer i = 0; i < dbLoader.getSelectionSize(); i++) {
+                EditCategory snake = new EditCategory(dbLoader, i, choice, dbLoader.getGameInclusionID(i));
+                System.out.println(dbLoader.getTableID(dataSize - i));
                 jlist.addElement("|   ID: " + dbLoader.getTableID(i)
                         + "   |   save file: " + dbLoader.getGameInclusionID(i)
                         + "   |   head: " + dbLoader.getTotalFirstEntries(i)
                         + "   |   tail: " + dbLoader.getTotalSecondEntries(i)
                         + "   |");
+                listEntries.put(i, snake);
             }
         } else if (choice == Edit.LADDER) {
             LoadDataDBManager dbLoader = new LoadDataDBManager();
             dbLoader.countLaddersInDatabase(connect);
+            Integer dataSize = dbLoader.getSelectionSize() - 1;
 
             for (Integer i = 0; i < dbLoader.getSelectionSize(); i++) {
-                jlist.addElement("|   ID: " + dbLoader.getTableID(i)
+                EditCategory ladder = new EditCategory(dbLoader, i, choice, dbLoader.getGameInclusionID(i));
+                jlist.addElement("|   ID: " + dbLoader.getTableID(dataSize - i)
                         + "   |   save file: " + dbLoader.getGameInclusionID(i)
                         + "   |   foot: " + dbLoader.getTotalFirstEntries(i)
                         + "   |   top: " + dbLoader.getTotalSecondEntries(i)
                         + "   |");
+                listEntries.put(i, ladder);
             }
 
         } else if (choice == Edit.BOOST) {
-                LoadDataDBManager dbLoader = new LoadDataDBManager();
-                dbLoader.countBoostsInDatabase(connect);
+            LoadDataDBManager dbLoader = new LoadDataDBManager();
+            dbLoader.countBoostsInDatabase(connect);
+            Integer dataSize = dbLoader.getSelectionSize() - 1;
 
-                for (Integer i = 0; i < dbLoader.getSelectionSize(); i++) {
-                    jlist.addElement("|   ID: " + dbLoader.getTableID(i)
-                            + "   |   save file: " + dbLoader.getGameInclusionID(i)
-                            + "   |   location: " + dbLoader.getTotalFirstEntries(i)
-                            + "   |");
+            for (Integer i = 0; i < dbLoader.getSelectionSize(); i++) {
+                EditCategory boost = new EditCategory(dbLoader, i, choice, dbLoader.getGameInclusionID(i));
+                jlist.addElement("|   ID: " + dbLoader.getTableID(dataSize - i)
+                        + "   |   save file: " + dbLoader.getGameInclusionID(i)
+                        + "   |   location: " + dbLoader.getTotalFirstEntries(i)
+                        + "   |");
+                listEntries.put(i, boost);
             }
 
         } else if (choice == Edit.PLAYER) {
             LoadDataDBManager dbLoader = new LoadDataDBManager();
             dbLoader.countPlayersInDatabase(connect);
+            Integer dataSize = dbLoader.getSelectionSize() - 1;
 
             for (Integer i = 0; i < dbLoader.getSelectionSize(); i++) {
+                EditCategory player = new EditCategory(dbLoader, i,  choice);
                 jlist.addElement("|   ID: " + dbLoader.getTableID(i)
                         + "   |   player: " + dbLoader.getPlayers(i)
                         + "   |");
+                listEntries.put(i, player);
+                System.out.println("player id: " + player.getListID());
             }
 
         } else if (choice == Edit.DIE) {
             LoadDataDBManager dbLoader = new LoadDataDBManager();
             dbLoader.countDiceInDatabase(connect);
+            Integer dataSize = dbLoader.getSelectionSize() - 1;
 
             for (Integer i = 0; i < dbLoader.getSelectionSize(); i++) {
-                jlist.addElement("|   ID: " + dbLoader.getTableID(i)
-                        + "   |   count: " + dbLoader.getTotalFirstEntries(i)
-                        + "   |   faces: " + dbLoader.getTotalSecondEntries(i)
+                EditCategory dice = new EditCategory(dbLoader, i, choice);
+                jlist.add(0, "|   ID: " + dbLoader.getTableID(dataSize - i)
+                        + "   |   count: " + dbLoader.getTotalFirstEntries(dataSize - i)
+                        + "   |   faces: " + dbLoader.getTotalSecondEntries(dataSize - i)
                         + "   |");
+                listEntries.put(i, dice);
+                System.out.println("dice id: " + dice.getListID());
+
+//                jlist.addElement(diceEdit);
             }
         }
     }
 }
 
+
+//                EditCategory diceEdit = ;
+//                System.out.println(diceEdit.getClass());
+//                ArrayList addition = new ArrayList<>();
+//                addition.add(diceEdit, diceEdit.printData);
+//                jlist.addElement(diceEdit.printData);
 
 

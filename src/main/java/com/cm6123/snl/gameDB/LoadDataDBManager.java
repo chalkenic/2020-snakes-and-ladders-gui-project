@@ -18,7 +18,7 @@ public class LoadDataDBManager {
     private ArrayList<String> players;
 
     /**
-     * Initialises manager for usage where required.
+     * Initialises Load manager for usage where required.
      */
     public LoadDataDBManager() {
     }
@@ -192,7 +192,7 @@ public class LoadDataDBManager {
 
             while (result.next()) {
                 tableID.add(result.getInt("playerListID"));
-                players.add(result.getString("playerName"));
+                players.add(result.getString("playerColour"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
