@@ -19,7 +19,7 @@ public class EditorChoicePanel extends SidePanel {
     private JLabel additionSecondEntryLabel;
     private JTextField additionFirstField;
     private JTextField additionSecondField;
-    private JButton createAdditionButton;
+    private JButton editsquareButton;
     private GUIFrame gameGui;
 
     private GameTextPanel textPanel;
@@ -95,16 +95,16 @@ public class EditorChoicePanel extends SidePanel {
 
         /////////////////END TEST CODE//////////////////
 
-        createAdditionButton = new JButton("Edit " + newAddition.toString().toLowerCase());
+        editsquareButton = new JButton("Edit " + newAddition.toString().toLowerCase());
 //        rollDiceButton.setPreferredSize(new Dimension(300, 200));
 
-        createAdditionButton.addActionListener(new ActionListener() {
+        editsquareButton.addActionListener(new ActionListener() {
             //
 //            @Override
             public void actionPerformed(final ActionEvent e) {
 
 
-                FormEvents newEntry = null;
+                LoadingFormEvent newEntry = null;
 
                 if (additionChoice != Edit.PLAYER) {
                     if (! additionFirstField.getText().equals("")) {
@@ -116,9 +116,9 @@ public class EditorChoicePanel extends SidePanel {
                                 try {
                                     Integer squareEnd = Integer.parseInt(additionSecondField.getText());
 
-                                    newEntry = new FormEvents(this, squareStart, squareEnd, additionChoice);
+                                    newEntry = new LoadingFormEvent(this, squareStart, squareEnd, additionChoice);
                                 } catch (NumberFormatException stringEntered) {
-                                    newEntry = new FormEvents(this, squareStart, additionChoice);
+                                    newEntry = new LoadingFormEvent(this, squareStart, additionChoice);
                                 }
                             } catch (NumberFormatException stringEntered) {
                                 System.out.println("ERROR - incorrect edit.");
@@ -128,7 +128,7 @@ public class EditorChoicePanel extends SidePanel {
                         } else {
                             try {
                                 Integer squareStart = Integer.parseInt(additionFirstField.getText());
-                                newEntry = new FormEvents(this, squareStart, additionChoice);
+                                newEntry = new LoadingFormEvent(this, squareStart, additionChoice);
                             } catch (NumberFormatException stringEntered) {
                                 System.out.println("ERROR - incorrect edit.");
                                 formListener.incorrectEntryMessage();
@@ -138,9 +138,9 @@ public class EditorChoicePanel extends SidePanel {
                         formListener.incorrectEntryMessage();
                     }
                 } else {
-                    if (! additionFirstField.getText().equals("")) {
+                    if (!additionFirstField.getText().equals("")) {
                         String newPlayerName = additionFirstField.getText();
-                        newEntry = new FormEvents(this, newPlayerName, additionChoice);
+                        newEntry = new LoadingFormEvent(this, newPlayerName, additionChoice);
                     } else {
                         formListener.incorrectEntryMessage();
                     }
@@ -162,9 +162,7 @@ public class EditorChoicePanel extends SidePanel {
 //        dim.height = height;
 //        setPreferredSize(dim);
 //    }
-    public void setPanelSize(final Integer width, final Integer height) {
-
-    }
+    public void setPanelSize(final Integer width, final Integer height) { }
 
 
 
@@ -203,8 +201,6 @@ public class EditorChoicePanel extends SidePanel {
         gridStructure.insets = new Insets(0, 0, 0, 5);
         add(additionFirstEntryLabel, gridStructure);
 
-//        gridStructure.gridx = 1;
-
         gridStructure.anchor = GridBagConstraints.LINE_END;
         gridStructure.insets = new Insets(0, 0, 0, 0);
         add(additionFirstField, gridStructure);
@@ -220,20 +216,10 @@ public class EditorChoicePanel extends SidePanel {
             gridStructure.insets = new Insets(0, 0, 0, 5);
             add(additionSecondEntryLabel, gridStructure);
 
-//            gridStructure.gridx = 1;
-
             gridStructure.anchor = GridBagConstraints.LINE_END;
             gridStructure.insets = new Insets(0, 0, 0, 0);
             add(additionSecondField, gridStructure);
         }
-
-        /////////////////THIRD ROW////////////////
-
-        /////////////////BEGIN TEST CODE////////////////
-
-        /////////////////END TEST CODE//////////////////
-
-        /////////////////FOURTH ROW////////////////
 
         gridStructure.weightx = 2;
         gridStructure.weighty = 2.0;
@@ -241,7 +227,7 @@ public class EditorChoicePanel extends SidePanel {
 
         gridStructure.anchor = GridBagConstraints.LINE_END;
         gridStructure.insets = new Insets(0, 0, 0, 0);
-        add(createAdditionButton, gridStructure);
+        add(editsquareButton, gridStructure);
 
         return this;
     }

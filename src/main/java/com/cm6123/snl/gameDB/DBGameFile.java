@@ -29,7 +29,9 @@ public class DBGameFile {
     private ArrayList<Integer> gameBoosts;
 
 
+
     public DBGameFile(final int newID, final String text) {
+
         this.id = newID;
         this.gameText = text;
 
@@ -49,10 +51,6 @@ public class DBGameFile {
             addBoostData();
         }
 
-        System.out.println("winning square: " + winningSquareFeature);
-        System.out.println("boost square: " + boostSquareFeature);
-        System.out.println("record game: " + recordGameFeature);
-
     }
 
     private void addDatabaseGameData() {
@@ -68,6 +66,7 @@ public class DBGameFile {
                 query = connect.prepareStatement("SELECT * FROM Game WHERE gameID=?;");
 
                 query.setInt(1, id);
+
                 result = query.executeQuery();
 
                 while (result.next()) {
@@ -119,8 +118,6 @@ public class DBGameFile {
                     diceFaces = result.getInt("diceFaces");
                     diceCount = result.getInt("diceCount");
                 }
-                System.out.println("Die count: " + diceCount);
-                System.out.println("Dice faces: " + diceFaces);
 
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -147,7 +144,6 @@ public class DBGameFile {
                     gameSnakes.add(result.getInt("snakehead"));
                     gameSnakes.add(result.getInt("snakeTail"));
                 }
-                System.out.println("snakes: " + gameSnakes);
 
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -173,7 +169,6 @@ public class DBGameFile {
                     gameLadders.add(result.getInt("ladderFoot"));
                     gameLadders.add(result.getInt("ladderTop"));
                 }
-                System.out.println("ladders: " + gameLadders);
 
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -198,7 +193,6 @@ public class DBGameFile {
                 while (result.next()) {
                     gameBoosts.add(result.getInt("boostLocation"));
                 }
-                System.out.println("Boosts: " + gameBoosts);
 
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -225,8 +219,7 @@ public class DBGameFile {
                     totalPlayers++;
                     playerPositions.add(result.getInt("playerPosition"));
                 }
-                System.out.println("Total players: " + totalPlayers);
-                System.out.println("Current player positions: " + playerPositions);
+
 
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -288,5 +281,9 @@ public class DBGameFile {
 
     public ArrayList<Integer> getGameBoosts() {
         return gameBoosts;
+    }
+
+    public Boolean getGameOver() {
+        return gameOver;
     }
 }

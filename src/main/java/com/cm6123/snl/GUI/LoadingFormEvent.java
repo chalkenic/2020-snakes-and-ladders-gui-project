@@ -2,7 +2,7 @@ package com.cm6123.snl.GUI;
 
 import java.util.EventObject;
 
-public class FormEvents extends EventObject {
+public class LoadingFormEvent extends EventObject {
 
 
 
@@ -14,24 +14,24 @@ public class FormEvents extends EventObject {
     private int boardCategory;
     private Edit editChoice;
 
-    public FormEvents(final Object source) {
+    public LoadingFormEvent(final Object source) {
         super(source);
     }
 
-    public FormEvents(final Object source, final Integer loadGameChoice) {
+    public LoadingFormEvent(final Object source, final Integer loadGameChoice) {
         super(source);
         this.loadGameEntry = loadGameChoice;
     }
 
 
-    public FormEvents(final Object source, final Integer newBoostSquare, final Edit addition) {
+    public LoadingFormEvent(final Object source, final Integer newBoostSquare, final Edit addition) {
         super(source);
         this.firstEntry = newBoostSquare;
         this.editChoice = addition;
     }
 
-    public FormEvents(final Object source, final Integer newSpecialSquareStart,
-                      final Integer newSpecialSquareEnd, final Edit edit) {
+    public LoadingFormEvent(final Object source, final Integer newSpecialSquareStart,
+                            final Integer newSpecialSquareEnd, final Edit edit) {
         super(source);
 
         this.firstEntry = newSpecialSquareStart;
@@ -39,7 +39,7 @@ public class FormEvents extends EventObject {
         this.editChoice = edit;
     }
 
-    public FormEvents(final Object source, final String newPlayerEntry, final Edit addition) {
+    public LoadingFormEvent(final Object source, final String newPlayerEntry, final Edit addition) {
         super(source);
 
         this.playerNameEntry = newPlayerEntry;

@@ -41,6 +41,8 @@ public class GUIFrame extends JFrame {
     private CreateGame customGame;
 
     private Boolean dataBaseConnection;
+    private Boolean loaded;
+    private Integer loadedGameId;
 
     public GUIFrame() {
         super("Snakes & Ladders");
@@ -96,9 +98,6 @@ public class GUIFrame extends JFrame {
                     currentPanel = mainMenuPanel;
 
                 }
-
-//                panelContainer.add(mainMenuPanel.createMenuPanel(), "1");
-//                cardLayout.show(panelContainer, "1");
                 break;
 
             case "newgame":
@@ -109,7 +108,6 @@ public class GUIFrame extends JFrame {
                 revalidate();
                 newGamePanel = new NewGameParentPanel(this);
 
-//                panelContainer.add(creationMenuPanel.createCreationPanel(), "2");
                 swapPanel(this,
                         currentPanel,
                         newGamePanel.createNewGamePanel(),
@@ -123,6 +121,8 @@ public class GUIFrame extends JFrame {
                 textPanel.wipeTextBox();
                 getContentPane().remove(currentPanel);
                 revalidate();
+                loaded = false;
+
 
                 Integer defaultGridChoice = 5;
                 TreeMap defaultSpecials = addTestDefaultValues();
@@ -139,7 +139,8 @@ public class GUIFrame extends JFrame {
 
                 diceSet = new DiceSet(6, 1);
 
-                runGamePanel = new RunGamePanel(this, newGame, diceSet, defaultGridChoice, defaultSpecials);
+                runGamePanel = new RunGamePanel(this, newGame, diceSet, defaultGridChoice, defaultSpecials, loaded,
+                        loadedGameId);
 
 //                panelContainer.add(creationMenuPanel.createCreationPanel(), "2");
                 swapPanel(this,
@@ -156,29 +157,42 @@ public class GUIFrame extends JFrame {
                 revalidate();
                 Integer customGridChoice;
                 TreeMap customSpecials;
+                loaded = false;
 
                 customGame = new CreateGame(this);
-                customGame.getCustomGameData(newGamePanel);
-                customGridChoice = customGame.getBoardSize();
-                customSpecials = customGame.getAllSpecials();
-
                 try {
-                    newGame = customGame.buildGame();
+                    customGame.getCustomGameData(newGamePanel);
+                    customGridChoice = customGame.getBoardSize();
+                    customSpecials = customGame.getAllSpecials();
 
-                    diceSet = new DiceSet(customGame.getDiceFaces(), customGame.getDiceCount());
+                    try {
+                        newGame = customGame.buildGame();
 
-                    runGamePanel = new RunGamePanel(this, newGame, diceSet, customGridChoice, customSpecials);
-                    swapPanel(this,
-                            currentPanel,
-                            runGamePanel.createRunGamePanel(),
-                            BorderLayout.WEST);
+                        diceSet = new DiceSet(customGame.getDiceFaces(), customGame.getDiceCount());
 
-                    currentPanel = runGamePanel;
+                        runGamePanel = new RunGamePanel(this, newGame, diceSet, customGridChoice, customSpecials, loaded,
+                                loadedGameId);
+                        swapPanel(this,
+                                currentPanel,
+                                runGamePanel.createRunGamePanel(),
+                                BorderLayout.WEST);
 
-                } catch (NullPointerException n) {
+                        currentPanel = runGamePanel;
+
+                    } catch (NullPointerException n) {
+                        selectWindow("newgame");
+                        newGamePanel.getSouthPanel().appendErrorLabel("Boost ticked with no entry! Please try again.");
+                    } catch (IllegalStateException i) {
+                        selectWindow("newgame");
+                        newGamePanel.getSouthPanel().appendErrorLabel("Entry error! Please try again.");
+                    }
+                } catch (IllegalStateException e) {
                     selectWindow("newgame");
-                    newGamePanel.getSouthPanel().appendErrorLabel("Boost ticked with no entry! please try again.");
-                }
+                    newGamePanel.getSouthPanel().appendErrorLabel("Illegal square entry! Please try again.");
+            }
+
+
+
 
 
 
@@ -195,6 +209,7 @@ public class GUIFrame extends JFrame {
                 RunGamePanel duplicateGamePanel;
                 Integer repeatGridChoice = null;
                 TreeMap repeatSpecials = null;
+                loaded = false;
 
 
 //                for (int i = 0; i < newGame.numberOfPlayers(); i++) {
@@ -204,7 +219,6 @@ public class GUIFrame extends JFrame {
 
                 if (customGame == null) {
                     repeatGridChoice = 5;
-                    System.out.println("null: " + repeatGridChoice);
                     repeatSpecials = addTestDefaultValues();
                     Game loadGame = new GameBuilder()
                             .withBoardSize(repeatGridChoice)
@@ -218,20 +232,20 @@ public class GUIFrame extends JFrame {
                             customGame.getCustomGameData(newGamePanel);
                         } catch (NullPointerException f) {
                             customGame.getLoadedGameData(dbGameFile);
+                            loaded = true;
                         }
-                            System.out.println("test2");
                             newGame = customGame.buildGame();
-                            System.out.println("test3");
                             repeatGridChoice = customGame.getBoardSize();
                             System.out.println(repeatGridChoice);
                             repeatSpecials = customGame.getAllSpecials();
                         }
                      catch (NullPointerException n) {
-                        System.out.println("am i going here?");
+                        n.printStackTrace();
                     }
                 }
 
-                duplicateGamePanel = new RunGamePanel(this, newGame, diceSet, repeatGridChoice, repeatSpecials);
+                duplicateGamePanel = new RunGamePanel(this, newGame, diceSet, repeatGridChoice, repeatSpecials,
+                        loaded, loadedGameId);
 
                 swapPanel(this,
                         currentPanel,
@@ -266,7 +280,7 @@ public class GUIFrame extends JFrame {
                         textPanel.appendText("Cannot find file!\n");
                     }
 
-                    public void formDatabaseEntry(final FormEvents data) {
+                    public void formDatabaseEntry(final LoadingFormEvent data) {
                         if (data.getLoadGameEntry() != null) {
                             Integer loadGameEntry = data.getLoadGameEntry();
                             appendTextToPanel("loaded game " + loadGameEntry + "!\n");
@@ -282,20 +296,24 @@ public class GUIFrame extends JFrame {
                 revalidate();
                 Integer loadedGridChoice;
                 TreeMap loadedSpecials;
-//                CreateGame loadGame = new CreateGame(this);
-
-//                loadGame = customGame.getLoadedGameData(customGame);
-//                this.dbGameFile = loadGame.getGameFile();
-
+                loaded = true;
+                System.out.println("#2 - file number:" + loadedGameId);
+//                Game loadGame = new GameBuilder()
+//                        .withBoardSize(5)
+//                        .withPlayers(2)
+//                        .withSnakes(14, 5, 20, 11)
+//                        .withLadders(3, 12, 13, 17)
+//                        .build();
+//                this.dbGameFile = customGame.getGamefile();
+//                customGame.getLoadedGameData(dbGameFile);
                 newGame = customGame.buildGame();
-                this.dbGameFile = customGame.getGamefile();
                 loadedGridChoice = customGame.getBoardSize();
                 loadedSpecials = customGame.getAllSpecials();
 
-
                 diceSet = new DiceSet(customGame.getDiceFaces(), customGame.getDiceCount());
 
-                runGamePanel = new RunGamePanel(this, newGame, diceSet, loadedGridChoice, loadedSpecials);
+                runGamePanel = new RunGamePanel(this, newGame, diceSet, loadedGridChoice, loadedSpecials, loaded,
+                        loadedGameId);
 //                runGamePanel.addLoadedPlayers(customGame.getPlayers());
                 runGamePanel.addLoadedPlayerPositions(customGame.getPlayerPositions());
                 swapPanel(this,
@@ -344,7 +362,7 @@ public class GUIFrame extends JFrame {
                                 + "\n|------------------------------------------------------|\n");
                     }
 
-                    public void formDatabaseEntry(final FormEvents data) {
+                    public void formDatabaseEntry(final LoadingFormEvent data) {
 
                         if (data.getPlayerNameEntry() == null) {
                             Integer firstFieldEntry;
@@ -446,6 +464,10 @@ public class GUIFrame extends JFrame {
 
     public void setCreatedGame(final CreateGame loadedGameData) {
         customGame = loadedGameData;
+    }
+
+    public void setID(final Integer gameID) {
+        loadedGameId = gameID;
     }
 }
 //    }

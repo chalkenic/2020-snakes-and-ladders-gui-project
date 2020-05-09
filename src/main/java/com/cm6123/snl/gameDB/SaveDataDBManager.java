@@ -18,31 +18,61 @@ public class SaveDataDBManager {
     private Integer gameID;
     private Integer gridSize;
     private TreeMap<String, Integer[]> allTestSpecials;
+    private Boolean loaded;
+
+    public SaveDataDBManager(final Integer id) {
+        this.gameID = id;
+    }
+
+    public void markGameAsEnded(final Connection connection) {
+        CallableStatement saveStatement = null;
+        String procedure = null;
+            try {
+                procedure = "{CALL manually_update_gameover(?)}";
+
+                saveStatement = connection.prepareCall(procedure);
+                saveStatement.setInt(1, gameID);
+                saveStatement.executeQuery();
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+
 
     public SaveDataDBManager(final Game gameSave, final DiceSet gameDice, final Integer size,
-                             final TreeMap specialList) {
+                             final TreeMap specialList, final Boolean loadedGame, final Integer id) {
         this.newGameSave = gameSave;
         this.dice = gameDice;
         this.gridSize = size;
         this.allTestSpecials = specialList;
+        this.loaded = loadedGame;
+        this.gameID = id;
     }
 
     public void saveCurrentGame(final Connection connection) {
 
-        saveDie(connection);
-        saveGame(connection);
-        if (allTestSpecials != null) {
-            saveSpecials(connection);
-        }
+        if (!loaded) {
 
-        savePlayers(connection);
+            saveDie(connection);
+            saveGame(connection);
+            if (allTestSpecials != null) {
+                saveSpecials(connection);
+            }
 
-        if (newGameSave.getBoostSquareOn()) {
-            saveboostFeatureOn(connection);
-        }
+            savePlayers(connection);
 
-        if (newGameSave.isWinningSquareOn()) {
-            saveWinningSquareFeatureOn(connection);
+            if (newGameSave.getBoostSquareOn()) {
+                saveboostFeatureOn(connection);
+            }
+
+            if (newGameSave.isWinningSquareOn()) {
+                saveWinningSquareFeatureOn(connection);
+            }
+        } else {
+                updatePlayerPosition(connection, loaded);
         }
             try {
                 if (connection != null) {
@@ -52,7 +82,38 @@ public class SaveDataDBManager {
                 e.printStackTrace();
             }
 
+    }
 
+    private void updatePosition(final Connection connection) {
+        CallableStatement saveStatement = null;
+        String procedure = null;
+        String playerCol;
+        Integer playerPos;
+
+        for (int i = 0; i < newGameSave.numberOfPlayers(); i++) {
+            playerCol = newGameSave.getPlayer(i).getColour().toString();
+            playerPos = newGameSave.getPlayer(i).getPosition().get();
+
+            procedure = "{CALL update_player_position(?,?,?)}";
+
+            try {
+
+                System.out.println("colour: " + playerCol);
+                System.out.println("position: " + playerPos);
+                System.out.println("id: " + gameID);
+
+                saveStatement = connection.prepareCall(procedure);
+                saveStatement.setString(1, playerCol);
+                saveStatement.setInt(2, playerPos);
+                saveStatement.setInt(3, gameID);
+
+                saveStatement.executeQuery();
+
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void saveDie(final Connection connection) {
@@ -135,16 +196,12 @@ public class SaveDataDBManager {
                         saveStatement.setInt(3, gameID);
 
                         saveStatement.executeQuery();
-                    } catch (ArrayIndexOutOfBoundsException a) {
-                        System.out.println("Snakes saved!");
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
                 }
             } else if (key == "ladders" && value.length > 0) {
-                System.out.println("test1");
-                System.out.println(value);
-
+                procedure = "{CALL add_new_ladder(?,?,?)}";
 
                 for (int i = 0; i < value.length; i += 2) {
                     try {
@@ -155,8 +212,6 @@ public class SaveDataDBManager {
 
                         saveStatement.executeQuery();
 //                        counter += 2;
-                    } catch (ArrayIndexOutOfBoundsException a) {
-                        System.out.println("ladders saved!");
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
@@ -171,8 +226,6 @@ public class SaveDataDBManager {
                         saveStatement.setInt(2, gameID);
 
                         saveStatement.executeQuery();
-                    } catch (ArrayIndexOutOfBoundsException a) {
-                        System.out.println("Boosts saved!");
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
@@ -247,10 +300,8 @@ public class SaveDataDBManager {
         String procedure = null;
         Integer playerPos;
         String playerCol;
-        System.out.println("test");
 
         if (isSaving) {
-            System.out.println("test2");
             for (int i = 0; i < newGameSave.numberOfPlayers(); i++) {
                 procedure = "{CALL update_player_position(?,?,?)}";
                 playerPos = newGameSave.getPlayer(i).getPosition().get();

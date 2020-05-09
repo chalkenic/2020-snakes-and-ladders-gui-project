@@ -33,6 +33,9 @@ public class CreateGame {
     private Boolean recordGame;
 
     private GUIFrame gameGui;
+    private Integer gameID;
+
+
 
     private NewGameWestInnerPanel westPanel;
     private NewGameEastInnerPanel eastPanel;
@@ -54,10 +57,13 @@ public class CreateGame {
         this.southPanel = newGamePanel.getSouthPanel();
         String[] tempValues;
 
+
         //Code adapted from Stef Heylen answer: JtextField to int[] array?
         //Available at: https://stackoverflow.com/questions/17256689/jtextfield-to-int-array
         String snakeValues = westPanel.getSnakeChoiceField();
+        System.out.println(westPanel.getSnakeChoiceField().length());
         tempValues = snakeValues.split(",");
+        System.out.println(tempValues);
         snakes = new Integer[tempValues.length];
 
         for (int i = 0; i < tempValues.length; i++) {
@@ -65,6 +71,12 @@ public class CreateGame {
                 snakes[i] = Integer.parseInt((tempValues[i].trim()));
             } catch (NumberFormatException additionError) {
             }
+        }
+
+        if (westPanel.getSnakeChoiceField().length() > 0 && snakes.length % 2 != 0) {
+
+             throw new IllegalStateException("Incorrect Snake Entry - missing a tail!");
+
         }
 
         String ladderValues = westPanel.getLadderChoiceField();
@@ -77,6 +89,12 @@ public class CreateGame {
             } catch (NumberFormatException additionError) {
             }
         }
+
+        if (westPanel.getLadderChoiceField().length() > 0 && ladders.length % 2 != 0) {
+            throw new IllegalStateException("Incorrect Ladder Entry - missing a top!");
+        }
+
+
         try {
             playerCount = westPanel.getPlayerCountField();
         } catch (NumberFormatException pc) {
@@ -137,12 +155,16 @@ public class CreateGame {
 
     public Game buildGame() {
 
+
         if (noPlayersGiven) {
             gameGui.appendTextToPanel("No player count entered. Player count set to 2.\n");
         }
+
+
         if (snakes.length == 1) {
             gameGui.appendTextToPanel("No snakes have been added into game.\n");
         }
+
 
         if (ladders.length == 1) {
             gameGui.appendTextToPanel("No ladders have been added into game.\n");
@@ -210,6 +232,7 @@ public class CreateGame {
 
     public CreateGame getLoadedGameData(final DBGameFile loadGameChoice) {
         this.gamefile = loadGameChoice;
+        this.gameID = loadGameChoice.getId();
         snakes = new Integer[loadGameChoice.getGameSnakes().size()];
         ladders = new Integer[loadGameChoice.getGameLadders().size()];
         positions = new Integer[loadGameChoice.getPlayerPositions().size()];
@@ -271,6 +294,10 @@ public class CreateGame {
         return this;
 
 
+    }
+
+    public Integer getGameID() {
+        return gameID;
     }
     public DBGameFile getGamefile() {
         return gamefile;

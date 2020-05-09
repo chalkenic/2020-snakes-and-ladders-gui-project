@@ -60,7 +60,7 @@ public class LoadGamePanel extends JPanel {
                     //Code adapted from Sebastien: changing a JButton text when clicked.
                     //Available at: https://stackoverflow.com/questions/9412620/changing-a-jbutton-text-when-clicked
 
-                    //Code adapted from K0pernikus: New Line \n is not working in JButton.setText(“fnord\nfoo”) ; [duplicate]
+                    //Code adapted from K0pernikus: New Line \n is not working in JButton.setText; [duplicate]
                     //available at: https://stackoverflow.com/questions/13503280/new-line-n-is-not-working-in-jbutton-settextfnord-nfoo
 
                     loadGameButton.setText("<html>Load Game <br />" + currentSelection + "</html>");
@@ -72,20 +72,21 @@ public class LoadGamePanel extends JPanel {
             @Override
             public void actionPerformed(final ActionEvent e) {
 
-                FormEvents loadGameEvent = null;
+                LoadingFormEvent loadGameEvent = null;
 
                 DBGameFile loadGameChoice = (DBGameFile) gameList.getSelectedValue();
-//                loadGameEvent = new FormEvents(this, loadGameChoice.getId());
+//                loadGameEvent = new LoadingFormEvent(this, loadGameChoice.getId());
 
                 if (formListener != null) {
 //                    formListener.formDatabaseEntry(loadGameEvent);
                     CreateGame loadedGame = new CreateGame(gameGui);
                     gameGui.setCreatedGame(loadedGame.getLoadedGameData(loadGameChoice));
+                    gameGui.setID(loadedGame.getGameID());
+                    System.out.println("file number: " + loadedGame.getGameID());
+                    System.out.println(loadedGame.getAllSpecials());
+                    System.out.println(loadedGame.getDiceFaces());
                     gameGui.selectWindow("runloadedgame");
                 }
-
-
-
             }
         });
 
@@ -134,8 +135,13 @@ public class LoadGamePanel extends JPanel {
     private void loadDBGames() {
         Connection connect = GameDBUtils.connectGuiToDatabase();
         Integer totalGames = LoadDataDBManager.countGamesInDatabase(connect);
+        System.out.println("total games: " + totalGames);
         for (Integer i = 1; i < (totalGames + 1); i++) {
-            savedGames.addElement(new DBGameFile(i, "File " + i));
+            DBGameFile newFile = new DBGameFile(i, "File " + i);
+            System.out.println("Game: " + newFile.getId());
+            if (!newFile.getGameOver()) {
+                savedGames.addElement(newFile);
+            }
         }
     }
     public void setFormListener(final FormListener listener) {

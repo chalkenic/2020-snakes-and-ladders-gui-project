@@ -29,7 +29,7 @@ public class LoadDataDBManager {
      * @return total number of games in database.
      */
     public static Integer countGamesInDatabase(final Connection connection) {
-        String query = "SELECT COUNT(*) AS totalCount FROM Game ";
+        String query = "SELECT COUNT(*) AS totalCount FROM Game";
         Integer gameCount = null;
         Statement statement = null;
         ResultSet result = null;
