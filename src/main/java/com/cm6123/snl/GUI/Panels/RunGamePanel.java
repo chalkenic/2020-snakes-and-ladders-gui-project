@@ -37,7 +37,7 @@ public class RunGamePanel extends SidePanel {
 
     private JLabel playerColourTurnResultLabel;
     private JLabel playerPositionResultLabel;
-//    private JTextField
+    //    private JTextField
     private JButton rollDiceButton;
     private JButton newGameButton;
     private JButton saveGameButton;
@@ -150,6 +150,7 @@ public class RunGamePanel extends SidePanel {
         newGameButton = new JButton("Start new Game");
         newGameButton.setEnabled(false);
         saveGameButton = new JButton("Save current game");
+        saveGameButton.setEnabled(false);
 
         restartGameButton = new JButton("Restart Game");
         confirmRestartGameButton = new JButton("Yes");
@@ -157,22 +158,23 @@ public class RunGamePanel extends SidePanel {
         confirmRestartGameButton.setVisible(false);
         declineRestartGameButton.setVisible(false);
 
-        if  (gameGui.getDatabaseConnection()) {
-            saveGameButton.setEnabled(true);
-        } else {
-            saveGameButton.setEnabled(false);
-        }
+//        if  (gameGui.getDatabaseConnection()) {
+//            saveGameButton.setEnabled(true);
+//        } else {
+//            saveGameButton.setEnabled(false);
+//        }
 
         rollDiceButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 if (!currentGame.isGameOver()) {
-                    if  (gameGui.getDatabaseConnection()) {
-                        saveGameButton.setEnabled(true);
-                    }
+//                    if  (gameGui.getDatabaseConnection()) {
+////                        saveGameButton.setEnabled(true);
+//                    }
                     settlePlayerMove(currentPlayer);
-                } else {
-                    saveGameButton.setEnabled(false);
+//                } else {
+////                    saveGameButton.setEnabled(false);
+//                }
                 }
             }
         });
@@ -181,7 +183,7 @@ public class RunGamePanel extends SidePanel {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 gameGui.selectWindow("newgame");
-                }
+            }
         });
 
         saveGameButton.addActionListener(new ActionListener() {
@@ -345,7 +347,6 @@ public class RunGamePanel extends SidePanel {
                 boardMovement.moveLoadedGamePlayer(currentGame.getPlayer(i), loadedPlayerPostions[i]);
             }
         }
-        currentPlayer = currentGame.getPlayer(0);
         highLightCurrentPlayer(currentGame.getPlayer(0));
 
     }
@@ -380,6 +381,13 @@ public class RunGamePanel extends SidePanel {
 
             highLightCurrentPlayer(currentGame.getCurrentPlayer());
             currentPlayer = currentGame.getCurrentPlayer();
+            if (gameGui.getDatabaseConnection()) {
+                if (currentPlayer == currentGame.getPlayer(0)) {
+                    saveGameButton.setEnabled(true);
+                } else {
+                    saveGameButton.setEnabled(false);
+                }
+            }
 
 
         } else {
@@ -390,7 +398,7 @@ public class RunGamePanel extends SidePanel {
                     gamePlayerList.setSelectionBackground(Color.ORANGE);
                     newGameButton.setEnabled(true);
                     gameGui.appendTextToPanel(currentPlayer.getColour() + " player ends their turn at "
-                                    + "position " + currentPlayer.getPosition().get() + "\n\n");
+                            + "position " + currentPlayer.getPosition().get() + "\n\n");
                     gameGui.appendTextToPanel(currentPlayer.getColour() + " player wins the "
                             + "game!\n");
                     gameGui.appendTextToPanel("|---------------------------------------------------------|\n");
@@ -428,7 +436,7 @@ public class RunGamePanel extends SidePanel {
         }
     }
 
-//    private void addLoadedPlayers(final );
+    //    private void addLoadedPlayers(final );
     public void addLoadedPlayerPositions(final Integer[] playerPositions) {
         loadedPlayerPostions = new Integer[playerPositions.length];
         for (int i = 0; i < playerPositions.length; i++) {

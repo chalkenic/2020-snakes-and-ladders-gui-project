@@ -77,21 +77,18 @@ public class LoadGamePanel extends JPanel {
             public void actionPerformed(final ActionEvent e) {
 
 
-                    LoadingFormEvent loadGameEvent = null;
+                LoadingFormEvent loadGameEvent = null;
 
-                    DBGameFile loadGameChoice = (DBGameFile) gameList.getSelectedValue();
-    //                loadGameEvent = new LoadingFormEvent(this, loadGameChoice.getId());
+                DBGameFile loadGameChoice = (DBGameFile) gameList.getSelectedValue();
+                //                loadGameEvent = new LoadingFormEvent(this, loadGameChoice.getId());
 
-                    if (formListener != null) {
-    //                    formListener.formDatabaseEntry(loadGameEvent);
-                        CreateGame loadedGame = new CreateGame(gameGui);
-                        gameGui.setCreatedGame(loadedGame.getLoadedGameData(loadGameChoice));
-                        gameGui.setID(loadedGame.getGameID());
-                        System.out.println("file number: " + loadedGame.getGameID());
-                        System.out.println(loadedGame.getAllSpecials());
-                        System.out.println(loadedGame.getDiceFaces());
-                        gameGui.selectWindow("runloadedgame");
-                    }
+                if (formListener != null) {
+                    //                    formListener.formDatabaseEntry(loadGameEvent);
+                    CreateGame loadedGame = new CreateGame(gameGui);
+                    gameGui.setCreatedGame(loadedGame.getLoadedGameData(loadGameChoice));
+                    gameGui.setID(loadedGame.getGameID());
+                    gameGui.selectWindow("runloadedgame");
+                }
 
             }
         });

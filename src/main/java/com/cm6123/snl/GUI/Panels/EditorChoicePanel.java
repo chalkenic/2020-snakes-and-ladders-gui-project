@@ -68,7 +68,7 @@ public class EditorChoicePanel extends SidePanel {
         } else if (newAddition == Edit.PLAYER) {
 
             loadDBGames(Edit.PLAYER, dbEntryList);
-            additionFirstEntryLabel = new JLabel("Edit Player name: ");
+            additionFirstEntryLabel = new JLabel("Edit name: ");
         } else if (newAddition == Edit.DIE) {
 
             loadDBGames(Edit.DIE, dbEntryList);
@@ -356,8 +356,8 @@ public class EditorChoicePanel extends SidePanel {
 
             for (Integer i = 0; i < dbLoader.getSelectionSize(); i++) {
                 EditCategory player = new EditCategory(dbLoader, i,  choice);
-                jlist.addElement("|   ID: " + dbLoader.getTableID(i)
-                        + "   |   player: " + dbLoader.getPlayers(i)
+                jlist.addElement("|     ID: " + dbLoader.getTableID(i)
+                        + "     |      player: " + dbLoader.getPlayers(i)
                         + "   |");
                 listEntries.put(i, player);
                 System.out.println("player id: " + player.getListID());

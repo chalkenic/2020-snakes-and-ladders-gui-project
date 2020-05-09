@@ -27,6 +27,9 @@ public class CreateGame {
     private Integer playerCount;
     private Integer diceCount;
     private Integer diceFaces;
+    private Integer playerTurn;
+
+
 
     private Boolean boostGameFeature;
     private Boolean winningSquareOnlyFeature;
@@ -75,7 +78,7 @@ public class CreateGame {
 
         if (westPanel.getSnakeChoiceField().length() > 0 && snakes.length % 2 != 0) {
 
-             throw new IllegalStateException("Incorrect Snake Entry - missing a tail!");
+            throw new IllegalStateException("Incorrect Snake Entry - missing a tail!");
 
         }
 
@@ -182,29 +185,8 @@ public class CreateGame {
 
         Game newCustomGame = null;
         gameGui.appendTextToPanel("-----------------------------------------------------------------------|\n");
-            if (winningSquareOnlyFeature) {
-                if (boosts != null) {
-                    try {
-                        if (boosts.length > 0) {
-                            newCustomGame = new GameBuilder()
-                                    .withBoardSize(boardSize)
-                                    .withPlayers(playerCount)
-                                    .withSnakes(snakes)
-                                    .withLadders(ladders)
-                                    .withBoosts(boosts)
-                                    .buildWithWinningSquare();
-                        }
-                    }  catch (NullPointerException n) {
-                    }
-                } else {
-                    newCustomGame = new GameBuilder()
-                            .withBoardSize(boardSize)
-                            .withPlayers(playerCount)
-                            .withSnakes(snakes)
-                            .withLadders(ladders)
-                            .buildWithWinningSquare();
-                }
-            } else if (boosts != null) {
+        if (winningSquareOnlyFeature) {
+            if (boosts != null) {
                 try {
                     if (boosts.length > 0) {
                         newCustomGame = new GameBuilder()
@@ -213,9 +195,8 @@ public class CreateGame {
                                 .withSnakes(snakes)
                                 .withLadders(ladders)
                                 .withBoosts(boosts)
-                                .build();
+                                .buildWithWinningSquare();
                     }
-
                 }  catch (NullPointerException n) {
                 }
             } else {
@@ -224,8 +205,30 @@ public class CreateGame {
                         .withPlayers(playerCount)
                         .withSnakes(snakes)
                         .withLadders(ladders)
-                        .build();
+                        .buildWithWinningSquare();
             }
+        } else if (boosts != null) {
+            try {
+                if (boosts.length > 0) {
+                    newCustomGame = new GameBuilder()
+                            .withBoardSize(boardSize)
+                            .withPlayers(playerCount)
+                            .withSnakes(snakes)
+                            .withLadders(ladders)
+                            .withBoosts(boosts)
+                            .build();
+                }
+
+            }  catch (NullPointerException n) {
+            }
+        } else {
+            newCustomGame = new GameBuilder()
+                    .withBoardSize(boardSize)
+                    .withPlayers(playerCount)
+                    .withSnakes(snakes)
+                    .withLadders(ladders)
+                    .build();
+        }
 
         return newCustomGame;
     }
@@ -233,6 +236,7 @@ public class CreateGame {
     public CreateGame getLoadedGameData(final DBGameFile loadGameChoice) {
         this.gamefile = loadGameChoice;
         this.gameID = loadGameChoice.getId();
+        this.playerTurn = loadGameChoice.getGamePlayerTurn();
         snakes = new Integer[loadGameChoice.getGameSnakes().size()];
         ladders = new Integer[loadGameChoice.getGameLadders().size()];
         positions = new Integer[loadGameChoice.getPlayerPositions().size()];
@@ -253,7 +257,7 @@ public class CreateGame {
             boosts = new Integer[loadGameChoice.getGameBoosts().size()];
 
             for (int i = 0; i < loadGameChoice.getGameBoosts().size(); i++) {
-               boosts[i] =  loadGameChoice.getGameBoosts().get(i);
+                boosts[i] =  loadGameChoice.getGameBoosts().get(i);
             }
         }
 
@@ -301,6 +305,10 @@ public class CreateGame {
     }
     public DBGameFile getGamefile() {
         return gamefile;
+    }
+
+    public Integer getPlayerTurn() {
+        return playerTurn;
     }
 
 

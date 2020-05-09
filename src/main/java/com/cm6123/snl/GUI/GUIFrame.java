@@ -24,10 +24,10 @@ public class GUIFrame extends JFrame {
     private JButton button;
     //    private JTextArea textArea;
     private GameTextPanel textPanel;
-//    private GameToolbarPanel toolbar;
+    //    private GameToolbarPanel toolbar;
     private JPanel panelContainer;
     private JPanel currentPanel;
-//    private LayoutManager layout;
+    //    private LayoutManager layout;
     private EditorMenuPanel creationMenuPanel;
     private MainMenuPanel mainMenuPanel;
     private LoadGamePanel loadGamePanel;
@@ -73,8 +73,8 @@ public class GUIFrame extends JFrame {
 
     public void selectWindow(final String windowChoice) {
 
-            if (windowChoice != "loadgame" && windowChoice != "newgame") {
-                add(textPanel, BorderLayout.CENTER);
+        if (windowChoice != "loadgame" && windowChoice != "newgame") {
+            add(textPanel, BorderLayout.CENTER);
         }
         switch (windowChoice.toLowerCase()) {
             case "menu":
@@ -190,7 +190,7 @@ public class GUIFrame extends JFrame {
                 } catch (IllegalStateException e) {
                     selectWindow("newgame");
                     newGamePanel.getSouthPanel().setErrorLabel("Illegal square entry! Please try again.");
-            }
+                }
 
 
 
@@ -235,12 +235,12 @@ public class GUIFrame extends JFrame {
                             customGame.getLoadedGameData(dbGameFile);
                             loaded = true;
                         }
-                            newGame = customGame.buildGame();
-                            repeatGridChoice = customGame.getBoardSize();
-                            System.out.println(repeatGridChoice);
-                            repeatSpecials = customGame.getAllSpecials();
-                        }
-                     catch (NullPointerException n) {
+                        newGame = customGame.buildGame();
+                        repeatGridChoice = customGame.getBoardSize();
+                        System.out.println(repeatGridChoice);
+                        repeatSpecials = customGame.getAllSpecials();
+                    }
+                    catch (NullPointerException n) {
                         n.printStackTrace();
                     }
                 }
@@ -299,14 +299,6 @@ public class GUIFrame extends JFrame {
                 TreeMap loadedSpecials;
                 loaded = true;
                 System.out.println("#2 - file number:" + loadedGameId);
-//                Game loadGame = new GameBuilder()
-//                        .withBoardSize(5)
-//                        .withPlayers(2)
-//                        .withSnakes(14, 5, 20, 11)
-//                        .withLadders(3, 12, 13, 17)
-//                        .build();
-//                this.dbGameFile = customGame.getGamefile();
-//                customGame.getLoadedGameData(dbGameFile);
 
                 try {
                     newGame = customGame.buildGame();
@@ -494,10 +486,11 @@ public class GUIFrame extends JFrame {
                 } else {
                     String playerFieldEntry = data.getPlayerNameEntry();
                     appendTextToPanel("player changed to name: " + playerFieldEntry + "\n");
+                    EditDataDBManager.editPlayerData(data);
                     selectWindow("newedit");
                 }
             }
-    });
+        });
     }
 }
 //    }

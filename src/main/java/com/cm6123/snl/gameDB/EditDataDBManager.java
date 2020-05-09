@@ -97,9 +97,11 @@ public class EditDataDBManager {
         Integer id = null;
         String playerEdit = null;
 
-        procedure = "{CALL update_player(?,?,?)}";
+        procedure = "{CALL update_player(?,?)}";
         id = editChoice.getDatabaseID();
+        System.out.println(id);
         playerEdit = editChoice.getPlayerNameEntry();
+        System.out.println(playerEdit);
 
         try  {
             saveStatement = connect.prepareCall(procedure);
