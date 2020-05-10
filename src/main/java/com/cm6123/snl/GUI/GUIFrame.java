@@ -51,9 +51,7 @@ public class GUIFrame extends JFrame {
 
 
         panelContainer = new JPanel();
-
         textPanel = new GameTextPanel();
-
         gameMenu = new MenuBar(this);
 
         setJMenuBar(gameMenu.getMenuBar());

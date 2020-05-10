@@ -4,53 +4,83 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Class covers JMenuBar for navigation at top of window.
+ */
 public class MenuBar extends JMenu implements ActionListener {
 
+    /**
+     * Main window frame.
+     */
     private GUIFrame gameGui;
 
+    /**
+     * MenuBar at top of window.
+     */
     private JMenuBar gameMenu;
+
+    /**
+     * Menu that holds file commands.
+     */
     private JMenu fileMenu;
+
+    /**
+     * Menu holds all GUI menu navigation commands.
+     */
     private JMenu menuNav;
-    private JMenu showMenu;
 
+    /**
+     * Navigate to main menu panel on click.
+     */
     private JMenuItem mainMenu;
-    private JMenuItem newGame;
-    private JMenuItem loadGame;
-    private JMenuItem exitGame;
 
+    /**
+     * Navigate to editor menu panel on click.
+     */
     private JMenuItem editorMenu;
 
+    /**
+     * Navigate to new game parent panel on click.
+     */
+    private JMenuItem newGame;
 
-    public MenuBar(final GUIFrame gui) {
+    /**
+     * Navigate to load Game panel on click.
+     */
+    private JMenuItem loadGame;
+
+    /**
+     * Close the game on click.
+     */
+    private JMenuItem exitGame;
+
+
+    /**
+     * Creates menu bar on top of window upon GUI JFrame instantiation.
+     * @param gui JFrame that runs the game parsed for access to methods.
+     */
+    MenuBar(final GUIFrame gui) {
         this.gameGui = gui;
 
         gameMenu = new JMenuBar();
 
         fileMenu = new JMenu("File");
         menuNav = new JMenu("Menus");
-//        fileMenu.addMenuListener(this);
         mainMenu = new JMenuItem("Main Menu");
-        mainMenu.addActionListener(this);
-//        mainMenu.setPreferredSize(new Dimension(50, 30));
-
         editorMenu = new JMenuItem("Editor Menu");
-        editorMenu.addActionListener(this);
-        editorMenu.setEnabled(false);
-
-//        editorMenu.setPreferredSize(new Dimension(50, 30));
-
         newGame = new JMenuItem("New game");
-        newGame.addActionListener(this);
-
         loadGame = new JMenuItem("Load Game...");
-        loadGame.addActionListener(this);
-        loadGame.setEnabled(false);
-
-
         exitGame = new JMenuItem("Exit Program");
+        //Listeners added to all buttons.
+        mainMenu.addActionListener(this);
+        editorMenu.addActionListener(this);
+        newGame.addActionListener(this);
+        loadGame.addActionListener(this);
         exitGame.addActionListener(this);
-
-
+        //Load Game & Editor Menu cannot be accessed unless database has been loaded.
+        loadGame.setEnabled(false);
+        editorMenu.setEnabled(false);
+        //Styling & poisitioning:
         fileMenu.addSeparator();
         fileMenu.add(newGame);
         fileMenu.add(loadGame);
@@ -63,67 +93,46 @@ public class MenuBar extends JMenu implements ActionListener {
 
         gameMenu.add(fileMenu);
         gameMenu.add(menuNav);
-
-
-
-
-
-//        exportData.addActionListener(this);
-//        saveGame.addActionListener(this);
-//        exitData.addActionListener(this);
-
-
-//
-//        showMenu = new JMenu("Navigate to");
-
-
-//       showEditSnakes.addActionListener(this);
-//        showEditLadders.addActionListener(this);
-//        showEditBoosts.addActionListener(this);
-//        showEditPlayers.addActionListener(this);
-//        showEditDice.addActionListener(this);
-//        showMenu.add(mainMenu);
-//        showMenu.add(editorMenu);
-//        fileMenu.addSeparator();
-//        showMenu.add(newGame);
-//        showMenu.add(loadGame);
-//        fileMenu.addSeparator();
-//        showMenu.add(exitGame);
-
-//        windowMenu.add(showMenu);
-
-
-//        gameMenu.add(windowMenu);
-
     }
     //Code adapted from Eric Leibenguth: JFrame Action Listener that listens to all menu items?
     //https://stackoverflow.com/questions/31229899/jframe-action-listener-that-listens-to-all-menu-items
 
+    /**
+     * Getter pulls all menubar data and parses into JFrame.
+     * @return game menu as JMenuBar.
+     */
     public JMenuBar getMenuBar() {
         return gameMenu;
     }
 
+    /**
+     * Handles clicks on menu items and redirects to specific JFrame locations.
+     * @param click - location on bar where click was registered.
+     */
     public void actionPerformed(final ActionEvent click) {
 
         if (click.getSource().equals(mainMenu)) {
-            gameGui.selectWindow("menu");
+            gameGui.selectWindow("menu"); //Redirects to main menu via JFrame method.
 
         } else if (click.getSource().equals(editorMenu)) {
-            gameGui.selectWindow("editormenu");
+            gameGui.selectWindow("editormenu"); //Redirects to editor menu via JFrame method.
 
         } else if (click.getSource().equals(newGame)) {
-            gameGui.selectWindow("newgame");
+            gameGui.selectWindow("newgame"); //Redirects to new game menu via JFrame method.
 
         } else if (click.getSource().equals(loadGame)) {
-            gameGui.selectWindow("loadgame");
+            gameGui.selectWindow("loadgame"); //Redirects to load menu via JFrame method.
 
 
         } else if (click.getSource().equals(exitGame)) {
-            System.exit(0);
+            System.exit(0); //Closes game and returns successful.
         }
 
     }
 
+    /**
+     * method called when database switched on. Both menu items switched on.
+     */
     public void enableDatabaseNavigation() {
             editorMenu.setEnabled(true);
             loadGame.setEnabled(true);
