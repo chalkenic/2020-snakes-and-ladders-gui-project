@@ -73,6 +73,9 @@ public class GUIFrame extends JFrame {
      * Determines whether a custom game was loaded for saving options.
      */
     private Boolean loaded;
+
+
+
     /**
      * Records the database ID of a loaded game for saving options.
      */
@@ -290,6 +293,7 @@ public class GUIFrame extends JFrame {
                     loadGamePanel.setErrorLabel("There is an illegal square clash in the file. "
                             + "Please amend using editor tool.");
                 } catch (IndexOutOfBoundsException oob) {
+                    //Catches any snake/ladder edited in editor choice menu that falls beyond board size.
                     selectWindow("loadgame");
                     loadGamePanel.setErrorLabel("There is a square landing outside of board size in the file. "
                             + "Please amend using editor tool.");
@@ -310,11 +314,13 @@ public class GUIFrame extends JFrame {
             case "newedit":
                 getContentPane().remove(currentPanel);
                 revalidate();
+                //labels, panels & data appended to panel based upon edit choice.
                 Edit newAdditionChoice = editorMenuPanel.getEditChoice();
+                //Confirms to panel the choice of edit.
                 EditorChoicePanel editPanel = new EditorChoicePanel(this, newAdditionChoice);
 
                 swapPanel(this, currentPanel, editPanel.editChoicePanel(), BorderLayout.WEST);
-
+                //Changes current panel to edit choice.
                 currentPanel = editPanel;
 
                 handleDbEdit(editPanel);
@@ -324,6 +330,13 @@ public class GUIFrame extends JFrame {
         }
     }
 
+    /**
+     * Method removes panel currently in use (typically currentPanel) with the panel of choice from switch case.
+     * @param currentFrame - this (GUIFrame)
+     * @param oldPanel - panel currently in use.
+     * @param newPanel - panel being created for appending onto JFrame.
+     * @param borderLayout - Position of the panel.
+     */
     public void swapPanel(final JFrame currentFrame,
                           final JPanel oldPanel,
                           final JPanel newPanel,
@@ -332,18 +345,12 @@ public class GUIFrame extends JFrame {
         currentFrame.remove(oldPanel);
         currentFrame.add(newPanel, borderLayout);
         currentFrame.revalidate();
-
     }
-
-    public ArrayList addDefaultValues() {
-        ArrayList<Integer[]> values = new ArrayList<>();
-
-        values.add(new Integer[] {14, 5, 20, 11});
-        values.add(new Integer[] {3, 12, 13, 17});
-        return values;
-    }
-
-    public TreeMap<String, Integer[]> addTestDefaultValues() {
+    /**
+     * TreeMap created of values used by default game, passed into createGame object to mimic method of customgame.
+     * @return values - TreeMap of values as integer arrays.
+     */
+    private TreeMap<String, Integer[]> addTestDefaultValues() {
         TreeMap<String, Integer[]> values = new TreeMap<>();
 
         values.put("snakes", new Integer[]{14, 5, 20, 11});
@@ -352,69 +359,118 @@ public class GUIFrame extends JFrame {
         return values;
     }
 
-
+    /**
+     * Add text to panel - used by most panels to access the TextPanel object on the JFrame. main reason for JFrame
+     * parameter in most objects.
+     * @param text - String data to add into JTextArea.
+     */
     public void appendTextToPanel(final String text) {
         textPanel.appendText(text);
     }
 
-    public void setDataBaseConnection(final Boolean b) {
+    /**
+     * Boolean that informs JFrame that database has been connect to.
+     * @param databaseConnected - boolean from CreateDBManager that confirms loaded.
+     */
+    public void setDataBaseConnection(final Boolean databaseConnected) {
         dataBaseConnection = true;
     }
 
+    /**
+     * Changes current game file held within the JFrame to the parsed parameter.
+     * @param gameFile
+     */
     public void setDbGameFile(final DBGameFile gameFile) {
         this.dbGameFile = gameFile;
     }
 
+    /**
+     * Checks JFrame to confirm whether database is loaded - used for enabling JButtons & JMenuItems in respective
+     * panels.
+     * @return Boolean of confirmation.
+     */
     public Boolean getDatabaseConnection() {
         return dataBaseConnection;
     }
 
+    /**
+     * Accessed by MainMenuPanel to activate Menubar navigation relating to database.
+     * @return the game menu bar.
+     */
     public MenuBar getGameMenu() {
         return gameMenu;
     }
 
+    /**
+     * Used by RunGamePanel to determiner whether to update gameover into database.
+     * @return loaded - was the game loaded from file?
+     */
+    public Boolean getLoaded() {
+        return loaded;
+    }
+
+    /**
+     * Assigns current game Creation object data from a loaded save.
+     * @param loadedGameData - game data from database.
+     */
     public void setCreatedGame(final CreateGame loadedGameData) {
         customGame = loadedGameData;
     }
 
+    /**
+     * Sets current ID to gameID from database, ensuring the link never breaks while in use.
+     * @param gameID
+     */
     public void setID(final Integer gameID) {
         loadedGameId = gameID;
     }
 
-    public void handleDbEdit(final EditorChoicePanel additionPanel) {
+    /**
+     * Changes game data depending on Edit enum choice for each edit window.
+     * @param editPanel
+     */
+    public void handleDbEdit(final EditorChoicePanel editPanel) {
 
-        additionPanel.setFormListener(new FormListener() {
+        editPanel.setFormListener(new FormListener() {
 
+            /**
+             * Appends text to GameTextPanel if incorrect entry.
+             */
             public void incorrectEntryMessage() {
                 textPanel.appendText("|------------------------------------------------------|"
                         + "\n| ERROR - INCORRECT ENTRY MADE  |"
                         + "\n|------------------------------------------------------|\n");
             }
-
+            /**
+             * Sources data from entered JTextFields and changes data in database depending on given locatoin in
+             * LoadingFormEvent.
+             * @param data data sourced from EditChoicePanel.
+             */
             public void formDatabaseEntry(final LoadingFormEvent data) {
-
+                //All entries held. from JTextfields.
                 Integer firstFieldEntry;
                 Integer secondFieldEntry;
                 Boolean newSquareType;
-                Boolean secondSquareMissing = true;
 
+                //Confirms if data sourced is part of existing game (applicable to snakes/ladders/boosts).
                 if (data.getGameID() != null) {
-
+                    //Grabs data from both fields.
                     firstFieldEntry = data.getFirstEntry();
                     secondFieldEntry = data.getSecondEntry();
-
+                    //Boosts & players do not have a second field - condition covered here.
                     if (secondFieldEntry == null) {
-                        newSquareType = additionPanel.entryValidation(additionPanel.getAdditionChoice(),
+                        newSquareType = editPanel.entryValidation(editPanel.getAdditionChoice(),
                                 firstFieldEntry);
                     } else {
-                        newSquareType = additionPanel.entryValidation(additionPanel.getAdditionChoice(),
+                        newSquareType = editPanel.entryValidation(editPanel.getAdditionChoice(),
                                 firstFieldEntry, secondFieldEntry);
                     }
-
+                    //Data added depending on enum given in FormEvent object.
                     if (newSquareType && data.getEditChoice() == Edit.SNAKE) {
-//                                EditDataDBManager.editSaveData(data);
+                        //Confirmation of addition passed to GameTextPanel's JTextArea.
                         appendTextToPanel("Snake Head changed to position " + firstFieldEntry
                                 + "\n" + "Snake Tail changed to position " + secondFieldEntry + "\n");
+                        //Static method to add data depending on entry.
                         EditDataDBManager.editSnakeOrLadderData(data);
                         selectWindow("newedit");
 
@@ -424,7 +480,6 @@ public class GUIFrame extends JFrame {
                         EditDataDBManager.editSnakeOrLadderData(data);
                         selectWindow("newedit");
 
-                        System.out.println("JDBC LADDER TO GO HERE");
                     } else if (newSquareType && data.getEditChoice() == Edit.BOOST) {
                         appendTextToPanel("Boost square changed to position " + firstFieldEntry + "\n");
                         EditDataDBManager.editBoostData(data);
@@ -433,7 +488,7 @@ public class GUIFrame extends JFrame {
                     } else {
                         incorrectEntryMessage();
                     }
-
+                //Confirms if data passed into object contains a playername string, confirming player name change.
                 } else if (data.getPlayerNameEntry() == null) {
 
                     firstFieldEntry = data.getFirstEntry();
@@ -445,7 +500,7 @@ public class GUIFrame extends JFrame {
                     EditDataDBManager.editDiceData(data);
                     selectWindow("newedit");
 
-
+                //Object can only be a dice if other conditions not met.
                 } else {
                     String playerFieldEntry = data.getPlayerNameEntry();
                     appendTextToPanel("player changed to name: " + playerFieldEntry + "\n");
@@ -456,77 +511,3 @@ public class GUIFrame extends JFrame {
         });
     }
 }
-//    }
-
-//    public JPanel getCurrentPanel() {
-//        return currentPanel;
-//    }
-
-//        label = new JLabel("Number of clicks innit: 0");
-
-
-//        JPanel panel = new JPanel();
-//        panel.
-//        panel.setLayout(new BorderLayout(0, 1));
-//        panel.add(button);
-//        panel.add(label);
-
-//        add(panel, BorderLayout.CENTER);
-
-
-//    public GUIFrame callGUI() {
-//        return this;
-//    }
-
-
-//    @Override
-//    public void actionPerformed(final ActionEvent e) {
-//        counter++;
-//        textArea.setText("Number of clicks innit: " + counter);
-//    }
-
-//    private JMenuBar createMenuBar() {
-//        JMenuBar gameMenu = new JMenuBar();
-//
-//        JMenu fileMenu = new JMenu("File");
-//        JMenuItem mainMenu = new JMenuItem("Main Menu");
-//        mainMenu.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(final ActionEvent e) {
-//                selectWindow("menu");
-//            }
-//        });
-//        JMenuItem exportData = new JMenuItem("Load Game...");
-//        JMenuItem importData = new JMenuItem("Save Game...");
-//        JMenuItem exitData = new JMenuItem("Exit Program");
-//        fileMenu.add("Main Menu");
-//        fileMenu.addSeparator();
-//        fileMenu.add(exportData);
-//        fileMenu.add(importData);
-//        fileMenu.addSeparator();
-//        fileMenu.add(exitData);
-//
-//
-//        JMenu windowMenu = new JMenu("Window");
-//
-//        JMenu showMenu = new JMenu("Navigate to");
-//        JMenuItem showEditSnakes = new JMenuItem("Edit Snakes");
-//        JMenuItem showEditLadders = new JMenuItem("Edit Ladders");
-//        JMenuItem showEditBoosts = new JMenuItem("Edit Boosts");
-//        JMenuItem showEditPlayers = new JMenuItem("Edit Players");
-//        JMenuItem showEditDice = new JMenuItem("Edit Dice");
-//
-//        showMenu.add(showEditSnakes);
-//        showMenu.add(showEditLadders);
-//        showMenu.add(showEditBoosts);
-//        showMenu.add(showEditPlayers);
-//        showMenu.add(showEditDice);
-//        windowMenu.add(showMenu);
-//
-//        gameMenu.add(fileMenu);
-//        gameMenu.add(windowMenu);
-//
-//
-//        return gameMenu;
-//
-//    }

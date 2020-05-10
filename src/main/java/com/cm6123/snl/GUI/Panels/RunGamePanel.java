@@ -190,11 +190,14 @@ public class RunGamePanel extends SidePanel {
             @Override
             public void actionPerformed(final ActionEvent e) {
 
-                SaveDataDBManager saveGame = new SaveDataDBManager(currentGame, dice, gridSize,
-                        allTestSpecials, loaded, gameID);
-                Connection connect = GameDBUtils.connectGuiToDatabase();
-                saveGame.saveCurrentGame(connect);
-                saveGameButton.setEnabled(false);
+                if (!currentGame.isGameOver()) {
+
+                    SaveDataDBManager saveGame = new SaveDataDBManager(currentGame, dice, gridSize,
+                            allTestSpecials, loaded, gameID);
+                    Connection connect = GameDBUtils.connectGuiToDatabase();
+                    saveGame.saveCurrentGame(connect);
+                    saveGameButton.setEnabled(false);
+                }
             }
         });
 
@@ -396,7 +399,9 @@ public class RunGamePanel extends SidePanel {
                 if (player.toString() == currentPlayer.getColour().toString()) {
                     gamePlayerList.setSelectedIndex(i);
                     gamePlayerList.setSelectionBackground(Color.ORANGE);
+                    restartGameButton.setEnabled(false);
                     newGameButton.setEnabled(true);
+                    saveGameButton.setEnabled(false);
                     gameGui.appendTextToPanel(currentPlayer.getColour() + " player ends their turn at "
                             + "position " + currentPlayer.getPosition().get() + "\n\n");
                     gameGui.appendTextToPanel(currentPlayer.getColour() + " player wins the "
@@ -409,7 +414,7 @@ public class RunGamePanel extends SidePanel {
             SaveDataDBManager markGameEnded = new SaveDataDBManager(gameID);
 
 
-            if (gameGui.getDatabaseConnection()) {
+            if (gameGui.getDatabaseConnection() && gameGui.getLoaded()) {
                 markGameEnded.markGameAsEnded(connect);
             }
 
