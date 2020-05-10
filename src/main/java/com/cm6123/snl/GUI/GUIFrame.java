@@ -289,7 +289,7 @@ public class GUIFrame extends JFrame {
                 } catch (IllegalStateException error) {
                     //GameBuilder errors reload the loadGamePanel and updates the error label.
                     selectWindow("loadgame");
-                    System.out.println(error);
+
                     loadGamePanel.setErrorLabel("There is an illegal square clash in the file. "
                             + "Please amend using editor tool.");
                 } catch (IndexOutOfBoundsException oob) {
