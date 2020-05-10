@@ -1,39 +1,55 @@
 package com.cm6123.snl.GUI;
 
-import com.cm6123.snl.gameDB.LoadDataDBManager;
-
+/**
+ * Object created that holds data from database when loaded onto EditChoicePanel.
+ */
 public class EditCategory {
-        private Integer jlistID;
-        private Integer gameID;
-        private LoadDataDBManager data;
-        private Edit editChoice;
+    /**
+     * Holds position of row inside database table.
+     */
+    private Integer jlistID;
+    /**
+     * Game that Edit choice refers to.
+     */
+    private Integer gameID;
+    /**
+     * What type of edit is being made.
+     */
+    private Edit editChoice;
 
-        public EditCategory(final LoadDataDBManager loader, final Integer id, final Edit choice, final Integer game ) {
-            this.jlistID = id;
-            this.gameID = game;
-            this.data = loader;
-            this.editChoice = choice;
-
-        }
-        public EditCategory(final LoadDataDBManager loader, final Integer id, final Edit choice) {
-            this.jlistID = id;
-            this.editChoice = choice;
-            this.data = loader;
-//            this.text = newText;
-
-//            if (editChoice == Edit.DIE) {
-//                printDiceData();
-            }
-
-        public int getListID() {
-            return jlistID;
-        }
-        public Integer getGameID() { return gameID; }
-
-
-//        public String printDiceData() {
-//            String addEelement =
-//
-//            return addEelement;
-//        }
+    /**
+     * Constructor handles any choice that must be linked to a specific game (i.e. snake/ladder/boost).
+     * @param id - ID of specific row inside database table.
+     * @param choice - Edit choice enum.
+     * @param game - Which game inside database does this object relate to?
+     */
+    public EditCategory(final Integer id, final Edit choice, final Integer game ) {
+        this.jlistID = id;
+        this.gameID = game;
+        this.editChoice = choice;
+    }
+    /**
+     * Consutrctor handles choices that don't require any specific game (dice/player)
+     * @param id - ID of specific row inside database table.
+     * @param choice - Edit choice enum.
+     */
+    public EditCategory(final Integer id, final Edit choice) {
+        this.jlistID = id;
+        this.editChoice = choice;
+    }
+    /**
+     * Getter for finding table row position.
+     * @return jlistID - table ID.
+     */
+    public int getListID() {
+        return jlistID;
+    }
+    /**
+     * Getter for finding the edit choice's related game.
+     * @return gameID - related game.
+     */
+    public Integer getGameID() {
+        return gameID;
+    }
 }
+

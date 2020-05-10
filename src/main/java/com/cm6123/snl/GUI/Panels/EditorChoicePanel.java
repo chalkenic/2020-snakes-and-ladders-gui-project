@@ -311,7 +311,8 @@ public class EditorChoicePanel extends SidePanel {
             System.out.println(dataSize);
 
             for (Integer i = 0; i < dbLoader.getSelectionSize(); i++) {
-                EditCategory snake = new EditCategory(dbLoader, i, choice, dbLoader.getGameInclusionID(i));
+                EditCategory snake = new EditCategory(i, choice, dbLoader.getGameInclusionID(i));
+//                EditCategory snake = new EditCategory(dbLoader, i, choice, dbLoader.getGameInclusionID(i));
                 System.out.println(dbLoader.getTableID(dataSize - i));
                 jlist.addElement("|   ID: " + dbLoader.getTableID(i)
                         + "   |   save file: " + dbLoader.getGameInclusionID(i)
@@ -326,7 +327,8 @@ public class EditorChoicePanel extends SidePanel {
             Integer dataSize = dbLoader.getSelectionSize() - 1;
 
             for (Integer i = 0; i < dbLoader.getSelectionSize(); i++) {
-                EditCategory ladder = new EditCategory(dbLoader, i, choice, dbLoader.getGameInclusionID(i));
+                EditCategory ladder = new EditCategory(i, choice, dbLoader.getGameInclusionID(i));
+//                EditCategory ladder = new EditCategory(dbLoader, i, choice, dbLoader.getGameInclusionID(i));
                 jlist.addElement("|   ID: " + dbLoader.getTableID(dataSize - i)
                         + "   |   save file: " + dbLoader.getGameInclusionID(i)
                         + "   |   foot: " + dbLoader.getTotalFirstEntries(i)
@@ -341,7 +343,8 @@ public class EditorChoicePanel extends SidePanel {
             Integer dataSize = dbLoader.getSelectionSize() - 1;
 
             for (Integer i = 0; i < dbLoader.getSelectionSize(); i++) {
-                EditCategory boost = new EditCategory(dbLoader, i, choice, dbLoader.getGameInclusionID(i));
+                EditCategory boost = new EditCategory(i, choice, dbLoader.getGameInclusionID(i));
+//                EditCategory boost = new EditCategory(dbLoader, i, choice, dbLoader.getGameInclusionID(i));
                 jlist.addElement("|   ID: " + dbLoader.getTableID(dataSize - i)
                         + "   |   save file: " + dbLoader.getGameInclusionID(i)
                         + "   |   location: " + dbLoader.getTotalFirstEntries(i)
@@ -355,7 +358,8 @@ public class EditorChoicePanel extends SidePanel {
             Integer dataSize = dbLoader.getSelectionSize() - 1;
 
             for (Integer i = 0; i < dbLoader.getSelectionSize(); i++) {
-                EditCategory player = new EditCategory(dbLoader, i,  choice);
+                EditCategory player = new EditCategory(i,  choice);
+//                EditCategory player = new EditCategory(dbLoader, i,  choice);
                 jlist.addElement("|     ID: " + dbLoader.getTableID(i)
                         + "     |      player: " + dbLoader.getPlayers(i)
                         + "    ");
@@ -369,7 +373,8 @@ public class EditorChoicePanel extends SidePanel {
             Integer dataSize = dbLoader.getSelectionSize() - 1;
 
             for (Integer i = 0; i < dbLoader.getSelectionSize(); i++) {
-                EditCategory dice = new EditCategory(dbLoader, i, choice);
+                EditCategory dice = new EditCategory(i, choice);
+//                EditCategory dice = new EditCategory(dbLoader, i, choice);
                 jlist.add(0, "|   ID: " + dbLoader.getTableID(dataSize - i)
                         + "   |   count: " + dbLoader.getTotalFirstEntries(dataSize - i)
                         + " --- faces: " + dbLoader.getTotalSecondEntries(dataSize - i)
