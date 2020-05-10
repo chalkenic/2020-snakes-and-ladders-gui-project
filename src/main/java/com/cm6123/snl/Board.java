@@ -310,15 +310,24 @@ public final class Board {
     return boostList;
   }
 
+  /**
+   * Locate where special square will lead player when landing on initial square location.
+   * @param choice starting square.
+   * @return destination of choice if landed upon.
+   */
   public Integer getSquareDestination(final Integer choice) {
     Integer squareChoice = null;
     for (Square s : squares) {
+      //Cycles through squares and selects one matching against parameter.
       if (s.getNumber() == choice) {
         squareChoice = squares.get(choice).destination().getNumber();
       }
     } return squareChoice;
   }
-
+  /**
+   * Get the winning square on board.
+   * @return the penultimate (winning) square.
+   */
   public Integer getWinningSquare() {
     return squares.get(size() - 1).getNumber();
   }

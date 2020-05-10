@@ -10,7 +10,6 @@ import com.cm6123.snl.gameDB.EditDataDBManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.TreeMap;
 
 /**
@@ -378,7 +377,7 @@ public class GUIFrame extends JFrame {
 
     /**
      * Changes current game file held within the JFrame to the parsed parameter.
-     * @param gameFile
+     * @param gameFile - current gamefile saved to the JFrame.
      */
     public void setDbGameFile(final DBGameFile gameFile) {
         this.dbGameFile = gameFile;
@@ -418,8 +417,8 @@ public class GUIFrame extends JFrame {
     }
 
     /**
-     * Sets current ID to gameID from database, ensuring the link never breaks while in use.
-     * @param gameID
+     * Sets current ID to gameID from loaded database file, ensuring the link never breaks while in current use.
+     * @param gameID - parsed ID.
      */
     public void setID(final Integer gameID) {
         loadedGameId = gameID;
@@ -427,7 +426,7 @@ public class GUIFrame extends JFrame {
 
     /**
      * Changes game data depending on Edit enum choice for each edit window.
-     * @param editPanel
+     * @param editPanel - Panel holding current data.
      */
     public void handleDbEdit(final EditorChoicePanel editPanel) {
 

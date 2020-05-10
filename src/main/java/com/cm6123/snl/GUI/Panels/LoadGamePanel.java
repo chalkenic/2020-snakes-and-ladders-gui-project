@@ -106,8 +106,6 @@ public class LoadGamePanel extends JPanel {
             }
 
             public void formDatabaseEntry(final LoadingFormEvent data) {
-//                        if (data.getLoadGameEntry() != null) {
-                Integer loadGameEntry = data.getLoadGameEntry();
             }
 //                    }
         });

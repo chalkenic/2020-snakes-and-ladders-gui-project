@@ -7,8 +7,8 @@ import java.util.EventListener;
  */
 public interface FormListener extends EventListener {
      /**
-      * Method to be used for adding data from forms into database.
-      * @param data
+      * Method used for adding data from forms into database.
+      * @param data - current dataset object saved with data from panel.
       */
      void formDatabaseEntry(LoadingFormEvent data);
 

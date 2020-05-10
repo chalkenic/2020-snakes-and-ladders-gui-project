@@ -23,13 +23,13 @@ public class EditCategory {
      * @param choice - Edit choice enum.
      * @param game - Which game inside database does this object relate to?
      */
-    public EditCategory(final Integer id, final Edit choice, final Integer game ) {
+    public EditCategory(final Integer id, final Edit choice, final Integer game) {
         this.jlistID = id;
         this.gameID = game;
         this.editChoice = choice;
     }
     /**
-     * Consutrctor handles choices that don't require any specific game (dice/player)
+     * Consutrctor handles choices that don't require any specific game (dice/player).
      * @param id - ID of specific row inside database table.
      * @param choice - Edit choice enum.
      */
