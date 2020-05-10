@@ -7,20 +7,25 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class GameDBUtils {
+/**
+ * Static utility class used to call database with default database name.
+ */
+public final class GameDBUtils {
+
+    private GameDBUtils() {
+    }
     /**
      * Establishes database connection.
-     * @param databaseName name of database
-     * @return connection properties.
+     * @return database connection link.
      */
     public static Connection connectGuiToDatabase() {
 
         String databaseName = "snakesAndLaddersDatabase";
         Connection connection = null;
         Properties properties = new Properties();
-
+        //Defines path for user to access database.
         String path = System.getProperty("user.dir");
-
+        //Specfic location of database data.
         path += "/src/database.properties";
 
         try (FileInputStream file = new FileInputStream(path)) {

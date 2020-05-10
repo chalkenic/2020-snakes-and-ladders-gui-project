@@ -236,7 +236,7 @@ public class DBGameFile {
 
     /**
      * Grabs all boosts (if using) depending on gameID sourced from prior method.
-     * @param connect
+     * @param connect - database connection link.
      */
     private void addBoostData(final Connection connect) {
         ResultSet result = null;

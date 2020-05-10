@@ -21,7 +21,7 @@ import java.util.TreeMap;
 
 public class RunGamePanel extends SidePanel {
 
-    private final Boolean loaded;
+    private Boolean loaded;
     private GUIFrame gameGui;
     private Game currentGame;
     private JList gamePlayerList;
@@ -68,6 +68,7 @@ public class RunGamePanel extends SidePanel {
         this.allTestSpecials = specialList;
         this.loaded = isLoaded;
         this.gameID = id;
+        System.out.println(gameID);
 
 //        addLoadedPlayers();
 //        addLoadedPlayerPositions();
@@ -197,6 +198,8 @@ public class RunGamePanel extends SidePanel {
                     Connection connect = GameDBUtils.connectGuiToDatabase();
                     saveGame.saveCurrentGame(connect);
                     saveGameButton.setEnabled(false);
+                    gameID = saveGame.getGameID();
+                    loaded = true;
                 }
             }
         });
