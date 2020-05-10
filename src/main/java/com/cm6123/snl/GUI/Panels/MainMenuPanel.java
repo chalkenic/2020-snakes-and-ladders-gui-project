@@ -1,7 +1,7 @@
 package com.cm6123.snl.GUI.Panels;
 
 import com.cm6123.snl.GUI.*;
-import com.cm6123.snl.gameDB.GameDBManager;
+import com.cm6123.snl.gameDB.CreateDBManager;
 import com.cm6123.snl.gameDB.GameDBUtils;
 
 import javax.swing.*;
@@ -73,9 +73,9 @@ public class MainMenuPanel extends JPanel {
         loadDatabaseButton.addActionListener(new ActionListener() {
             public void actionPerformed(final ActionEvent a) {
 
-                GameDBManager newDatabase = new GameDBManager();
+//                CreateDBManager newDatabase = new CreateDBManager();
                 Connection connect = GameDBUtils.connectGuiToDatabase();
-                newDatabase.createDatabase(connect);
+                CreateDBManager.createDatabase(connect);
                 enableFrontPage();
                 gameGui.getGameMenu().enableDatabaseNavigation();
                 //                gridStructure.gridy = 4;
