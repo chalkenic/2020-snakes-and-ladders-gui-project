@@ -9,6 +9,9 @@
     <suppress checks = "MagicNumber"
               files = "com[\\/]cm6123[\\/]snl[\\/]GUI[\\/]"/>
 
+    <suppress files = "com[\\/]cm6123[\\/]snl[\\/]GUI[\\/]"
+              checks = "MethodLength" />
+
     <suppress files = "com[\\/]cm6123[\\/]snl[\\/]gameDB[\\/]"
               checks = "MagicNumber"/>
 

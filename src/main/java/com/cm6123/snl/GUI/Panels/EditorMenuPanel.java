@@ -170,7 +170,7 @@ public class EditorMenuPanel extends SidePanel {
             return this;
         }
 
-        public Edit getAdditionChoice() {
+        public Edit getEditChoice() {
             return additionChoice;
         }
 

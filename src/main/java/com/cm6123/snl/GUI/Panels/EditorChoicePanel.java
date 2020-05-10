@@ -316,8 +316,8 @@ public class EditorChoicePanel extends SidePanel {
                 jlist.addElement("|   ID: " + dbLoader.getTableID(i)
                         + "   |   save file: " + dbLoader.getGameInclusionID(i)
                         + "   |   head: " + dbLoader.getTotalFirstEntries(i)
-                        + "   |   tail: " + dbLoader.getTotalSecondEntries(i)
-                        + "   |");
+                        + "   -   tail: " + dbLoader.getTotalSecondEntries(i)
+                        + "    ");
                 listEntries.put(i, snake);
             }
         } else if (choice == Edit.LADDER) {
@@ -330,8 +330,8 @@ public class EditorChoicePanel extends SidePanel {
                 jlist.addElement("|   ID: " + dbLoader.getTableID(dataSize - i)
                         + "   |   save file: " + dbLoader.getGameInclusionID(i)
                         + "   |   foot: " + dbLoader.getTotalFirstEntries(i)
-                        + "   |   top: " + dbLoader.getTotalSecondEntries(i)
-                        + "   |");
+                        + "   -   top: " + dbLoader.getTotalSecondEntries(i)
+                        + "    ");
                 listEntries.put(i, ladder);
             }
 
@@ -345,7 +345,7 @@ public class EditorChoicePanel extends SidePanel {
                 jlist.addElement("|   ID: " + dbLoader.getTableID(dataSize - i)
                         + "   |   save file: " + dbLoader.getGameInclusionID(i)
                         + "   |   location: " + dbLoader.getTotalFirstEntries(i)
-                        + "   |");
+                        + "    ");
                 listEntries.put(i, boost);
             }
 
@@ -358,7 +358,7 @@ public class EditorChoicePanel extends SidePanel {
                 EditCategory player = new EditCategory(dbLoader, i,  choice);
                 jlist.addElement("|     ID: " + dbLoader.getTableID(i)
                         + "     |      player: " + dbLoader.getPlayers(i)
-                        + "   |");
+                        + "    ");
                 listEntries.put(i, player);
                 System.out.println("player id: " + player.getListID());
             }
@@ -372,8 +372,8 @@ public class EditorChoicePanel extends SidePanel {
                 EditCategory dice = new EditCategory(dbLoader, i, choice);
                 jlist.add(0, "|   ID: " + dbLoader.getTableID(dataSize - i)
                         + "   |   count: " + dbLoader.getTotalFirstEntries(dataSize - i)
-                        + "   |   faces: " + dbLoader.getTotalSecondEntries(dataSize - i)
-                        + "   |");
+                        + " --- faces: " + dbLoader.getTotalSecondEntries(dataSize - i)
+                        + "    ");
                 listEntries.put(i, dice);
                 System.out.println("dice id: " + dice.getListID());
 

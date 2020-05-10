@@ -87,6 +87,7 @@ public class LoadGamePanel extends JPanel {
                     //                    formListener.formDatabaseEntry(loadGameEvent);
                     CreateGame loadedGame = new CreateGame(gameGui);
                     gameGui.setCreatedGame(loadedGame.getLoadedGameData(loadGameChoice));
+                    gameGui.setDbGameFile(loadGameChoice);
                     gameGui.setID(loadedGame.getGameID());
                     gameGui.selectWindow("runloadedgame");
                 }
