@@ -2,7 +2,6 @@ package com.cm6123.snl.GUI.Panels;
 
 import com.cm6123.snl.GUI.*;
 import com.cm6123.snl.GUI.PanelBackgroundLogic.CreateGame;
-import com.cm6123.snl.Game;
 import com.cm6123.snl.gameDB.DBGameFile;
 import com.cm6123.snl.gameDB.GameDBUtils;
 import com.cm6123.snl.gameDB.LoadDataDBManager;
@@ -81,7 +80,7 @@ public class LoadGamePanel extends JPanel {
                 LoadingFormEvent loadGameEvent = null;
 
                 DBGameFile loadGameChoice = (DBGameFile) gameList.getSelectedValue();
-                //                loadGameEvent = new LoadingFormEvent(this, loadGameChoice.getId());
+                //                loadGameEvent = new LoadingFormEvent(this, loadGameChoice.getGameID());
 
                 if (formListener != null) {
                     //                    formListener.formDatabaseEntry(loadGameEvent);
@@ -106,6 +105,8 @@ public class LoadGamePanel extends JPanel {
             }
 
             public void formDatabaseEntry(final LoadingFormEvent data) {
+//                        if (data.getLoadGameEntry() != null) {
+//                Integer loadGameEntry = data.getLoadGameEntry();
             }
 //                    }
         });
@@ -170,7 +171,7 @@ public class LoadGamePanel extends JPanel {
         System.out.println("total games: " + totalGames);
         for (Integer i = 1; i < (totalGames + 1); i++) {
             DBGameFile newFile = new DBGameFile(i, "File " + i);
-            System.out.println("Game: " + newFile.getId());
+            System.out.println("Game: " + newFile.getGameID());
             if (!newFile.getGameOver()) {
                 savedGames.addElement(newFile);
             }

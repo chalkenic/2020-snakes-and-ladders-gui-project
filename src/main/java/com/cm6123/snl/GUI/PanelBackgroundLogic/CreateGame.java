@@ -235,7 +235,7 @@ public class CreateGame {
 
     public CreateGame getLoadedGameData(final DBGameFile loadGameChoice) {
         this.gamefile = loadGameChoice;
-        this.gameID = loadGameChoice.getId();
+        this.gameID = loadGameChoice.getGameID();
         this.playerTurn = loadGameChoice.getGamePlayerTurn();
         snakes = new Integer[loadGameChoice.getGameSnakes().size()];
         ladders = new Integer[loadGameChoice.getGameLadders().size()];
@@ -289,7 +289,7 @@ public class CreateGame {
             gameGui.appendTextToPanel("No ladders have been added into game.\n");
         }
 
-        this.recordGame = loadGameChoice.getRecordGameFeature();
+//        this.recordGame = loadGameChoice.getRecordGameFeature();
         this.winningSquareOnlyFeature = loadGameChoice.getWinningSquareFeature();
 
         this.boardSize = loadGameChoice.getBoardSize();
