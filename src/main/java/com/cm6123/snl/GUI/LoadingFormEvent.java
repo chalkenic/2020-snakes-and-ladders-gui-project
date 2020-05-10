@@ -2,27 +2,27 @@ package com.cm6123.snl.GUI;
 
 import java.util.EventObject;
 
+/**
+ * Class handles all loading form entries for editor menu & creates an object to store the data,
+ */
 public class LoadingFormEvent extends EventObject {
 
-
-
+    /**
+     * Used for holding
+     */
     private Integer loadGameEntry;
     private Integer firstEntry;
     private Integer secondEntry;
-//    private Integer boostSquare;
     private String playerNameEntry;
     private int boardCategory;
     private Edit editChoice;
 
 
-
-
     private Integer gameID;
     private Integer databaseID;
-
     /**
      * Constructor handles player edit entries (no gameID or number entries required by object).
-     * @param source - eventObject,
+     * @param source - object where event initially occurred.
      * @param editPlayerEntry - player name,
      * @param edit - confirmation of addition choice to GUI frame.
      * @param dbID - indication in database as to where to edit on table. script not 0 indexed - appended by 1.
@@ -33,16 +33,6 @@ public class LoadingFormEvent extends EventObject {
         this.playerNameEntry = editPlayerEntry;
         this.editChoice = edit;
     }
-//     Unsure of this purpose!
-//    public LoadingFormEvent(final Object source) {
-//        super(source);
-//    }
-
-    public LoadingFormEvent(final Object source, final Integer loadGameChoice) {
-        super(source);
-        this.loadGameEntry = loadGameChoice;
-    }
-
     /**
      * Constructor handles boost entries - no second entry required.
      * @param source eventObject.

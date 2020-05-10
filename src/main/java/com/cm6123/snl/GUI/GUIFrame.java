@@ -261,31 +261,11 @@ public class GUIFrame extends JFrame {
                 revalidate();
                 loadGamePanel = new LoadGamePanel(this);
 
-//                panelContainer.add(creationMenuPanel.createCreationPanel(), "2");
                 swapPanel(this,
                         currentPanel,
                         loadGamePanel.createloadGamePanel(),
                         BorderLayout.CENTER);
                 currentPanel = loadGamePanel;
-//                cardLayout.show(panelContainer, "2");
-
-                loadGamePanel.setFormListener(new FormListener() {
-
-                    public void appendTextToPanel(final String text) {
-                        textPanel.appendText(text);
-                    }
-
-                    public void incorrectEntryMessage() {
-                        textPanel.appendText("Cannot find file!\n");
-                    }
-
-                    public void formDatabaseEntry(final LoadingFormEvent data) {
-                        if (data.getLoadGameEntry() != null) {
-                            Integer loadGameEntry = data.getLoadGameEntry();
-                            appendTextToPanel("loaded game " + loadGameEntry + "!\n");
-                        }
-                    }
-                });
 
                 break;
 

@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Class covers JMenuBar for navigation at top of window.
+ * Class covers JMenuBar for navigation at top of window. ACtionListener must be implemented in code.
  */
 public class MenuBar extends JMenu implements ActionListener {
 
@@ -123,11 +123,9 @@ public class MenuBar extends JMenu implements ActionListener {
         } else if (click.getSource().equals(loadGame)) {
             gameGui.selectWindow("loadgame"); //Redirects to load menu via JFrame method.
 
-
         } else if (click.getSource().equals(exitGame)) {
             System.exit(0); //Closes game and returns successful.
         }
-
     }
 
     /**

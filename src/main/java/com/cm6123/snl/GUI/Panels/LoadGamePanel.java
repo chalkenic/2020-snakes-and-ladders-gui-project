@@ -2,6 +2,7 @@ package com.cm6123.snl.GUI.Panels;
 
 import com.cm6123.snl.GUI.*;
 import com.cm6123.snl.GUI.PanelBackgroundLogic.CreateGame;
+import com.cm6123.snl.Game;
 import com.cm6123.snl.gameDB.DBGameFile;
 import com.cm6123.snl.gameDB.GameDBUtils;
 import com.cm6123.snl.gameDB.LoadDataDBManager;
@@ -91,6 +92,23 @@ public class LoadGamePanel extends JPanel {
                 }
 
             }
+        });
+
+        this.setFormListener(new FormListener() {
+
+            public void appendTextToPanel(final String text) {
+                gameGui.appendTextToPanel(text);
+            }
+
+            public void incorrectEntryMessage() {
+                gameGui.appendTextToPanel("Cannot find file!\n");
+            }
+
+            public void formDatabaseEntry(final LoadingFormEvent data) {
+//                        if (data.getLoadGameEntry() != null) {
+                Integer loadGameEntry = data.getLoadGameEntry();
+            }
+//                    }
         });
 
     }
