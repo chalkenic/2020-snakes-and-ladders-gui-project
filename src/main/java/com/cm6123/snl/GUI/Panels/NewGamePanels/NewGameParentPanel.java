@@ -21,7 +21,6 @@ public class NewGameParentPanel extends JPanel {
     private JLabel boostOnlabel;
     private JLabel boostChoiceLabel;
     private JLabel winningSquareOnlyOnLabel;
-    private JLabel recordGameLabel;
     private JLabel createGameLabel;
     private JLabel defaultGameLabel;
 
@@ -59,7 +58,6 @@ public class NewGameParentPanel extends JPanel {
         boostOnlabel = new JLabel("Enable Boost Squares: ");
         boostChoiceLabel = new JLabel("Choose boost squares to use: ");
         winningSquareOnlyOnLabel = new JLabel("Enable Winning Square Only: ");
-        recordGameLabel = new JLabel("Record all game player moves.");
         createGameLabel = new JLabel("Create game with parameters");
         defaultGameLabel = new JLabel("Create a default game with set parameters");
 
