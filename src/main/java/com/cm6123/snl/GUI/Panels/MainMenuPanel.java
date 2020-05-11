@@ -154,6 +154,7 @@ public class MainMenuPanel extends JPanel implements ActionListener {
             Connection initialConnection = GameDBUtils.connectGuiToDatabase("");
             System.out.println(initialConnection);
             CreateDBManager.createDatabase(initialConnection, ConstantDatabaseName.DATABASENAME);
+            System.out.println(ConstantDatabaseName.DATABASENAME);
             gameGui.getGameMenu().enableDatabaseNavigation();
             enableFrontPage();
 
