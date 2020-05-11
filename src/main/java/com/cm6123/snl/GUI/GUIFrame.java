@@ -196,7 +196,7 @@ public class GUIFrame extends JFrame {
                 } catch (IllegalStateException e) {
                     //Catches square classes from gamebuilder object instantiation inside customGame.BuildGame method.
                     selectWindow("newgame");
-                    newGamePanel.getSouthPanel().setErrorLabel("Illegal square entry! Please try again.");
+                    newGamePanel.getSouthPanel().setErrorLabel("Illegal field entry! Please try again.");
                 }
                 break;
             //Reloads RunGamePanel with identical Game data as a new object.

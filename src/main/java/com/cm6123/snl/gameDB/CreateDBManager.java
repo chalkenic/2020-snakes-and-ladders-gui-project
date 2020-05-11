@@ -22,14 +22,16 @@ public final class CreateDBManager {
     /* Available at:
     https://github.com/BenoitDuffez/ScriptRunner?fbclid=IwAR2BSaTAjhJQD8YvsFhf3GIepreDGU8SWtaqDNKhtmtcOmjRXyrNu12Ykks
      */
+            //ScriptRunner object created ready for intake of sql file path.
             ScriptRunner runner = new ScriptRunner(connection, false, false);
-            System.out.println(runner);
+            //Path defined.
             String sqlPath = (System.getProperty("user.dir"));
             sqlPath += "/src/c1936922_database.sql";
-            System.out.println(sqlPath);
+            //File reader created for scanning character stream of file path.
             Reader sqlReader = new BufferedReader(new FileReader(sqlPath));
-            System.out.println(sqlReader);
+            //Script is parsed through & database created at location of parameter.
             runner.runScript(new BufferedReader((sqlReader)));
+            sqlReader.close();
 
 
         } catch (SQLException e) {

@@ -137,7 +137,7 @@ public class CreateGame {
         //Ensures an odd number of snakes cannot be entered. indicates to JFrame the below error has occurred.
         if (westPanel.getSnakeChoiceField().length() > 0 && snakes.length % 2 != 0) {
 
-            throw new IllegalStateException("Incorrect Snake Entry - missing a tail!");
+            throw new IllegalStateException("Incorrect snake entry - missing a tail!");
 
         }
         //Identical to snakeChoiceField addition.
@@ -152,11 +152,15 @@ public class CreateGame {
             }
         }
         if (westPanel.getLadderChoiceField().length() > 0 && ladders.length % 2 != 0) {
-            throw new IllegalStateException("Incorrect Ladder Entry - missing a top!");
+            throw new IllegalStateException("Incorrect ladder entry - missing a top!");
         }
         //Checks if player count entered. null/incorrect value defaults entry to 2.
         try {
             playerCount = westPanel.getPlayerCountField();
+            //Player count must be between 2 and 5.
+            if (playerCount < 2 || playerCount > 5) {
+                throw new IllegalStateException(("incorrect player entry - must be between 2 and 5!"));
+            }
         } catch (NumberFormatException pc) {
             noPlayersGiven = true;
             playerCount = 2;
@@ -217,7 +221,7 @@ public class CreateGame {
     public Game buildGame() {
         //GameTextPanel messages passed for player to check if additions made via GUI & changes made.
         if (noPlayersGiven) {
-            gameGui.appendTextToPanel("No player count entered. Player count set to 2.\n");
+            gameGui.appendTextToPanel("No player count number entered. Player count set to 2.\n");
         }
         if (snakes.length == 1) {
             gameGui.appendTextToPanel("No snakes have been added into game.\n");
