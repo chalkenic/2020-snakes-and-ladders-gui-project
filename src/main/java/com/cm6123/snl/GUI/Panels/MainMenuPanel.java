@@ -84,10 +84,9 @@ public class MainMenuPanel extends JPanel implements ActionListener {
         //Places Panel in middle of window.
         gameGui.add(this, BorderLayout.CENTER);
     }
-
     /**
      * Places all JUNit objects onto panel at define dlocations.
-     * @return
+     * @return this - the Panel to be inserted onto JFrame.
      */
     public JPanel createMenuPanel() {
 

@@ -102,7 +102,6 @@ public class DBGameFile {
         }
         try {
             if (connect != null) {
-                System.out.println("Closing database link.");
                 connect.close();
             }
 

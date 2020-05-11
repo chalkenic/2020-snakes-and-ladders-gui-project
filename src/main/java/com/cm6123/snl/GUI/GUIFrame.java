@@ -217,12 +217,14 @@ public class GUIFrame extends JFrame {
                 if (customGame == null) { //repeat game will intake a game with default values if not custom.
                     repeatGridChoice = 5;
                     repeatSpecials = addTestDefaultValues();
-                    Game loadGame = new GameBuilder()
+                    Game repeatGame = new GameBuilder()
                             .withBoardSize(repeatGridChoice)
                             .withPlayers(2)
                             .withSnakes(14, 5, 20, 11)
                             .withLadders(3, 12, 13, 17)
                             .build();
+                    duplicateGamePanel = new RunGamePanel(this, repeatGame, diceSet,
+                            repeatGridChoice, repeatSpecials, loaded, loadedGameId);
                 } else {
                     try { //Validation for if a custom game is available to use.
                         try { //Attempts to grab a custom game made from panel.
@@ -239,9 +241,10 @@ public class GUIFrame extends JFrame {
                     } catch (NullPointerException n) {
                         n.printStackTrace();
                     }
+                    duplicateGamePanel = new RunGamePanel(this, newGame, diceSet, repeatGridChoice, repeatSpecials,
+                            loaded, loadedGameId);
                 }
-                duplicateGamePanel = new RunGamePanel(this, newGame, diceSet, repeatGridChoice, repeatSpecials,
-                        loaded, loadedGameId);
+
                 swapPanel(this, currentPanel, duplicateGamePanel.createRunGamePanel(), BorderLayout.WEST);
                 //Swaps current panel to the duplicate game.
                 currentPanel = duplicateGamePanel;
@@ -316,7 +319,7 @@ public class GUIFrame extends JFrame {
                 //labels, panels & data appended to panel based upon edit choice.
                 Edit newAdditionChoice = editorMenuPanel.getEditChoice();
                 //Confirms to panel the choice of edit.
-                EditorChoicePanel editPanel = new EditorChoicePanel(this, newAdditionChoice);
+                EditorChoicePanel editPanel = new EditorChoicePanel(newAdditionChoice);
 
                 swapPanel(this, currentPanel, editPanel.editChoicePanel(), BorderLayout.WEST);
                 //Changes current panel to edit choice.

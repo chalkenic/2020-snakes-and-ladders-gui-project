@@ -3,7 +3,10 @@ package com.cm6123.snl.GUI;
 import java.util.EventObject;
 /**
  * Class handles all loading form entries for editor menu & creates an object to store the data.
+ * Code adapted from CaveOfProgramming: Java Swing: Events (Video Tutorial Part 5).
+ * Available at: https://caveofprogramming.com/java-swing-gui/java-swing-events-tutorial-part-5.html.
  */
+
 public class LoadingFormEvent extends EventObject {
     /**
      * handles first entry of edit form.
