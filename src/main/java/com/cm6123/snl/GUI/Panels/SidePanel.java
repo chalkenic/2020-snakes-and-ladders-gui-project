@@ -2,28 +2,16 @@ package com.cm6123.snl.GUI.Panels;
 
 import javax.swing.*;
 import java.awt.*;
-
-
+/**
+ * All panels using a side panel must have method that sets panel size.
+ */
 public abstract class SidePanel extends JPanel {
-
-//    private FormListener formListener;
-
-    public SidePanel() {
-
-    }
-
+    /**
+     * Dictates sidepanel size (if necessary).
+     * @param width - horizontal size of panel.
+     * @param height - vertical size of panel.
+     */
     public abstract void setPanelSize(Integer width, Integer height);
-
-//    public abstract void setFormListener(FormListener listener);
-
-//    public abstract Integer entryValidation(Edit value, int... othervalues);
-
-//    public abstract Edit getEditChoice();
-
-//    public abstract void createSidePanel();
-
-
-//    public void createMenuPanel() { }
 }
 
 

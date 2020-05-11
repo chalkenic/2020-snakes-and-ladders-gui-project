@@ -16,11 +16,7 @@ public final class Application {
 
   /**
    * Start the application.
-   *
    * @param args command-line arguments
-   */
-  /**
-   * @param args
    */
   public static void main(final String[] args) {
     GUIFrame snakesAndLaddersGui = new GUIFrame();

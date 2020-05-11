@@ -1,48 +1,50 @@
 package com.cm6123.snl.GUI;
 
 import java.util.EventObject;
+/**
+ * Class handles all loading form entries for editor menu & creates an object to store the data.
+ * Code adapted from CaveOfProgramming: Java Swing: Events (Video Tutorial Part 5).
+ * Available at: https://caveofprogramming.com/java-swing-gui/java-swing-events-tutorial-part-5.html.
+ */
 
 public class LoadingFormEvent extends EventObject {
-
-
-
-    private Integer loadGameEntry;
+    /**
+     * handles first entry of edit form.
+     */
     private Integer firstEntry;
+    /**
+     * Handles second entry of edit form.
+     */
     private Integer secondEntry;
-//    private Integer boostSquare;
+    /**
+     * Holds a player name if loading is for EditChoice - Edit.PLAYER.
+     */
     private String playerNameEntry;
-    private int boardCategory;
+    /**
+     * Choice of Edit.
+     */
     private Edit editChoice;
-
-
-
-
+    /**
+     * Does this Event have an associated game id?
+     */
     private Integer gameID;
+    /**
+     * Holds position of field inside database.
+     */
     private Integer databaseID;
-
     /**
      * Constructor handles player edit entries (no gameID or number entries required by object).
-     * @param source - eventObject,
+     * @param source - object where event initially occurred.
      * @param editPlayerEntry - player name,
      * @param edit - confirmation of addition choice to GUI frame.
      * @param dbID - indication in database as to where to edit on table. script not 0 indexed - appended by 1.
      */
     public LoadingFormEvent(final Object source, final String editPlayerEntry, final Edit edit, final Integer dbID) {
         super(source);
-        this.databaseID = dbID + 1;
+        this.databaseID = dbID + 1; //Database is not zero-indexed, ID requires increment.
         this.playerNameEntry = editPlayerEntry;
         this.editChoice = edit;
     }
-//     Unsure of this purpose!
-//    public LoadingFormEvent(final Object source) {
-//        super(source);
-//    }
-
-    public LoadingFormEvent(final Object source, final Integer loadGameChoice) {
-        super(source);
-        this.loadGameEntry = loadGameChoice;
-    }
-
     /**
      * Constructor handles boost entries - no second entry required.
      * @param source eventObject.
@@ -98,49 +100,46 @@ public class LoadingFormEvent extends EventObject {
         this.editChoice = edit;
     }
 
-
-
+    /**
+     * Get first entry of form.
+     * @return firstEntry - the first entry.
+     */
     public Integer getFirstEntry() {
         return firstEntry;
     }
-
-    public void setFirstEntry(final Integer newSpecialSquareStart) {
-        this.firstEntry = newSpecialSquareStart;
-    }
-
+    /**
+     * get second entry of form (if using).
+     * @return secondEntry - the second entry.
+     */
     public Integer getSecondEntry() {
         return secondEntry;
     }
-
-    public void setSecondEntry(final Integer newSpecialSquareEnd) {
-        this.secondEntry = newSpecialSquareEnd;
+    /**
+     * Get player name from form.
+     * @return playerNameEntry - name of player.
+     */
+    public String getPlayerNameEntry() {
+        return playerNameEntry;
     }
-
-    public String getPlayerNameEntry() { return playerNameEntry; }
-
-    public void setPlayerNameEntry(final String playerName) { this.playerNameEntry = playerNameEntry; }
-//    public Integer getBoostSquare() {
-//        return boostSquare;
-//    }
+    /**
+     * Get the game ID (if required).
+     * @return gameID - ID of game inside database.
+     */
     public Integer getGameID() {
         return gameID;
     }
-
-    public void setGameID(final Integer id) {
-        this.gameID = id;
-    }
-    //
-
+    /**
+     * get the ID of row location inside database.
+     * @return databaseID - location inside database.
+     */
     public Integer getDatabaseID() {
         return databaseID;
     }
+    /**
+     * Get the choice of edit.
+     * @return editChoice - enum field saved.
+     */
     public Edit getEditChoice() {
         return editChoice;
     }
-//    public void setBoostSquare(final Integer newBoostSquare) {
-//        this.boostSquare = boostSquare;
-//    }
-    public Integer getLoadGameEntry() {
-        return loadGameEntry;
-}
 }

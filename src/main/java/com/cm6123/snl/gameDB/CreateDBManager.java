@@ -1,11 +1,16 @@
 package com.cm6123.snl.gameDB;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class GameDBManager {
+/**
+ * Utility class handles database creation on main menu. Marked final to avoid subclass extension.
+ */
+public final class CreateDBManager {
+
+    private CreateDBManager() {
+    }
 
     /**
      * static method creates the database.
