@@ -28,6 +28,7 @@ public final class GameDBUtils {
         path += "/src/database.properties";
 
         try (FileInputStream file = new FileInputStream(path)) {
+            System.out.println("test1");
             properties.load(file);
             //First connection will source the location for database to be sent.
             //additional following connections will source the actual database name.
@@ -35,11 +36,14 @@ public final class GameDBUtils {
                     properties.getProperty("DB_URL") + databaseName,
                     properties.getProperty("DB_USER"),
                     properties.getProperty("DB_PASS"));
+            System.out.println("test2");
 
         } catch (IOException e) {
+            System.out.println("test3");
             e.printStackTrace();
 
         } catch (SQLException e) {
+            System.out.println("test4");
             e.printStackTrace();
         }
 

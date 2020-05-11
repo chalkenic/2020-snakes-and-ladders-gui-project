@@ -1,4 +1,4 @@
-package com.cm6123.snl.GUI;
+package com.cm6123.snl.gameDB;
 
 /**
  * Constant class stores hardcoded database string name.
@@ -10,5 +10,5 @@ public final class ConstantDatabaseName {
     /**
      * Get the string value equal to database name.
      */
-    public static final String DATABASENAME = "snakesAndLaddersDatabase";
+    public static final String DATABASENAME = "snakesandladdersdatabase";
 }

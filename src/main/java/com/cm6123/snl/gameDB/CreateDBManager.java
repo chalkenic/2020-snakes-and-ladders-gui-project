@@ -16,11 +16,12 @@ public final class CreateDBManager {
      * @param databaseName - name of the database.
      */
     public static void createDatabase(final Connection connection, final String databaseName) {
+        System.out.println(databaseName);
 
         Statement statement = null;
         try {
             statement = connection.createStatement();
-            statement.execute("CREATE DATABASE IF NOT EXISTS `databaseName`");
+            statement.execute("CREATE DATABASE IF NOT EXISTS databaseName");
 
         } catch (SQLException e) {
             e.printStackTrace();

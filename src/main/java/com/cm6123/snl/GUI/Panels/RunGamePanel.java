@@ -1,6 +1,6 @@
 package com.cm6123.snl.GUI.Panels;
 
-import com.cm6123.snl.GUI.ConstantDatabaseName;
+import com.cm6123.snl.gameDB.ConstantDatabaseName;
 import com.cm6123.snl.GUI.PanelBackgroundLogic.BoardMove;
 import com.cm6123.snl.GUI.GUIFrame;
 import com.cm6123.snl.Game;
@@ -489,7 +489,7 @@ public class RunGamePanel extends SidePanel implements ActionListener {
                 //All current data from game parsed.
                 SaveDataDBManager saveGame = new SaveDataDBManager(currentGame, dice, gridSize,
                         allSpecialSquares, loaded, gameID);
-                Connection connect = GameDBUtils.connectGuiToDatabase("snakesAndLaddersDatabase");
+                Connection connect = GameDBUtils.connectGuiToDatabase(ConstantDatabaseName.DATABASENAME);
                 saveGame.saveCurrentGame(connect);
                 saveGameButton.setEnabled(false);
                 //GameID is the same as getGameID if already loaded - new games initialise a new game here.

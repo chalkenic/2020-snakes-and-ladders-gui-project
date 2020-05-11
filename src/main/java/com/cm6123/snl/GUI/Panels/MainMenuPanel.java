@@ -1,6 +1,7 @@
 package com.cm6123.snl.GUI.Panels;
 
 import com.cm6123.snl.GUI.*;
+import com.cm6123.snl.gameDB.ConstantDatabaseName;
 import com.cm6123.snl.gameDB.CreateDBManager;
 import com.cm6123.snl.gameDB.GameDBUtils;
 
@@ -151,6 +152,7 @@ public class MainMenuPanel extends JPanel implements ActionListener {
             gameGui.selectWindow("editormenu");
         } else {
             Connection initialConnection = GameDBUtils.connectGuiToDatabase("");
+            System.out.println(initialConnection);
             CreateDBManager.createDatabase(initialConnection, ConstantDatabaseName.DATABASENAME);
             gameGui.getGameMenu().enableDatabaseNavigation();
             enableFrontPage();

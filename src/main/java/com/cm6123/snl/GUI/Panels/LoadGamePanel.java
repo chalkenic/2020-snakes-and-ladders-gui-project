@@ -2,6 +2,7 @@ package com.cm6123.snl.GUI.Panels;
 
 import com.cm6123.snl.GUI.*;
 import com.cm6123.snl.GUI.PanelBackgroundLogic.CreateGame;
+import com.cm6123.snl.gameDB.ConstantDatabaseName;
 import com.cm6123.snl.gameDB.DBGameFile;
 import com.cm6123.snl.gameDB.GameDBUtils;
 import com.cm6123.snl.gameDB.LoadDataDBManager;
@@ -165,6 +166,7 @@ public class LoadGamePanel extends JPanel implements ActionListener {
      */
     private void loadDBGames() {
         Connection connect = GameDBUtils.connectGuiToDatabase(ConstantDatabaseName.DATABASENAME);
+        System.out.println(connect);
         Integer totalGames = LoadDataDBManager.countGamesInDatabase(connect);
         for (Integer i = 1; i < (totalGames + 1); i++) {
             DBGameFile newFile = new DBGameFile(i, "File " + i);

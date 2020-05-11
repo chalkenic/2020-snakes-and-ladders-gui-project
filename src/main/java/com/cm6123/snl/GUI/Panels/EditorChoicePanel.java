@@ -1,6 +1,7 @@
 package com.cm6123.snl.GUI.Panels;
 
 import com.cm6123.snl.GUI.*;
+import com.cm6123.snl.gameDB.ConstantDatabaseName;
 import com.cm6123.snl.gameDB.GameDBUtils;
 import com.cm6123.snl.gameDB.LoadDataDBManager;
 import javax.swing.*;

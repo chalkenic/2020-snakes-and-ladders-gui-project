@@ -15,9 +15,9 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema snakesAndLaddersData
 -- -----------------------------------------------------
-DROP SCHEMA IF EXISTS `snakesAndLaddersDatabase`;
-CREATE SCHEMA IF NOT EXISTS `snakesAndLaddersDatabase` DEFAULT CHARACTER SET utf8 ;
-USE `snakesAndLaddersDatabase` ;
+DROP SCHEMA IF EXISTS `snakesandladdersdatabase`;
+CREATE SCHEMA IF NOT EXISTS `snakesandladdersdatabase` DEFAULT CHARACTER SET utf8 ;
+USE `snakesandladdersdatabase` ;
 
 
 -- ----------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ USE `snakesAndLaddersDatabase` ;
 -- Table `snakesAndLaddersData`.`Dice`
 -- -----------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `snakesAndLaddersDatabase`.`Dice` (
+CREATE TABLE IF NOT EXISTS `snakesandladdersdatabase`.`Dice` (
   `diceID` INTEGER NOT NULL AUTO_INCREMENT,
   `diceCount` INT NOT NULL,
   `diceFaces` INT NOT NULL,
@@ -42,7 +42,7 @@ ENGINE = InnoDB;
 -- Table `snakesAndLaddersData`.`Game`
 -- -----------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `snakesAndLaddersDatabase`.`Game` (
+CREATE TABLE IF NOT EXISTS `snakesandladdersdatabase`.`Game` (
   `gameID` INT NOT NULL AUTO_INCREMENT,
   `gamePlayerTurn` INT NOT NULL DEFAULT 1,
   `gameRound` INT NOT NULL DEFAULT 1,
@@ -56,14 +56,14 @@ CREATE TABLE IF NOT EXISTS `snakesAndLaddersDatabase`.`Game` (
   `dice_diceID` INT NOT NULL,
   PRIMARY KEY (`gameID`),
     FOREIGN KEY (`dice_diceID`)
-    REFERENCES `snakesAndLaddersDatabase`.`Dice` (`diceID`))
+    REFERENCES `snakesandladdersdatabase`.`Dice` (`diceID`))
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 -- Table `snakesAndLaddersData`.`Players`
 -- -----------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `snakesAndLaddersDatabase`.`players` (
+CREATE TABLE IF NOT EXISTS `snakesandladdersdatabase`.`players` (
   `playerID` INT NOT NULL AUTO_INCREMENT,
   `playerColour` VARCHAR(45) NOT NULL,
   `playerPosition` INT DEFAULT 0,
@@ -83,7 +83,7 @@ ENGINE = InnoDB;
 -- Table `snakesAndLaddersData`.`PlayerList`
 -- -----------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `snakesAndLaddersDatabase`.`PlayerList` (
+CREATE TABLE IF NOT EXISTS `snakesandladdersdatabase`.`PlayerList` (
 	`PlayerListID` INT NOT NULL AUTO_INCREMENT,
     `playerColour` VARCHAR(45),
     `playerWinCount` INT DEFAULT 0,
@@ -96,41 +96,41 @@ ENGINE = InnoDB;
 -- Table `snakesAndLaddersData`.`Snakes`
 -- -----------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `snakesAndLaddersDatabase`.`Snakes` (
+CREATE TABLE IF NOT EXISTS `snakesandladdersdatabase`.`Snakes` (
   `snakeID` INT NOT NULL AUTO_INCREMENT,
   `snakeHead` INT NOT NULL,
   `snakeTail` INT NOT NULL,
   `game_gameID` INT NOT NULL,
   PRIMARY KEY (`snakeID`),
     FOREIGN KEY (`game_gameID`)
-    REFERENCES `snakesAndLaddersDatabase`.`Game` (`gameID`))
+    REFERENCES `snakesandladdersdatabase`.`Game` (`gameID`))
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 -- Table `snakesAndLaddersData`.`Ladders`
 -- -----------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `snakesAndLaddersDatabase`.`Ladders` (
+CREATE TABLE IF NOT EXISTS `snakesandladdersdatabase`.`Ladders` (
   `ladderID` INT NOT NULL AUTO_INCREMENT,
   `ladderFoot` INT NOT NULL,
   `ladderTop` INT NOT NULL,
   `game_gameID` INT NOT NULL,
   PRIMARY KEY (`ladderID`),
     FOREIGN KEY (`game_gameID`)
-    REFERENCES `snakesAndLaddersDatabase`.`Game` (`gameID`))
+    REFERENCES `snakesandladdersdatabase`.`Game` (`gameID`))
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 -- Table `snakesAndLaddersData`.`Boosts`
 -- -----------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `snakesAndLaddersDatabase`.`Boosts` (
+CREATE TABLE IF NOT EXISTS `snakesandladdersdatabase`.`Boosts` (
   `boostID` INT NOT NULL AUTO_INCREMENT,
   `boostLocation` INT NOT NULL,
   `game_gameID` INT NOT NULL,
   PRIMARY KEY (`boostID`),
     FOREIGN KEY (`Game_gameID`)
-    REFERENCES `snakesAndLaddersDatabase`.`Game` (`gameID`))
+    REFERENCES `snakesandladdersdatabase`.`Game` (`gameID`))
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
@@ -138,7 +138,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 
 
-CREATE TABLE IF NOT EXISTS `snakesAndLaddersDatabase`.`Moves` (
+CREATE TABLE IF NOT EXISTS `snakesandladdersdatabase`.`Moves` (
   `moveID` INT NOT NULL AUTO_INCREMENT,
   `moveStart` INT NOT NULL,
   `moveEnd` INT NOT NULL,
@@ -150,9 +150,9 @@ CREATE TABLE IF NOT EXISTS `snakesAndLaddersDatabase`.`Moves` (
   `game_gameID` INT NOT NULL,
   PRIMARY KEY (`moveID`),
     FOREIGN KEY (`players_playerID`)
-    REFERENCES `snakesAndLaddersDatabase`.`players` (`playerID`),
+    REFERENCES `snakesandladdersdatabase`.`players` (`playerID`),
     FOREIGN KEY (`game_gameID`)
-    REFERENCES `snakesAndLaddersDatabase`.`Game` (`gameID`))
+    REFERENCES `snakesandladdersdatabase`.`Game` (`gameID`))
 ENGINE = InnoDB;
 
 
@@ -1232,7 +1232,7 @@ SELECT * FROM boosts;
 SELECT * FROM playerList;
     CALL update_player(1, "PURPLE");
 
-
+SHOW databases;
 
 
 SELECT * FROM dice;

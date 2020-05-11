@@ -1,6 +1,5 @@
 package com.cm6123.snl.gameDB;
 
-import com.cm6123.snl.GUI.ConstantDatabaseName;
 import com.cm6123.snl.GUI.Edit;
 import com.cm6123.snl.GUI.LoadingFormEvent;
 
