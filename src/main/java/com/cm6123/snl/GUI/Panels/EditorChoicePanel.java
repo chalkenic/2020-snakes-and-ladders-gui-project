@@ -318,7 +318,7 @@ public class EditorChoicePanel extends SidePanel implements ActionListener {
      */
     private void loadDBGames(final Edit choice, final DefaultListModel jlist) {
 
-        Connection connect = GameDBUtils.connectGuiToDatabase();
+        Connection connect = GameDBUtils.connectGuiToDatabase(ConstantDatabaseName.DATABASENAME);
 
         if (choice == Edit.SNAKE) {
             LoadDataDBManager dbLoader = new LoadDataDBManager(); //Manager opened for loading data.

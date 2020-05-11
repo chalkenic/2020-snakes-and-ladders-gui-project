@@ -164,7 +164,7 @@ public class LoadGamePanel extends JPanel implements ActionListener {
      * Loop starts at 1 to match database not being zero-indexed.
      */
     private void loadDBGames() {
-        Connection connect = GameDBUtils.connectGuiToDatabase();
+        Connection connect = GameDBUtils.connectGuiToDatabase(ConstantDatabaseName.DATABASENAME);
         Integer totalGames = LoadDataDBManager.countGamesInDatabase(connect);
         for (Integer i = 1; i < (totalGames + 1); i++) {
             DBGameFile newFile = new DBGameFile(i, "File " + i);

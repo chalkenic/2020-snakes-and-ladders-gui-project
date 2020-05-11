@@ -54,8 +54,6 @@ public class GUIFrame extends JFrame {
      */
     private DiceSet diceSet;
 
-
-
     /**
      * Holds current save data pulled from loadgame for use in repeatgame switch case to restart game.
      */
@@ -72,9 +70,6 @@ public class GUIFrame extends JFrame {
      * Determines whether a custom game was loaded for saving options.
      */
     private Boolean loaded;
-
-
-
     /**
      * Records the database ID of a loaded game for saving options.
      */

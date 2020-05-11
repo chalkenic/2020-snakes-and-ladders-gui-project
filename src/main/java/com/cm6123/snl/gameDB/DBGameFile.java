@@ -83,7 +83,7 @@ public class DBGameFile {
         this.gameID = newID;
         this.gameText = text;
         //Calls databse connection for usage by all following methods.
-        Connection connect = GameDBUtils.connectGuiToDatabase();
+        Connection connect = GameDBUtils.connectGuiToDatabase("snakesAndLaddersDatabase");
         //Methods run depending on initial DatabaseGameDatam method.
         addDatabaseGameData(connect);
         addDiceData(connect);

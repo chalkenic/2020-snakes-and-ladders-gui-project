@@ -16,11 +16,10 @@ public final class GameDBUtils {
     }
     /**
      * Establishes database connection.
+     * @param databaseName - name of the database.
      * @return database connection link.
      */
-    public static Connection connectGuiToDatabase() {
-
-        String databaseName = "snakesandladdersdatabase";
+    public static Connection connectGuiToDatabase(final String databaseName) {
         Connection connection = null;
         Properties properties = new Properties();
         //Defines path for user to access database.
@@ -30,6 +29,8 @@ public final class GameDBUtils {
 
         try (FileInputStream file = new FileInputStream(path)) {
             properties.load(file);
+            //First connection will source the location for database to be sent.
+            //additional following connections will source the actual database name.
             connection = DriverManager.getConnection(
                     properties.getProperty("DB_URL") + databaseName,
                     properties.getProperty("DB_USER"),

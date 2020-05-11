@@ -125,7 +125,6 @@ public class MainMenuPanel extends JPanel implements ActionListener {
         add(databaseLoadedLabel, gridStructure);
         return this;
     }
-
     /**
      * Enables all buttons on main menu as true when database loaded, & changes JLabel text. JFrame notified of
      * connection for other object method usage.
@@ -138,12 +137,12 @@ public class MainMenuPanel extends JPanel implements ActionListener {
         databaseLoadedLabel.setText("Database Loaded!");
         gameGui.setDataBaseConnection(true);
     }
-
     /**
      * Dictates actions to perform on JButton clicks.
      * @param click - the click made onto Jbuttons.
      */
     public void actionPerformed(final ActionEvent click) {
+
         if (click.getSource() == newGameButton) {
             gameGui.selectWindow("newgame");
         } else if (click.getSource() == loadGameButton) {
@@ -151,8 +150,8 @@ public class MainMenuPanel extends JPanel implements ActionListener {
         } else if (click.getSource() == editorButton) {
             gameGui.selectWindow("editormenu");
         } else {
-            Connection connect = GameDBUtils.connectGuiToDatabase();
-            CreateDBManager.createDatabase(connect);
+            Connection initialConnection = GameDBUtils.connectGuiToDatabase("");
+            CreateDBManager.createDatabase(initialConnection, ConstantDatabaseName.DATABASENAME);
             gameGui.getGameMenu().enableDatabaseNavigation();
             enableFrontPage();
 
