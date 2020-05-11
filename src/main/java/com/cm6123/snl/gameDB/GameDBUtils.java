@@ -20,7 +20,7 @@ public final class GameDBUtils {
      */
     public static Connection connectGuiToDatabase() {
 
-        String databaseName = "snakesAndLaddersDatabase";
+        String databaseName = "snakesandladdersdatabase";
         Connection connection = null;
         Properties properties = new Properties();
         //Defines path for user to access database.
