@@ -1,7 +1,6 @@
 package com.cm6123.snl.gameDB;
 
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -27,8 +26,9 @@ public final class GameDBUtils {
         //Specfic location of database data.
         path += "/src/database.properties";
 
+
+//        myConnection = DriverManager.getConnection("");
         try (FileInputStream file = new FileInputStream(path)) {
-            System.out.println("test1");
             properties.load(file);
             //First connection will source the location for database to be sent.
             //additional following connections will source the actual database name.
@@ -36,14 +36,11 @@ public final class GameDBUtils {
                     properties.getProperty("DB_URL") + databaseName,
                     properties.getProperty("DB_USER"),
                     properties.getProperty("DB_PASS"));
-            System.out.println("test2");
 
         } catch (IOException e) {
-            System.out.println("test3");
             e.printStackTrace();
 
         } catch (SQLException e) {
-            System.out.println("test4");
             e.printStackTrace();
         }
 

@@ -6,6 +6,9 @@
 
 <suppressions>
 
+    <suppress checks=".*"
+            files="[\\/]cm6123[\\/]snl[\\/]gameDB[\\/]ScriptRunner"/>
+
     <suppress checks = "MagicNumber"
               files = "com[\\/]cm6123[\\/]snl[\\/]GUI[\\/]"/>
 
@@ -20,6 +23,8 @@
 
     <suppress files = "com[\\/]cm6123[\\/]snl[\\/]gameDB[\\/]"
               checks = "AvoidStarImport"/>
+
+
 
 </suppressions>
 

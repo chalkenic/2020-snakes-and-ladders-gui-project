@@ -1,7 +1,7 @@
+
 package com.cm6123.snl.gameDB;
-
+import java.io.*;
 import java.sql.*;
-
 /**
  * Utility class handles database creation on main menu. Marked final to avoid subclass extension.
  */
@@ -16,26 +16,32 @@ public final class CreateDBManager {
      */
     public static void createDatabase(final Connection connection, final String databaseName) {
 
-        Statement statement = null;
+//        Statement statement = null;
         try {
-            statement = connection.createStatement();
-            DatabaseMetaData dmbd = connection.getMetaData();
-            System.out.println(dmbd);
-            String[] types = {"table"};
-            ResultSet rs = dmbd.getTables(null, null, "%", types);
-            while (rs.next()) {
-                System.out.println(rs.getString("TABLE_NAME"));
-            }
-            statement.execute("CREATE DATABASE IF NOT EXISTS " + databaseName);
-            System.out.println("test: " + connection.getSchema());
+    //Code adapted from Benoit Duffez  - ScriptRunner.
+    /* Available at:
+    https://github.com/BenoitDuffez/ScriptRunner?fbclid=IwAR2BSaTAjhJQD8YvsFhf3GIepreDGU8SWtaqDNKhtmtcOmjRXyrNu12Ykks
+     */
+            ScriptRunner runner = new ScriptRunner(connection, false, false);
+            System.out.println(runner);
+            String sqlPath = (System.getProperty("user.dir"));
+            sqlPath += "/src/c1936922_database.sql";
+            System.out.println(sqlPath);
+            Reader sqlReader = new BufferedReader(new FileReader(sqlPath));
+            System.out.println(sqlReader);
+            runner.runScript(new BufferedReader((sqlReader)));
+
 
         } catch (SQLException e) {
+            System.out.println("Cannot connect to server.");
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            System.out.println("Cannot find file.");
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         } finally {
             try {
-                if (statement != null) {
-                    statement.close();
-                }
                 if (connection != null) {
                     connection.close();
                 }
@@ -44,4 +50,5 @@ public final class CreateDBManager {
             }
         }
     }
+
 }
