@@ -212,7 +212,7 @@ public class GUIFrame extends JFrame {
                 RunGamePanel duplicateGamePanel; //Object initialised for holding a game repeat.
                 Integer repeatGridChoice = null;
                 TreeMap repeatSpecials = null;
-                loaded = false;
+//                loaded = false;
 
                 if (customGame == null) { //repeat game will intake a game with default values if not custom.
                     repeatGridChoice = 5;
@@ -231,6 +231,7 @@ public class GUIFrame extends JFrame {
                             customGame.getCustomGameData(newGamePanel);
                         } catch (NullPointerException f) {
                             //If custom game not found, game pulls data from current DBGameFile & rebuilds.
+                            System.out.println("test");
                             customGame.getLoadedGameData(dbGameFile);
                             //Frame marked as using loaded game for saving purposes.
                             loaded = true;
