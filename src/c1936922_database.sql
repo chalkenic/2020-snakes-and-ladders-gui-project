@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS game (
   `gamePlayerTurn` INT NOT NULL DEFAULT 1,
   `gameRound` INT NOT NULL DEFAULT 1,
   `boardGridSize` INT NOT NULL,
-  `boardSize` INT NOT NULL DEFAULT (boardGridSize * boardGridSize),
+  `boardSize` INT NOT NULL DEFAULT 16,
 --   `winningSquare` INT NULL,
   `gameHasEnded` TINYINT NULL DEFAULT false,
   `boostSquareFeature` TINYINT NULL DEFAULT false,
@@ -851,6 +851,24 @@ DELIMITER ;
 -- ----------------------------------------------------------------------------------
 
 -- -----------------------------------------------------
+-- Trigger sets board size after new game added into table.
+-- -----------------------------------------------------
+
+DROP TRIGGER IF EXISTS add_board_size;
+
+DELIMITER ??
+CREATE TRIGGER add_board_size BEFORE INSERT
+ON game
+FOR EACH ROW
+
+BEGIN
+
+	SET new.boardSize = (new.boardGridSize * new.boardGridSize);
+
+END ??
+DELIMITER ;
+
+-- -----------------------------------------------------
 -- Trigger calculates diceroll into table before entry of player's positions on turn.
 -- -----------------------------------------------------
 DROP TRIGGER IF EXISTS calculate_move_roll_from_entries;
@@ -1033,6 +1051,7 @@ BEGIN
 
 END ??
 DELIMITER ;
+
 
 -- -----------------------------------------------------
 -- Trigger increments game round when turns reach player count. game turns reset to 1.
