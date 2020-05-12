@@ -16,7 +16,6 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- Schema snakesAndLaddersData
 -- -----------------------------------------------------
 SET GLOBAL log_bin_trust_function_creators = 1;
-DROP SCHEMA IF EXISTS `snakesandladdersdatabase`;
 CREATE SCHEMA IF NOT EXISTS `snakesandladdersdatabase` DEFAULT CHARACTER SET utf8 ;
 USE `snakesandladdersdatabase` ;
 
