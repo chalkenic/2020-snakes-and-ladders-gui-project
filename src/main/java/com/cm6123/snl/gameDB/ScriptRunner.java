@@ -1,3 +1,6 @@
+//Code adapted from GitHub user Benoit Duffez - ScriptRunner Class - Allows to virtually use `source script.sql` with your JDBC
+//Available at: https://github.com/BenoitDuffez/ScriptRunner?fbclid=IwAR2BSaTAjhJQD8YvsFhf3GIepreDGU8SWtaqDNKhtmtcOmjRXyrNu12Ykks
+
 /*
  * Slightly modified version of the com.ibatis.common.jdbc.ScriptRunner class
  * from the iBATIS Apache project. Only removed dependency on Resource class
