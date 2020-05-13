@@ -86,7 +86,9 @@ public class NewGameSouthInnerPanel extends SidePanel implements ActionListener 
         setBorder(BorderFactory.createCompoundBorder(outerGameBarBorder, innerGameBarBorder));
 
         setLayout(new GridBagLayout());
-
+        /* Code layout design originates from CaveOfProgramming tutorial:
+        Java Swing: GridBagLayout (Video Tutorial Part 4). available at:
+        https://www.caveofprogramming.com/java-swing-gui/java-swing-gridbaglayou-video-tutorial-part-4.html */
         gridStructure = new GridBagConstraints();
         //Board size positioning.
         gridStructure.weightx = 1;

@@ -210,10 +210,11 @@ public class EditorChoicePanel extends SidePanel implements ActionListener {
         innerGameBarBorder.setTitleJustification(TitledBorder.CENTER);
         //Creates border as a margin around inner game bar.
         setBorder(BorderFactory.createCompoundBorder(outerGameBarBorder, innerGameBarBorder));
-
-        //USED FOR FLEXIBILITY COMPARED TO OTHER LAYOUTS
+        //Gridbag chosen for layout strengths compared to other layouts.
         setLayout(new GridBagLayout());
-
+        /* Code layout design originates from CaveOfProgramming tutorial:
+        Java Swing: GridBagLayout (Video Tutorial Part 4). available at:
+        https://www.caveofprogramming.com/java-swing-gui/java-swing-gridbaglayou-video-tutorial-part-4.html */
         gridStructure = new GridBagConstraints();
 
         gridStructure.weightx = 1;

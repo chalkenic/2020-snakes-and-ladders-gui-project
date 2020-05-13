@@ -102,7 +102,9 @@ public class MainMenuPanel extends JPanel implements ActionListener {
 
         //GridbagLayout chosen due to more customizing available with specific object positions.
         setLayout(new GridBagLayout());
-
+        /* Code layout design originates from CaveOfProgramming tutorial:
+        Java Swing: GridBagLayout (Video Tutorial Part 4). available at:
+        https://www.caveofprogramming.com/java-swing-gui/java-swing-gridbaglayou-video-tutorial-part-4.html */
         gridStructure = new GridBagConstraints();
 
         gridStructure.weightx = 1;
@@ -151,20 +153,21 @@ public class MainMenuPanel extends JPanel implements ActionListener {
         } else if (click.getSource() == editorButton) {
             gameGui.selectWindow("editormenu");
         } else {
-            Connection initialConnection = GameDBUtils.connectGuiToDatabase("");
-            System.out.println(initialConnection);
-            CreateDBManager.createDatabase(initialConnection, ConstantDatabaseName.DATABASENAME);
-
-
-
-            Connection conn = GameDBUtils.connectGuiToDatabase(ConstantDatabaseName.DATABASENAME);
-//            ScriptRunner sr = new ScriptRunner(conn, false, false);
-//            Reader reader = new BufferedReader(new FileReader(System.getProperty("user.dir") + filePath));
-//            sr.runScript(reader);
-            gameGui.getGameMenu().enableDatabaseNavigation();
-            enableFrontPage();
-
+            makeDatabaseConnection();
         }
+    }
+    /**
+     * Establishes database connection for GUI.
+     */
+    private void makeDatabaseConnection() {
+        //Initial connection to area established.
+        Connection initialConnection = GameDBUtils.connectGuiToDatabase("");
+        //Database created via 3rd party class design.
+        CreateDBManager.createDatabase(initialConnection, ConstantDatabaseName.DATABASENAME);
+        //Allows full navigation to all areas of gui via JMenuBar.
+        gameGui.getGameMenu().enableDatabaseNavigation();
+        //Enables all buttons on front page.
+        enableFrontPage();
     }
 }
 

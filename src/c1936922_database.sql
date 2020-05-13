@@ -19,6 +19,8 @@ SET GLOBAL log_bin_trust_function_creators = 1;
 CREATE SCHEMA IF NOT EXISTS `snakesandladdersdatabase` DEFAULT CHARACTER SET utf8 ;
 USE `snakesandladdersdatabase` ;
 
+
+
 -- DROP database if exists snakesandladdersdatabase;
 
 
@@ -157,6 +159,9 @@ CREATE TABLE IF NOT EXISTS moves (
     REFERENCES game (`gameID`))
 ENGINE = InnoDB;
 
+-- CREATE TABLE IF NOT EXISTS databaseEnabled (
+-- 	isDatabaseOn TINYINT DEFAULT 0
+--     );
 
 -- ----------------------------------------------------------------------------------
 --
@@ -208,6 +213,8 @@ BEGIN
     CALL add_new_dice(chosenDiceCount, chosenDiceFace);
 	INSERT INTO Game(boardSize,boardGridSize, dice_diceID)
     VALUES(chosenBoardSize*chosenBoardSize,chosenBoardSize, (SELECT MAX(diceID) from Dice));
+    
+
 END //
 DELIMITER ;
 
@@ -805,7 +812,6 @@ INSERT INTO dice (diceCount, diceFaces) VALUES (2, 6);
 INSERT INTO dice (diceCount, diceFaces) VALUES (1, 10);
 
 
-
 insert into Game(boardGridSize, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
 values ( 5, false, false, 1);
 insert into Game(boardGridSize, boostSquarefeature, winningSquareOnlyFeature, Dice_diceID)
@@ -897,38 +903,24 @@ DELIMITER ;
 --
 --
 -- ----------------------------------------------------------------------------------
+
+-- dummy data insert cannot be added if game files already exists (i.e. has been called once).
 DROP PROCEDURE IF EXISTS test;
 
 DELIMITER !!
 CREATE PROCEDURE test()
 BEGIN
-	CALL insert_dummy_data;
+IF (SELECT EXISTS (SELECT 1 FROM game)) = 0
+    THEN
+--     INSERT INTO databaseEnabled(isDatabaseOn) values (true);
+		CALL insert_dummy_data;
 
-	CALL select_game(1, @gameChoice);
-	CALL select_players_from_game(@gameChoice); 
-	CALL select_dice_choice_from_game(@gameChoice);
-
-	CALL select_game_snakes(@gameChoice);
-	CALL select_game_ladders(@gameChoice);
-	CALL select_game_boosts(@gameChoice);
-    
-
-	
---     CALL update_dice(1, 2, 8);
---     CALL update_snake(1, 10,3);
---     CALL update_ladder(1,13,4);
---     CALL update_boost(1, 13);
-
-
-	CALL switch_on_boost_feature(1);
-	CALL switch_on_winning_feature(1);
-	CALL update_player_position("RED", 3, 60);
-
+    END IF;
 END !!
 DELIMITER ;
 
-CALL test();
 
+CALL test();
 
 SELECT * FROM dice;
 SELECT * FROM game;
@@ -936,8 +928,6 @@ SELECT * FROM game;
 SELECT * FROM players;
 
 
-
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
-

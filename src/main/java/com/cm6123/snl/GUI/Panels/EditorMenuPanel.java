@@ -112,7 +112,9 @@ public class EditorMenuPanel extends SidePanel implements ActionListener {
 
         //Gridbag chosen for more specified layout options compared to other layouts.
         setLayout(new GridBagLayout());
-
+        /* Code layout design originates from CaveOfProgramming tutorial:
+        Java Swing: GridBagLayout (Video Tutorial Part 4). available at:
+        https://www.caveofprogramming.com/java-swing-gui/java-swing-gridbaglayou-video-tutorial-part-4.html */
         gridStructure = new GridBagConstraints();
         gridStructure.weighty = 1;
         gridStructure.gridx = 0;
