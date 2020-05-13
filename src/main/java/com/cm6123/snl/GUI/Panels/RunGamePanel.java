@@ -486,40 +486,10 @@ public class RunGamePanel extends SidePanel implements ActionListener {
         //Savegame connections to database with data sourced from current panel. CANNOT SAVE FINISHED GAME.
         }  else if (click.getSource() == saveGameButton) {
             if (!currentGame.isGameOver()) {
-                //All current data from game parsed.
-                SaveDataDBManager saveGame = new SaveDataDBManager(currentGame, dice, gridSize,
-                        allSpecialSquares, loaded, gameID);
-                Connection connect = GameDBUtils.connectGuiToDatabase(ConstantDatabaseName.DATABASENAME);
-                saveGame.saveCurrentGame(connect);
-                saveGameButton.setEnabled(false);
-                //GameID is the same as getGameID if already loaded - new games initialise a new game here.
-                gameID = saveGame.getGameID();
-                //loaded boolean already true if game came from database. new games change value to true from null.
-                loaded = true;
-                if (connect != null) {
-                    try {
-                        connect.close();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                }
+                saveTheGame();
             }
         }  else if (click.getSource() == restartGameButton) {
-            //Add new buttons onto GridBagLayout.temporarily disable default resart button.
-            restartGameButton.setEnabled(false);
-            restartGameButton.setText("Really restart?");
-            gridStructure.weighty = 1;
-            gridStructure.gridy = 9;
-            gridStructure.anchor = GridBagConstraints.LINE_START;
-            //Enable both new buttons, provide visual flair.
-            confirmRestartGameButton.setVisible(true);
-            confirmRestartGameButton.setBackground(Color.green);
-            declineRestartGameButton.setVisible(true);
-            declineRestartGameButton.setBackground(Color.red);
-            add(confirmRestartGameButton, gridStructure);
-            gridStructure.insets = new Insets(0, 0, 0, 100);
-            gridStructure.anchor = GridBagConstraints.CENTER;
-            add(declineRestartGameButton, gridStructure);
+            restartButtonClick();
         //Reset player positions in current game with identical Board datapoints.
         }  else if (click.getSource() == confirmRestartGameButton) {
             gameGui.selectWindow("runrepeatgame");
@@ -530,5 +500,49 @@ public class RunGamePanel extends SidePanel implements ActionListener {
             restartGameButton.setEnabled(true);
             restartGameButton.setText("Restart Game");
         }
+    }
+
+    /**
+     * Method save the game.
+     */
+    private void saveTheGame() {
+        //All current data from game parsed.
+        SaveDataDBManager saveGame = new SaveDataDBManager(currentGame, dice, gridSize,
+                allSpecialSquares, loaded, gameID);
+        Connection connect = GameDBUtils.connectGuiToDatabase(ConstantDatabaseName.DATABASENAME);
+        saveGame.saveCurrentGame(connect);
+        saveGameButton.setEnabled(false);
+        //GameID is the same as getGameID if already loaded - new games initialise a new game here.
+        gameID = saveGame.getGameID();
+        //loaded boolean already true if game came from database. new games change value to true from null.
+        loaded = true;
+        if (connect != null) {
+            try {
+                connect.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Enables confirm & restart game buttons on panel.
+     */
+    private void restartButtonClick() {
+        //Add new buttons onto GridBagLayout.temporarily disable default resart button.
+        restartGameButton.setEnabled(false);
+        restartGameButton.setText("Really restart?");
+        gridStructure.weighty = 1;
+        gridStructure.gridy = 9;
+        gridStructure.anchor = GridBagConstraints.LINE_START;
+        //Enable both new buttons, provide visual flair.
+        confirmRestartGameButton.setVisible(true);
+        confirmRestartGameButton.setBackground(Color.green);
+        declineRestartGameButton.setVisible(true);
+        declineRestartGameButton.setBackground(Color.red);
+        add(confirmRestartGameButton, gridStructure);
+        gridStructure.insets = new Insets(0, 0, 0, 100);
+        gridStructure.anchor = GridBagConstraints.CENTER;
+        add(declineRestartGameButton, gridStructure);
     }
 }
