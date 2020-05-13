@@ -16,10 +16,10 @@ public final class CreateDBManager {
      */
     public static void createDatabase(final Connection connection, final String databaseName) {
 
-//        Statement statement = null;
         try {
-    //Code adapted from Benoit Duffez  - ScriptRunner.
-    /* Available at:
+    /*
+    Code for accesing third party ScriptRunner class sourced from Benoit Duffez  - ScriptRunner.
+    Available at:
     https://github.com/BenoitDuffez/ScriptRunner?fbclid=IwAR2BSaTAjhJQD8YvsFhf3GIepreDGU8SWtaqDNKhtmtcOmjRXyrNu12Ykks
      */
             //ScriptRunner object created ready for intake of sql file path.
