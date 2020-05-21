@@ -69,15 +69,24 @@ public final class GameBuilder {
    *
    * @return a Game object configured which board, snakes, ladders and players.
    */
+//  public Game build() {
+//    if (boosts.length < 1) {
+//      Game theGame = new Game(tempPlayers, tempBoardSize, snakes, ladders);
+//      return theGame;
+//    } else {
+//      Game boostGame = new Game(tempPlayers, tempBoardSize, snakes, ladders, boosts);
+//      boostGame.setBoostSquareOn();
+//      return boostGame;
+//    }
+//  }
+
   public Game build() {
-    if (boosts.length < 1) {
-      Game theGame = new Game(tempPlayers, tempBoardSize, snakes, ladders);
-      return theGame;
-    } else {
-      Game boostGame = new Game(tempPlayers, tempBoardSize, snakes, ladders, boosts);
+    Game boostGame = new Game(tempPlayers, tempBoardSize, snakes, ladders, boosts);
+    if (boosts.length > 0) {
       boostGame.setBoostSquareOn();
-      return boostGame;
     }
+    boostGame.setWinningSquareOnly(false);
+    return boostGame;
   }
 
   /**
@@ -86,17 +95,12 @@ public final class GameBuilder {
    * @return configured game object with board, snakes, ladders, players & winning square.
    */
   public Game buildWithWinningSquare() {
+    Game theWinningSquareGame = new Game(tempPlayers, tempBoardSize, snakes, ladders, boosts);
+    theWinningSquareGame.setWinningSquareOnly(true);
     if (boosts.length > 0) {
-      Game theWinningSquareGame = new Game(tempPlayers, tempBoardSize, snakes, ladders, boosts);
-      theWinningSquareGame.setWinningSquareOnlyOn();
       theWinningSquareGame.setBoostSquareOn();
-      return theWinningSquareGame;
-    } else {
-      Game theWinningSquareGame = new Game(tempPlayers, tempBoardSize, snakes, ladders);
-      theWinningSquareGame.setWinningSquareOnlyOn();
-      return theWinningSquareGame;
     }
-
+    return theWinningSquareGame;
   }
 
 
@@ -172,7 +176,9 @@ public final class GameBuilder {
    * @return the configured GameBuilder
    */
   public GameBuilder withBoosts(final Integer... someBoosts) {
-    this.boosts = someBoosts;
+    if (someBoosts != null) {
+      this.boosts = someBoosts;
+    }
     return this;
   }
 

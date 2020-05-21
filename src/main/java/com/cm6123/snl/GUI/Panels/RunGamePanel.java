@@ -145,7 +145,7 @@ public class RunGamePanel extends SidePanel implements ActionListener {
     /**
      * Instances panel with data passed from multiple sources.
      * @param gui - current JFrame.
-     * @param newGame - Game object created prior.
+     * @param game - Game object created prior.
      * @param diceChoice - Dice object created prior.
      * @param boardGridSize - grid size for saving into database.
      * @param specialList - all special squares from new/loaded game.
@@ -153,10 +153,10 @@ public class RunGamePanel extends SidePanel implements ActionListener {
      * @param id - ID given to game on instantiation if loaded to reaffirm link between RunGamePanel game & database
      *        game. begins as null if brand new game created.
      */
-    public RunGamePanel(final GUIFrame gui, final Game newGame, final DiceSet diceChoice,
+    public RunGamePanel(final GUIFrame gui, final Game game, final DiceSet diceChoice,
                         final Integer boardGridSize, final TreeMap specialList, final Boolean isLoaded,
                         final Integer id) {
-        this.currentGame = newGame;
+        this.currentGame = game;
         this.gameGui = gui;
         this.dice = diceChoice;
         this.gridSize = boardGridSize;

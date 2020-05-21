@@ -239,58 +239,33 @@ public class CreateGame {
 
         Game newCustomGame = null;
         gameGui.appendTextToPanel("-----------------------------------------------------------------------|\n");
-        //Game built as per basic GameBuilder rules. different versions exist:
-        //1. Winning square & boost square on.
-        //2. Winning square on.
-        //3. Boost Square on.
-        //4. No features on.
+        //Game built as per basic GameBuilder rules. built depending on if winningSquare feature on.
+
         if (winningSquareOnlyFeature) {
-            if (boosts != null) {
-                try {
-                    if (boosts.length > 0) {
-                        newCustomGame = new GameBuilder()
-                                .withBoardSize(boardSize)
-                                .withPlayers(playerCount)
-                                .withSnakes(snakes)
-                                .withLadders(ladders)
-                                .withBoosts(boosts)
-                                .buildWithWinningSquare();
-                    }
-                }  catch (NullPointerException n) {
-                }
-            } else {
+            try {
                 newCustomGame = new GameBuilder()
                         .withBoardSize(boardSize)
                         .withPlayers(playerCount)
                         .withSnakes(snakes)
                         .withLadders(ladders)
+                        .withBoosts(boosts)
                         .buildWithWinningSquare();
-            }
-        } else if (boosts != null) {
-            try {
-                if (boosts.length > 0) {
-                    newCustomGame = new GameBuilder()
-                            .withBoardSize(boardSize)
-                            .withPlayers(playerCount)
-                            .withSnakes(snakes)
-                            .withLadders(ladders)
-                            .withBoosts(boosts)
-                            .build();
-                }
-
-            }  catch (NullPointerException n) {
+            } catch (NullPointerException n) {
             }
         } else {
-            newCustomGame = new GameBuilder()
-                    .withBoardSize(boardSize)
-                    .withPlayers(playerCount)
-                    .withSnakes(snakes)
-                    .withLadders(ladders)
-                    .build();
+            try {
+                newCustomGame = new GameBuilder()
+                        .withBoardSize(boardSize)
+                        .withPlayers(playerCount)
+                        .withSnakes(snakes)
+                        .withLadders(ladders)
+                        .withBoosts(boosts)
+                        .build();
+            } catch (NullPointerException n) {
+            }
         }
         return newCustomGame;
     }
-
     /**
      * Builds game data base upon data provided from database file.
      * @param loadGameChoice - game file containing data sourced from database.
