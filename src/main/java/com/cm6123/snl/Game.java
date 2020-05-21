@@ -129,16 +129,6 @@ public final class Game {
             }
         }
     }
-
-    /**
-     * Returns player's roll for testing.
-     * @param roll - player's roll on turn
-     * @return value of roll.
-     */
-    public Integer getRoll(final Integer roll) {
-        return roll;
-    }
-
     /**
      * Get a read-only object for the players.
      * @param index - which player
