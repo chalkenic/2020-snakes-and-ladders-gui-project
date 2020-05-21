@@ -114,13 +114,6 @@ public final class Board {
   public Integer size() {
     return squares.size();
   }
-
-  /**
-   * @return specials - all interactive squares.
-   */
-  Set<Integer> specials() {
-    return specials;
-  }
   /**
    * @return returns the starting square.
    */
@@ -331,4 +324,13 @@ public final class Board {
   public Integer getWinningSquare() {
     return squares.get(size() - 1).getNumber();
   }
+
+  /**
+   * @return getSpecials - all interactive squares.
+   */
+  Set<Integer> getSpecials() {
+    return specials;
+  }
 }
+
+

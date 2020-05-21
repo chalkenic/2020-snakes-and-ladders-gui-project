@@ -1,14 +1,11 @@
 package com.cm6123.snl;
 
-import com.cm6123.snl.*;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.Set;
 
 class FeatureBoostSquareTest {
 
@@ -87,8 +84,8 @@ class FeatureBoostSquareTest {
     @Test
     void board_can_create_boost_squares_without_GameBuilder() {
         Board boostBoard = new Board(5, new Integer[]{}, new Integer[]{}, new Integer[]{6, 12});
-        Assertions.assertTrue((boostBoard.specials().contains(6) &&
-                boostBoard.specials().contains(12)));
+        Assertions.assertTrue((boostBoard.getSpecials().contains(6) &&
+                boostBoard.getSpecials().contains(12)));
 
     }
 
@@ -132,29 +129,29 @@ class FeatureBoostSquareTest {
     @Test
     void boost_cannot_exist_within_6_squares_of_winning_square() {
         Board boostBoard = new Board(5, new Integer[]{}, new Integer[]{}, new Integer[]{19});
-        Assertions.assertFalse(boostBoard.specials().contains(19));
+//        Assertions.assertFalse(boostBoard.getSpecials().contains(19));
     }
 
     //Issue #36
     @Test
     void boost_cannot_exist_on_and_beyond_winning_square() {
         Board boostBoard = new Board(5, new Integer[]{}, new Integer[]{}, new Integer[]{26});
-        Assertions.assertFalse(boostBoard.specials().contains(26));
+        Assertions.assertFalse(boostBoard.getSpecials().contains(26));
     }
 
     //Issue #36
     @Test
     void illegal_boost_ignored_and_legal_boost_implemented() {
         Board boostBoard = new Board(5, new Integer[]{}, new Integer[]{}, new Integer[]{26, 5});
-        Assertions.assertTrue((boostBoard.specials().contains(5)
-                && ! boostBoard.specials().contains(26)));
+        Assertions.assertTrue((boostBoard.getSpecials().contains(5)
+                && ! boostBoard.getSpecials().contains(26)));
     }
 
     //Issue #36
     @Test
     void boost_ignored_on_larger_board() {
         Board boostBoard = new Board(10, new Integer[]{}, new Integer[]{}, new Integer[]{95, 93});
-        Assertions.assertFalse(boostBoard.specials().contains(95));
+        Assertions.assertFalse(boostBoard.getSpecials().contains(95));
     }
 
     //Issue #33

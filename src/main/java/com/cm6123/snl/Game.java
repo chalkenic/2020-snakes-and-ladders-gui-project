@@ -89,7 +89,7 @@ public final class Game {
      * @return All special square locations
      */
     public Set<Integer> getSpecials() {
-        return board.specials();
+        return board.getSpecials();
     }
 
 
