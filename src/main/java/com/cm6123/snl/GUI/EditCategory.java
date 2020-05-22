@@ -9,21 +9,21 @@ public class EditCategory {
      */
     private Integer jlistID;
     /**
-     * Game that Edit choice refers to.
+     * Game that GameEdit choice refers to.
      */
     private Integer gameID;
     /**
      * What type of edit is being made.
      */
-    private Edit editChoice;
+    private GameEdit editChoice;
 
     /**
      * Constructor handles any choice that must be linked to a specific game (i.e. snake/ladder/boost).
      * @param id - ID of specific row inside database table.
-     * @param choice - Edit choice enum.
+     * @param choice - GameEdit choice enum.
      * @param game - Which game inside database does this object relate to?
      */
-    public EditCategory(final Integer id, final Edit choice, final Integer game) {
+    public EditCategory(final Integer id, final GameEdit choice, final Integer game) {
         this.jlistID = id;
         this.gameID = game;
         this.editChoice = choice;
@@ -31,9 +31,9 @@ public class EditCategory {
     /**
      * Consutrctor handles choices that don't require any specific game (dice/player).
      * @param id - ID of specific row inside database table.
-     * @param choice - Edit choice enum.
+     * @param choice - GameEdit choice enum.
      */
-    public EditCategory(final Integer id, final Edit choice) {
+    public EditCategory(final Integer id, final GameEdit choice) {
         this.jlistID = id;
         this.editChoice = choice;
     }

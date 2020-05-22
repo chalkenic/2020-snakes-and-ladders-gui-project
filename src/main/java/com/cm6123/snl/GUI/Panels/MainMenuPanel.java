@@ -147,11 +147,11 @@ public class MainMenuPanel extends JPanel implements ActionListener {
     public void actionPerformed(final ActionEvent click) {
 
         if (click.getSource() == newGameButton) {
-            gameGui.selectWindow("newgame");
+            gameGui.selectWindow(NavigateTo.NEWGAME);
         } else if (click.getSource() == loadGameButton) {
-            gameGui.selectWindow("loadgame");
+            gameGui.selectWindow(NavigateTo.LOADGAME);
         } else if (click.getSource() == editorButton) {
-            gameGui.selectWindow("editormenu");
+            gameGui.selectWindow(NavigateTo.EDITORMENU);
         } else {
             makeDatabaseConnection();
         }

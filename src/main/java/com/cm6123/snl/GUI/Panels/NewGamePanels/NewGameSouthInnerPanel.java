@@ -1,5 +1,6 @@
 package com.cm6123.snl.GUI.Panels.NewGamePanels;
 import com.cm6123.snl.GUI.GUIFrame;
+import com.cm6123.snl.GUI.NavigateTo;
 import com.cm6123.snl.GUI.Panels.SidePanel;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -153,10 +154,10 @@ public class NewGameSouthInnerPanel extends SidePanel implements ActionListener 
     public void actionPerformed(final ActionEvent click) {
         if (click.getSource().equals(defaultGameButton)) {
             //Game calls selectWindow method and attempts to run a default game.
-           gameGui.selectWindow("rundefaultgame");
+           gameGui.selectWindow(NavigateTo.RUNDEFAULTGAME);
         } else if (click.getSource().equals(customGameButton)) {
             //Game calls selectWindow method and attempts to run a custom game with panel parameters.
-            gameGui.selectWindow("runcustomgame");
+            gameGui.selectWindow(NavigateTo.RUNCUSTOMGAME);
         }
     }
     /**

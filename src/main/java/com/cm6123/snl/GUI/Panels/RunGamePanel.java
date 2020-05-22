@@ -1,5 +1,6 @@
 package com.cm6123.snl.GUI.Panels;
 
+import com.cm6123.snl.GUI.NavigateTo;
 import com.cm6123.snl.GUI.PanelBackgroundLogic.BoardMove;
 import com.cm6123.snl.GUI.GUIFrame;
 import com.cm6123.snl.Game;
@@ -484,7 +485,7 @@ public class RunGamePanel extends SidePanel implements ActionListener {
             }
         //New game will simply create a newgame window & close the current game in progress.
         } else if (click.getSource() == newGameButton) {
-            gameGui.selectWindow("newgame");
+            gameGui.selectWindow(NavigateTo.NEWGAME);
         //Savegame connections to database with data sourced from current panel. CANNOT SAVE FINISHED GAME.
         }  else if (click.getSource() == saveGameButton) {
             if (!currentGame.isGameOver()) {
@@ -494,7 +495,7 @@ public class RunGamePanel extends SidePanel implements ActionListener {
             restartButtonClick();
         //Reset player positions in current game with identical Board datapoints.
         }  else if (click.getSource() == confirmRestartGameButton) {
-            gameGui.selectWindow("runrepeatgame");
+            gameGui.selectWindow(NavigateTo.RUNREPEATGAME);
         } else {
             //Decline restart action - undo all changes made when originally clicking restartGameButton JButton.
             confirmRestartGameButton.setVisible(false);

@@ -1,8 +1,8 @@
 package com.cm6123.snl.GUI;
 /**
- * Edit choices will only ever be one of 5 choices below.
+ * GameEdit choices will only ever be one of 5 choices below.
  */
-public enum Edit {
+public enum GameEdit {
     /**
      * confirms edit choice is a snake for opening EditChoicePanel & adding database data -
      * must be provided with a game id & table id inside EditChoicePanel.

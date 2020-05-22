@@ -17,13 +17,13 @@ public class LoadingFormEvent extends EventObject {
      */
     private Integer secondEntry;
     /**
-     * Holds a player name if loading is for EditChoice - Edit.PLAYER.
+     * Holds a player name if loading is for EditChoice - GameEdit.PLAYER.
      */
     private String playerNameEntry;
     /**
-     * Choice of Edit.
+     * Choice of GameEdit.
      */
-    private Edit editChoice;
+    private GameEdit editChoice;
     /**
      * Does this Event have an associated game id?
      */
@@ -39,7 +39,7 @@ public class LoadingFormEvent extends EventObject {
      * @param edit - confirmation of addition choice to GUI frame.
      * @param dbID - indication in database as to where to edit on table. script not 0 indexed - appended by 1.
      */
-    public LoadingFormEvent(final Object source, final String editPlayerEntry, final Edit edit, final Integer dbID) {
+    public LoadingFormEvent(final Object source, final String editPlayerEntry, final GameEdit edit, final Integer dbID) {
         super(source);
         this.databaseID = dbID + 1; //Database is not zero-indexed, ID requires increment.
         this.playerNameEntry = editPlayerEntry;
@@ -53,7 +53,7 @@ public class LoadingFormEvent extends EventObject {
      * @param id - game ID of choice.
      * @param dbID - indication in database as to where to edit on table. script not 0 indexed - appended by 1.
      */
-    public LoadingFormEvent(final Object source, final Integer newBoostSquare, final Edit edit, final Integer id,
+    public LoadingFormEvent(final Object source, final Integer newBoostSquare, final GameEdit edit, final Integer id,
                             final Integer dbID) {
         super(source);
         this.firstEntry = newBoostSquare;
@@ -72,7 +72,7 @@ public class LoadingFormEvent extends EventObject {
      * @param dbID - indication in database as to where to edit on table. script not 0 indexed - appended by 1.
      */
     public LoadingFormEvent(final Object source, final Integer newSpecialSquareStart,
-                                 final Integer newSpecialSquareEnd, final Edit edit, final Integer id,
+                            final Integer newSpecialSquareEnd, final GameEdit edit, final Integer id,
                             final Integer dbID) {
         super(source);
         this.gameID = id;
@@ -91,7 +91,7 @@ public class LoadingFormEvent extends EventObject {
      * @param dbID - indication in database as to where to edit on table. script not 0 indexed - appended by 1.
      */
     public LoadingFormEvent(final Object source, final Integer newSpecialSquareStart,
-                            final Integer newSpecialSquareEnd, final Edit edit, final Integer dbID) {
+                            final Integer newSpecialSquareEnd, final GameEdit edit, final Integer dbID) {
         super(source);
         this.databaseID = dbID + 1;
 
@@ -139,7 +139,7 @@ public class LoadingFormEvent extends EventObject {
      * Get the choice of edit.
      * @return editChoice - enum field saved.
      */
-    public Edit getEditChoice() {
+    public GameEdit getEditChoice() {
         return editChoice;
     }
 }

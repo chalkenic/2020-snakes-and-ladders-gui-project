@@ -40,9 +40,9 @@ public class EditorMenuPanel extends SidePanel implements ActionListener {
      */
     private GUIFrame gameGui;
     /**
-     * Stores choice of Edit as selectWindowe GUIFrame object navigation condition.
+     * Stores choice of GameEdit as selectWindowe GUIFrame object navigation condition.
      */
-    private Edit additionChoice;
+    private GameEdit additionChoice;
     /**
      * initialises JPanel with navigation buttons.
      * @param gui - current GUIFrame JFrame.
@@ -52,21 +52,21 @@ public class EditorMenuPanel extends SidePanel implements ActionListener {
 
         setPanelSize(350, 200);
 
-        createNewSnakeButton = new JButton("Edit Snake");
+        createNewSnakeButton = new JButton("GameEdit Snake");
         //Code adapted from answer of user Kris: How can I set size of a button?
         //available at: https://stackoverflow.com/questions/2536873/how-can-i-set-size-of-a-button
         createNewSnakeButton.setPreferredSize(new Dimension(200, 60));
 
-        createNewLadderButton = new JButton("Edit Ladder");
+        createNewLadderButton = new JButton("GameEdit Ladder");
         createNewLadderButton.setPreferredSize(new Dimension(200, 60));
 
-        createNewBoostButton = new JButton("Edit Boost");
+        createNewBoostButton = new JButton("GameEdit Boost");
         createNewBoostButton.setPreferredSize(new Dimension(200, 60));
 
-        createNewPlayerButton = new JButton("Edit Player");
+        createNewPlayerButton = new JButton("GameEdit Player");
         createNewPlayerButton.setPreferredSize(new Dimension(200, 60));
 
-        createNewDieButton = new JButton("Edit Dice");
+        createNewDieButton = new JButton("GameEdit Dice");
         createNewDieButton.setPreferredSize(new Dimension(200, 60));
 
         createNewSnakeButton.addActionListener(this);
@@ -81,20 +81,20 @@ public class EditorMenuPanel extends SidePanel implements ActionListener {
      */
     public void actionPerformed(final ActionEvent click) {
         if (click.getSource() == createNewSnakeButton) {
-            additionChoice = Edit.SNAKE;
-            gameGui.selectWindow("newedit");
+            additionChoice = GameEdit.SNAKE;
+            gameGui.selectWindow(NavigateTo.NEWEDIT);
         } else if (click.getSource() == createNewLadderButton) {
-            additionChoice = Edit.LADDER;
-            gameGui.selectWindow("newedit");
+            additionChoice = GameEdit.LADDER;
+            gameGui.selectWindow(NavigateTo.NEWEDIT);
         } else if (click.getSource() == createNewBoostButton) {
-            additionChoice = Edit.BOOST;
-            gameGui.selectWindow("newedit");
+            additionChoice = GameEdit.BOOST;
+            gameGui.selectWindow(NavigateTo.NEWEDIT);
         } else if (click.getSource() == createNewPlayerButton) {
-            additionChoice = Edit.PLAYER;
-            gameGui.selectWindow("newedit");
+            additionChoice = GameEdit.PLAYER;
+            gameGui.selectWindow(NavigateTo.NEWEDIT);
         } else {
-            additionChoice = Edit.DIE;
-            gameGui.selectWindow("newedit");
+            additionChoice = GameEdit.DIE;
+            gameGui.selectWindow(NavigateTo.NEWEDIT);
         }
     }
     /**
@@ -135,10 +135,10 @@ public class EditorMenuPanel extends SidePanel implements ActionListener {
         return this;
     }
     /**
-     * Sources Edit choice from button prompt to discern via which GUIFrame selectWindow switch case to follow.
-     * @return Edit enum.
+     * Sources GameEdit choice from button prompt to discern via which GUIFrame selectWindow switch case to follow.
+     * @return GameEdit enum.
      */
-    public Edit getEditChoice() {
+    public GameEdit getEditChoice() {
         return additionChoice;
     }
     /**

@@ -38,9 +38,9 @@ public class EditorChoicePanel extends SidePanel implements ActionListener {
      */
     private JButton editButton;
     /**
-     * Choice of Edit sourced from prior EditorMenu & parsed from GUIFrame. Dictates labels & JList data to be shown.
+     * Choice of GameEdit sourced from prior EditorMenu & parsed from GUIFrame. Dictates labels & JList data to be shown.
      */
-    private Edit additionChoice;
+    private GameEdit additionChoice;
     /**
      * Listens to choice made on list for when JButton pressed to edit selected data.
      */
@@ -58,10 +58,10 @@ public class EditorChoicePanel extends SidePanel implements ActionListener {
      */
     private HashMap<Integer, EditCategory> listEntries;
     /**
-     * Panel for changing current game data within database depending upon Edit enum choice made.
+     * Panel for changing current game data within database depending upon GameEdit enum choice made.
      * @param newAddition - enum that dictates data shown & available to edit.
      */
-    public EditorChoicePanel(final Edit newAddition) {
+    public EditorChoicePanel(final GameEdit newAddition) {
         listEntries = new HashMap<Integer, EditCategory>();
         this.additionChoice = newAddition;
         additionFirstField = new JTextField(10);
@@ -69,37 +69,37 @@ public class EditorChoicePanel extends SidePanel implements ActionListener {
         setPanelSize(350, 200);
 
         dbEntries = new JList();
-        editButton = new JButton("Edit " + newAddition.toString().toLowerCase());
+        editButton = new JButton("GameEdit " + newAddition.toString().toLowerCase());
         editButton.addActionListener(this);
         DefaultListModel dbEntryList = new DefaultListModel();
-        //Jlabels show text depending on Edit enum choice made on menu.
-        if (newAddition == Edit.SNAKE) {
-            //Calls method that fills dbEntryList with database relating to Enum Edit choice.
-            loadDBGames(Edit.SNAKE, dbEntryList);
+        //Jlabels show text depending on GameEdit enum choice made on menu.
+        if (newAddition == GameEdit.SNAKE) {
+            //Calls method that fills dbEntryList with database relating to Enum GameEdit choice.
+            loadDBGames(GameEdit.SNAKE, dbEntryList);
             additionFirstEntryLabel = new JLabel("Snake Head: ");
             additionSecondEntryLabel = new JLabel("Snake Tail: ");
-        } else if (newAddition == Edit.LADDER) {
-            loadDBGames(Edit.LADDER, dbEntryList);
+        } else if (newAddition == GameEdit.LADDER) {
+            loadDBGames(GameEdit.LADDER, dbEntryList);
             additionFirstEntryLabel = new JLabel("Ladder Base: ");
             additionSecondEntryLabel = new JLabel("Ladder Top: ");
-        } else if (newAddition == Edit.BOOST) {
-            loadDBGames(Edit.BOOST, dbEntryList);
+        } else if (newAddition == GameEdit.BOOST) {
+            loadDBGames(GameEdit.BOOST, dbEntryList);
             //Only 1 label needed for changing boost location.
             additionFirstEntryLabel = new JLabel("Boost location: ");
-        } else if (newAddition == Edit.PLAYER) {
-            loadDBGames(Edit.PLAYER, dbEntryList);
+        } else if (newAddition == GameEdit.PLAYER) {
+            loadDBGames(GameEdit.PLAYER, dbEntryList);
             //Only 1 label needed for changing a player name/colour.
-            additionFirstEntryLabel = new JLabel("Edit name: ");
-        } else if (newAddition == Edit.DIE) {
-            loadDBGames(Edit.DIE, dbEntryList);
+            additionFirstEntryLabel = new JLabel("GameEdit name: ");
+        } else if (newAddition == GameEdit.DIE) {
+            loadDBGames(GameEdit.DIE, dbEntryList);
             additionFirstEntryLabel = new JLabel("Dice Count: ");
             additionSecondEntryLabel = new JLabel("Die faces: ");
         }
         //PlAYER & BOOST choices do not require second field for data entry.
-        if (additionChoice != Edit.PLAYER || additionChoice != Edit.BOOST) {
+        if (additionChoice != GameEdit.PLAYER || additionChoice != GameEdit.BOOST) {
             additionSecondField = new JTextField(10);
         }
-        //Model set upon retrieving all data from database relating to Edit choice.
+        //Model set upon retrieving all data from database relating to GameEdit choice.
         dbEntries.setModel(dbEntryList);
         dbEntries.setBorder(BorderFactory.createEtchedBorder());
         //Defaults JList to position 1.
@@ -116,7 +116,7 @@ public class EditorChoicePanel extends SidePanel implements ActionListener {
             LoadingFormEvent newEntry = null;
 
             //Both SNAKE & LADDER require gameID & 2 JTextFields.
-            if (additionChoice == Edit.SNAKE || additionChoice == Edit.LADDER) {
+            if (additionChoice == GameEdit.SNAKE || additionChoice == GameEdit.LADDER) {
                 //Confirms if first field has had data entered.
                 if (!additionFirstField.getText().equals("")) {
                     //Confirms if second field has had data entered.
@@ -144,7 +144,7 @@ public class EditorChoicePanel extends SidePanel implements ActionListener {
                     formListener.incorrectEntryMessage();
                 }
             //BOOST requires gameID but only 1 JTextField.
-            } else if (additionChoice == Edit.BOOST) {
+            } else if (additionChoice == GameEdit.BOOST) {
                 if (!additionFirstField.getText().equals("")) {
                     try {
                         Integer squareStart = Integer.parseInt(additionFirstField.getText());
@@ -157,7 +157,7 @@ public class EditorChoicePanel extends SidePanel implements ActionListener {
                     }
                 }
             //PLAYER only requires 1 JTextField and passes field as string into constructor.
-            } else if (additionChoice == Edit.PLAYER) {
+            } else if (additionChoice == GameEdit.PLAYER) {
                 if (!additionFirstField.getText().equals("")) {
                     //Try not required due to String also allowing integer entries as name/colour.
                     String newPlayerName = additionFirstField.getText();
@@ -166,7 +166,7 @@ public class EditorChoicePanel extends SidePanel implements ActionListener {
                     formListener.incorrectEntryMessage();
                 }
             //DICE requires 2 JTextField but no gameID required.
-            } else if (additionChoice == Edit.DIE) {
+            } else if (additionChoice == GameEdit.DIE) {
                 if (!additionFirstField.getText().equals("")) {
                     try {
                         Integer diceCount = Integer.parseInt(additionFirstField.getText());
@@ -205,7 +205,7 @@ public class EditorChoicePanel extends SidePanel implements ActionListener {
         //Code adapted from TitledBorder.CENTER : TitledBorder « javax.swing.border « Java by API
         //Available at: http://www.java2s.com/Code/JavaAPI/javax.swing.border/TitledBorderCENTER.htm
         TitledBorder innerGameBarBorder =
-                BorderFactory.createTitledBorder("Edit " + additionChoice.toString().toLowerCase());
+                BorderFactory.createTitledBorder("GameEdit " + additionChoice.toString().toLowerCase());
         Border outerGameBarBorder = BorderFactory.createEmptyBorder(2, 10, 10, 10);
         innerGameBarBorder.setTitleJustification(TitledBorder.CENTER);
         //Creates border as a margin around inner game bar.
@@ -271,31 +271,31 @@ public class EditorChoicePanel extends SidePanel implements ActionListener {
 
     /**
      * validates data from JTextFields to ensure game integrity.
-     * @param newSquare Edit choice
+     * @param newSquare GameEdit choice
      * @param values - all values parsed into method.
      * @return Boolean - confirms if values can be accepted.
      */
-    public Boolean entryValidation(final Edit newSquare, final int... values) {
+    public Boolean entryValidation(final GameEdit newSquare, final int... values) {
         Boolean validEntry = false;
         try {
             //Snake Head must be larger than Snake tail for method to return true.
-            if (newSquare == Edit.SNAKE) {
+            if (newSquare == GameEdit.SNAKE) {
                 if (values[0] > values[1]) {
                     validEntry = true;
                 }
             //Ladder Foot must be smaller than ladder top for method to return true.
-            } else if (newSquare == Edit.LADDER) {
+            } else if (newSquare == GameEdit.LADDER) {
                 if (values[0] < values[1]) {
                     validEntry = true;
                 }
                 //Confirms data is related to boost.
-            } else if (newSquare == Edit.BOOST) {
+            } else if (newSquare == GameEdit.BOOST) {
                 validEntry = true;
                 //Confirms data related to player.
-            } else if (newSquare == Edit.PLAYER) {
+            } else if (newSquare == GameEdit.PLAYER) {
                 validEntry = true;
                 //confirms data related to dice.
-            } else if (newSquare == Edit.DIE) {
+            } else if (newSquare == GameEdit.DIE) {
                 validEntry = true;
             }
             //Catches any entries made outside of database's stored board size.
@@ -307,22 +307,22 @@ public class EditorChoicePanel extends SidePanel implements ActionListener {
     }
 
     /**
-     * Source which Edit was use for entryValidation method.
-     * @return Edit enum choice.
+     * Source which GameEdit was use for entryValidation method.
+     * @return GameEdit enum choice.
      */
-    public final Edit getAdditionChoice() {
+    public final GameEdit getAdditionChoice() {
         return additionChoice;
     }
     /**
-     * Load database entries from specific table depending on Edit enum entry.
+     * Load database entries from specific table depending on GameEdit enum entry.
      * @param choice - Table of choice.
      * @param jlist - list model to collate data into.
      */
-    private void loadDBGames(final Edit choice, final DefaultListModel jlist) {
+    private void loadDBGames(final GameEdit choice, final DefaultListModel jlist) {
 
         Connection connect = GameDBUtils.connectGuiToDatabase(ConstantDatabaseName.DATABASENAME);
 
-        if (choice == Edit.SNAKE) {
+        if (choice == GameEdit.SNAKE) {
             LoadDataDBManager dbLoader = new LoadDataDBManager(); //Manager opened for loading data.
             dbLoader.countSnakesInDatabase(connect); //Method parses all snake data into dbLoader from database.
             Integer dataSize = dbLoader.getSelectionSize() - 1; //Database is not zero-indexed.
@@ -338,7 +338,7 @@ public class EditorChoicePanel extends SidePanel implements ActionListener {
                 //Places object into panel TreeMap.
                 listEntries.put(i, snake);
             }
-        } else if (choice == Edit.LADDER) {
+        } else if (choice == GameEdit.LADDER) {
             LoadDataDBManager dbLoader = new LoadDataDBManager();
             dbLoader.countLaddersInDatabase(connect);
             Integer dataSize = dbLoader.getSelectionSize() - 1;
@@ -353,7 +353,7 @@ public class EditorChoicePanel extends SidePanel implements ActionListener {
                 listEntries.put(i, ladder);
             }
 
-        } else if (choice == Edit.BOOST) {
+        } else if (choice == GameEdit.BOOST) {
             LoadDataDBManager dbLoader = new LoadDataDBManager();
             dbLoader.countBoostsInDatabase(connect);
             Integer dataSize = dbLoader.getSelectionSize() - 1;
@@ -368,7 +368,7 @@ public class EditorChoicePanel extends SidePanel implements ActionListener {
                 listEntries.put(i, boost);
             }
 
-        } else if (choice == Edit.PLAYER) {
+        } else if (choice == GameEdit.PLAYER) {
             LoadDataDBManager dbLoader = new LoadDataDBManager();
             dbLoader.countPlayersInDatabase(connect);
             Integer dataSize = dbLoader.getSelectionSize() - 1;
@@ -382,7 +382,7 @@ public class EditorChoicePanel extends SidePanel implements ActionListener {
                 listEntries.put(i, player);
             }
 
-        } else if (choice == Edit.DIE) {
+        } else if (choice == GameEdit.DIE) {
             LoadDataDBManager dbLoader = new LoadDataDBManager();
             dbLoader.countDiceInDatabase(connect);
             Integer dataSize = dbLoader.getSelectionSize() - 1;

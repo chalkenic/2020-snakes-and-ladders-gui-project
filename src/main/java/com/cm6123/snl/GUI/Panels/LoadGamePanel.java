@@ -211,8 +211,8 @@ public class LoadGamePanel extends JPanel implements ActionListener {
             gameGui.setDbGameFile(loadGameChoice);
             //GUIFrame notified of game id in case of game reload required.
             gameGui.setID(loadedGame.getGameID());
-            //Navigation made to loaded game to parse data into RunGamePanel.
-            gameGui.selectWindow("runloadedgame");
+            //NavigateTo made to loaded game to parse data into RunGamePanel.
+            gameGui.selectWindow(NavigateTo.RUNLOADEDGAME);
         } else {
             setErrorLabel("no list choice made!");
         }

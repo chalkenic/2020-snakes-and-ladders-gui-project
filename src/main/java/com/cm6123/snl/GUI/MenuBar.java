@@ -112,16 +112,23 @@ public class MenuBar extends JMenu implements ActionListener {
     public void actionPerformed(final ActionEvent click) {
 
         if (click.getSource().equals(mainMenu)) {
-            gameGui.selectWindow("menu"); //Redirects to main menu via JFrame method.
+            gameGui.selectWindow(NavigateTo.MENU); //Redirects to main menu via
+            // JFrame
+            // method.
 
         } else if (click.getSource().equals(editorMenu)) {
-            gameGui.selectWindow("editormenu"); //Redirects to editor menu via JFrame method.
+            gameGui.selectWindow(NavigateTo.EDITORMENU); //Redirects to editor menu via JFrame
+            // method.
 
         } else if (click.getSource().equals(newGame)) {
-            gameGui.selectWindow("newgame"); //Redirects to new game menu via JFrame method.
+            gameGui.selectWindow(NavigateTo.NEWGAME); //Redirects to new game menu
+            // via JFrame
+            // method.
 
         } else if (click.getSource().equals(loadGame)) {
-            gameGui.selectWindow("loadgame"); //Redirects to load menu via JFrame method.
+            gameGui.selectWindow(NavigateTo.LOADGAME); //Redirects to load menu via
+            // JFrame
+            // method.
 
         } else if (click.getSource().equals(exitGame)) {
             System.exit(0); //Closes game and returns successful.

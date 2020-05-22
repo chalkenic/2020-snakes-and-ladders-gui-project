@@ -1,6 +1,6 @@
 package com.cm6123.snl.gameDB;
 
-import com.cm6123.snl.GUI.Edit;
+import com.cm6123.snl.GUI.GameEdit;
 import com.cm6123.snl.GUI.LoadingFormEvent;
 
 import java.sql.CallableStatement;
@@ -53,8 +53,8 @@ public final class EditDataDBManager {
         Integer id = null;
         Integer firstEdit = null;
         Integer secondEdit = null;
-        //Edit enum decides which table to edit.
-        if (editChoice.getEditChoice() == Edit.SNAKE) {
+        //GameEdit enum decides which table to edit.
+        if (editChoice.getEditChoice() == GameEdit.SNAKE) {
             procedure = "{CALL update_snake(?,?,?)}";
         } else {
             procedure = "{CALL update_ladder(?,?,?)}";

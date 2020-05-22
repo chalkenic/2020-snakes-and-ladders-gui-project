@@ -26,7 +26,7 @@ public class GUIFrame extends JFrame {
      */
     private JPanel currentPanel;
     /**
-     * Holds editor Panel, allowing specific edit panel to run based upon Panel choice of Edit enum.
+     * Holds editor Panel, allowing specific edit panel to run based upon Panel choice of GameEdit enum.
      */
     private EditorMenuPanel editorMenuPanel;
     /**
@@ -82,28 +82,26 @@ public class GUIFrame extends JFrame {
         super("Snakes & Ladders Game"); //Window title.
         dataBaseConnection = false; //No buttons which require database connection are enabled when GUI opened.
         textPanel = new GameTextPanel(); //Panel used by all panels to append text to for user.
-        gameMenu = new MenuBar(this); //Navigation bar at top of screen.
+        gameMenu = new MenuBar(this); //NavigateTo bar at top of screen.
         setJMenuBar(gameMenu.getMenuBar());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        selectWindow("menu"); //Menu panel automatically chosen upon program launch.
+        selectWindow(NavigateTo.MENU); //Menu panel automatically chosen upon program launch.
         pack();
         setVisible(true);
         //Size of window cannot be resized below dimensions given in order for panel data to remain visible.
         setMinimumSize(new Dimension(800, 600));
     }
-
     /**
      * Chooses panel to show based upon choice made. Defaults to menu upon startup.
      * @param windowChoice - window choice made by various panels & object.
      */
-    public void selectWindow(final String windowChoice) {
-
-         //Textpanel addition ignored on loadGamePanel & NewGamepanel. MainMenuPanel removes at switch case.
-        if (windowChoice != "loadgame" && windowChoice != "newgame") {
+    public void selectWindow(final NavigateTo windowChoice) {
+        //Textpanel addition ignored on loadGamePanel & NewGamepanel. MainMenuPanel removes at switch case.
+        if (windowChoice != NavigateTo.LOADGAME && windowChoice != NavigateTo.NEWGAME) {
             add(textPanel, BorderLayout.CENTER);
         }
-        switch (windowChoice.toLowerCase()) { //Additional validation.
-            case "menu"://Main menu choice.
+        switch (windowChoice) { //Additional validation.
+            case MENU://Main menu choice.
                 getContentPane().remove(textPanel); //Removes the textPanel from JFrame if present.
                 MainMenuPanel mainMenuPanel = new MainMenuPanel(this);
                 if (dataBaseConnection) { //method called to enable frontpage buttons if connection already on.
@@ -120,8 +118,8 @@ public class GUIFrame extends JFrame {
                     currentPanel = mainMenuPanel;
                 }
                 break;
-            //Navigation to new Game Panel.
-            case "newgame":
+            //NavigateTo to new Game Panel.
+            case NEWGAME:
                 customGame = null; //Removes any custom game currently saved into the JFrame.
                 getContentPane().remove(textPanel); //remove text panel from JFrame if present.
                 getContentPane().remove(currentPanel); //remove the current panel from JFrame.
@@ -132,7 +130,7 @@ public class GUIFrame extends JFrame {
                 currentPanel = newGamePanel;
                 break;
 
-            case "rundefaultgame":
+            case RUNDEFAULTGAME:
                 //Wipes text box to ensure a clean panel for user readability.
                 textPanel.wipeTextBox();
                 getContentPane().remove(currentPanel);
@@ -157,8 +155,8 @@ public class GUIFrame extends JFrame {
                 swapPanel(this, currentPanel, runGamePanel.createRunGamePanel(), BorderLayout.WEST);
                 currentPanel = runGamePanel;
                 break;
-            //Navigation to RunGamePanel along with creation of Game object.
-            case "runcustomgame":
+            //NavigateTo to RunGamePanel along with creation of Game object.
+            case RUNCUSTOMGAME:
                 textPanel.wipeTextBox();
                 getContentPane().remove(currentPanel);
                 revalidate();
@@ -186,21 +184,21 @@ public class GUIFrame extends JFrame {
 
                     } catch (NullPointerException n) {
                         // Catches error when boost checkbox ticked but no values added to boost JTextField.
-                        selectWindow("newgame");
+                        selectWindow(NavigateTo.NEWGAME);
                         newGamePanel.getSouthPanel().setErrorLabel("Boost ticked with no entry! Please try again.");
                     } catch (IllegalStateException i) {
                         //Catches errors relating to incorrect data.
-                        selectWindow("newgame");
+                        selectWindow(NavigateTo.NEWGAME);
                         newGamePanel.getSouthPanel().setErrorLabel("Entry error! Please try again.");
                     }
                 } catch (IllegalStateException e) {
                     //Catches square classes from gamebuilder object instantiation inside customGame.BuildGame method.
-                    selectWindow("newgame");
+                    selectWindow(NavigateTo.NEWGAME);
                     newGamePanel.getSouthPanel().setErrorLabel("Illegal field entry! Please try again.");
                 }
                 break;
             //Reloads RunGamePanel with identical Game data as a new object.
-            case "runrepeatgame":
+            case RUNREPEATGAME:
                 textPanel.wipeTextBox();
                 getContentPane().remove(currentPanel);
                 revalidate();
@@ -246,7 +244,7 @@ public class GUIFrame extends JFrame {
                 currentPanel = duplicateGamePanel;
                 break;
 
-            case "loadgame": //Navigation to load game panel.
+            case LOADGAME: //NavigateTo to load game panel.
                 getContentPane().remove(textPanel);
                 getContentPane().remove(currentPanel);
                 revalidate();
@@ -260,8 +258,8 @@ public class GUIFrame extends JFrame {
                 //Swaps current panel to game load panel.
                 currentPanel = loadGamePanel;
                 break;
-            //Navigation to RunGamePanel along with Game Object creation based upon database information.
-            case "runloadedgame":
+            //NavigateTo to RunGamePanel along with Game Object creation based upon database information.
+            case RUNLOADEDGAME:
                 textPanel.wipeTextBox();
                 getContentPane().remove(currentPanel);
                 revalidate();
@@ -279,26 +277,26 @@ public class GUIFrame extends JFrame {
 
                     runGamePanel = new RunGamePanel(this, newGame, diceSet, loadedGridChoice, loadedSpecials, loaded,
                             loadedGameId);
-    //              //Loaded game includes stored database player position. Method obtains these for each player.
+                    //              //Loaded game includes stored database player position. Method obtains these for each player.
                     runGamePanel.addLoadedPlayerPositions(customGame.getPlayerPositions());
                     swapPanel(this, currentPanel, runGamePanel.createRunGamePanel(), BorderLayout.WEST);
                     //Swaps current panel to run game panel.
                     currentPanel = runGamePanel;
                 } catch (IllegalStateException error) {
                     //GameBuilder errors reload the loadGamePanel and updates the error label.
-                    selectWindow("loadgame");
+                    selectWindow(NavigateTo.LOADGAME);
 
                     loadGamePanel.setErrorLabel("There is an illegal square clash in the file. "
                             + "Please amend using editor tool.");
                 } catch (IndexOutOfBoundsException oob) {
                     //Catches any snake/ladder edited in editor choice menu that falls beyond board size.
-                    selectWindow("loadgame");
+                    selectWindow(NavigateTo.LOADGAME);
                     loadGamePanel.setErrorLabel("There is a square landing outside of board size in the file. "
                             + "Please amend using editor tool.");
                 }
                 break;
-            //Navigation to the editor submenu.
-            case "editormenu":
+            //NavigateTo to the editor submenu.
+            case EDITORMENU:
                 textPanel.wipeTextBox();
                 getContentPane().remove(currentPanel);
                 revalidate();
@@ -308,12 +306,12 @@ public class GUIFrame extends JFrame {
                 //Swaps current panel for the editor menu.
                 currentPanel = editorMenuPanel;
                 break;
-            //Navigation to edit Panels depending on edit JButton choice on EditorMenuPanel.
-            case "newedit":
+            //NavigateTo to edit Panels depending on edit JButton choice on EditorMenuPanel.
+            case NEWEDIT:
                 getContentPane().remove(currentPanel);
                 revalidate();
                 //labels, panels & data appended to panel based upon edit choice.
-                Edit newAdditionChoice = editorMenuPanel.getEditChoice();
+                GameEdit newAdditionChoice = editorMenuPanel.getEditChoice();
                 //Confirms to panel the choice of edit.
                 EditorChoicePanel editPanel = new EditorChoicePanel(newAdditionChoice);
 
@@ -335,10 +333,10 @@ public class GUIFrame extends JFrame {
      * @param newPanel - panel being created for appending onto JFrame.
      * @param borderLayout - Position of the panel.
      */
-    public void swapPanel(final JFrame currentFrame,
-                          final JPanel oldPanel,
-                          final JPanel newPanel,
-                          final String borderLayout) {
+    private void swapPanel(final JFrame currentFrame,
+                           final JPanel oldPanel,
+                           final JPanel newPanel,
+                           final String borderLayout) {
 
         currentFrame.remove(oldPanel);
         currentFrame.add(newPanel, borderLayout);
@@ -424,7 +422,7 @@ public class GUIFrame extends JFrame {
     }
 
     /**
-     * Changes game data depending on Edit enum choice for each edit window.
+     * Changes game data depending on GameEdit enum choice for each edit window.
      * @param editPanel - Panel holding current data.
      */
     public void handleDbEdit(final EditorChoicePanel editPanel) {
@@ -464,24 +462,24 @@ public class GUIFrame extends JFrame {
                                 firstFieldEntry, secondFieldEntry);
                     }
                     //Data added depending on enum given in FormEvent object.
-                    if (newSquareType && data.getEditChoice() == Edit.SNAKE) {
+                    if (newSquareType && data.getEditChoice() == GameEdit.SNAKE) {
                         //Confirmation of addition passed to GameTextPanel's JTextArea.
                         appendTextToPanel("Snake Head changed to position " + firstFieldEntry
                                 + "\n" + "Snake Tail changed to position " + secondFieldEntry + "\n");
                         //Static method to add data depending on entry.
                         EditDataDBManager.editSnakeOrLadderData(data);
-                        selectWindow("newedit");
+                        selectWindow(NavigateTo.NEWEDIT);
 
-                    } else if (newSquareType && data.getEditChoice() == Edit.LADDER) {
+                    } else if (newSquareType && data.getEditChoice() == GameEdit.LADDER) {
                         appendTextToPanel("Ladder Foot changed to position " + firstFieldEntry
                                 + "\n" + "Ladder Top changed to position " + secondFieldEntry + "\n");
                         EditDataDBManager.editSnakeOrLadderData(data);
-                        selectWindow("newedit");
+                        selectWindow(NavigateTo.NEWEDIT);
 
-                    } else if (newSquareType && data.getEditChoice() == Edit.BOOST) {
+                    } else if (newSquareType && data.getEditChoice() == GameEdit.BOOST) {
                         appendTextToPanel("Boost square changed to position " + firstFieldEntry + "\n");
                         EditDataDBManager.editBoostData(data);
-                        selectWindow("newedit");
+                        selectWindow(NavigateTo.NEWEDIT);
 
                     } else {
                         incorrectEntryMessage();
@@ -496,14 +494,14 @@ public class GUIFrame extends JFrame {
                             + "Die amount: " + firstFieldEntry
                             + "\nDie faces: " + secondFieldEntry + "\n");
                     EditDataDBManager.editDiceData(data);
-                    selectWindow("newedit");
+                    selectWindow(NavigateTo.NEWEDIT);
 
                 //Object can only be a dice if other conditions not met.
                 } else {
                     String playerFieldEntry = data.getPlayerNameEntry();
                     appendTextToPanel("player changed to name: " + playerFieldEntry + "\n");
                     EditDataDBManager.editPlayerData(data);
-                    selectWindow("newedit");
+                    selectWindow(NavigateTo.NEWEDIT);
                 }
             }
         });
