@@ -112,9 +112,9 @@ public class BoardMove {
                     // during move.
                     Integer snakeHead = currentPlayer.getPosition().get() + diceRoll;
                     Integer snakeTail = currentBoard.getSquareDestination(snakeHead);
-                    gameGui.appendTextToPanel(currentPlayer.getColour() + " player hits a snake square at "
+                    gameGui.appendTextToPanel(currentPlayer.getPlayerData().getColour() + " player hits a snake square at "
                             + "position " + snakeHead + "...\n");
-                    gameGui.appendTextToPanel(currentPlayer.getColour() + " player moves back "
+                    gameGui.appendTextToPanel(currentPlayer.getPlayerData().getColour() + " player moves back "
                             + (snakeHead - snakeTail) + " squares...\n");
                     hitSnake = true;
                 }
@@ -122,9 +122,9 @@ public class BoardMove {
                 //recursive passes must use the player's temporary position due to object position not having moved.
                 if (position == s) {
                     Integer snakeTail = currentBoard.getSquareDestination(position);
-                    gameGui.appendTextToPanel(currentPlayer.getColour() + " player hits a snake square at "
+                    gameGui.appendTextToPanel(currentPlayer.getPlayerData().getColour() + " player hits a snake square at "
                             + "position " + position + "...\n");
-                    gameGui.appendTextToPanel(currentPlayer.getColour() + " player slides down "
+                    gameGui.appendTextToPanel(currentPlayer.getPlayerData().getColour() + " player slides down "
                             + (position - snakeTail) + " squares...\n");
                     hitSnake = true;
                 }
@@ -144,17 +144,17 @@ public class BoardMove {
                 if (((currentPlayer.getPosition().get()) + diceRoll) == s) {
                     Integer ladderFoot = currentPlayer.getPosition().get() + diceRoll;
                     Integer ladderTop = currentBoard.getSquareDestination(ladderFoot);
-                    gameGui.appendTextToPanel(currentPlayer.getColour() + " player hits a ladder square at "
+                    gameGui.appendTextToPanel(currentPlayer.getPlayerData().getColour() + " player hits a ladder square at "
                             + "position " + ladderFoot + ".\n");
-                    gameGui.appendTextToPanel(currentPlayer.getColour() + " player climbs "
+                    gameGui.appendTextToPanel(currentPlayer.getPlayerData().getColour() + " player climbs "
                             + (ladderTop - ladderFoot) + " additional squares!\n");
                 }
             } else {
                 if (position == s) {
                     Integer ladderTop = currentBoard.getSquareDestination(position);
-                    gameGui.appendTextToPanel(currentPlayer.getColour() + " player hits a ladder square at "
+                    gameGui.appendTextToPanel(currentPlayer.getPlayerData().getColour() + " player hits a ladder square at "
                             + "position " + position + ".\n");
-                    gameGui.appendTextToPanel(currentPlayer.getColour() + " player propels "
+                    gameGui.appendTextToPanel(currentPlayer.getPlayerData().getColour() + " player propels "
                             + (ladderTop - position) + " additional squares!\n");
                 }
             }
@@ -177,17 +177,17 @@ public class BoardMove {
         for (Integer s : currentBoard.getBoostList()) {
             if (tempPosition == s) {
 
-                gameGui.appendTextToPanel(currentPlayer.getColour() + " player hits a Boost square at "
+                gameGui.appendTextToPanel(currentPlayer.getPlayerData().getColour() + " player hits a Boost square at "
                         + "position " + tempPosition + "!\n");
                 if (boostAccumulator < 1) {
-                    gameGui.appendTextToPanel(currentPlayer.getColour() + " player doubles their dice roll "
+                    gameGui.appendTextToPanel(currentPlayer.getPlayerData().getColour() + " player doubles their dice roll "
                     + "to " + (diceRoll * 2) + "!\n");
                     //Confirms player has hit 1 square. future checks will check a refined player position.
                     boostAccumulator++;
                 } else {
                     //textPanel addition text changed to reflect a multiple Boost move. player does not move double
                     // dice roll after first boost pad.
-                    gameGui.appendTextToPanel(currentPlayer.getColour() + " player increases their boosted roll "
+                    gameGui.appendTextToPanel(currentPlayer.getPlayerData().getColour() + " player increases their boosted roll "
                             + "by an additional " + (diceRoll) + "!\n");
                     boostAccumulator++;
                 }

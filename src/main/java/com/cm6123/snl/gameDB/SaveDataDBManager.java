@@ -241,7 +241,7 @@ public class SaveDataDBManager {
 
         for (int i = 0; i < newGameSave.numberOfPlayers(); i++) {
             procedure = "{CALL add_new_player_to_game(?,?,?)}";
-            playerCol = newGameSave.getPlayer(i).getColour().toString();
+            playerCol = newGameSave.getPlayer(i).getPlayerData().getColour().toString();
             //Assigns Colour & player number to game, along with their associated game via gameID.
             try {
                 saveStatement = connection.prepareCall(procedure);
@@ -308,7 +308,7 @@ public class SaveDataDBManager {
         for (int i = 0; i < newGameSave.numberOfPlayers(); i++) {
             procedure = "{CALL update_player_position(?,?,?)}";
             playerPos = newGameSave.getPlayer(i).getPosition().get();
-            playerCol = newGameSave.getPlayer(i).getColour().toString();
+            playerCol = newGameSave.getPlayer(i).getPlayerData().getColour().toString();
 
             try {
                 saveStatement = connection.prepareCall(procedure);

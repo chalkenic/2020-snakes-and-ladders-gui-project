@@ -366,9 +366,9 @@ public class RunGamePanel extends SidePanel implements ActionListener {
         //Current position on Board object.
         Integer currentPosition = movingPlayer.getPosition().get();
 
-        gameGui.appendTextToPanel(currentPlayer.getColour() + " player starts their turn at position "
+        gameGui.appendTextToPanel(currentPlayer.getPlayerData().getColour() + " player starts their turn at position "
                 + currentPosition + ".\n");
-        gameGui.appendTextToPanel(currentPlayer.getColour() + " player has rolled a " + diceRoll + "!\n");
+        gameGui.appendTextToPanel(currentPlayer.getPlayerData().getColour() + " player has rolled a " + diceRoll + "!\n");
         //Method goes through all hypothetical player moves for textPanel entries.
         // Moves player on board for final call.
         boardMovement.movePlayer(diceRoll, currentPlayer, currentPosition);
@@ -378,12 +378,12 @@ public class RunGamePanel extends SidePanel implements ActionListener {
             //Available at: https://kodejava.org/how-do-i-get-the-items-of-a-jlist-components/
             for (int i = 0; i < gamePlayerList.getModel().getSize(); i++) {
                 Object player = gamePlayerList.getModel().getElementAt(i);
-                if (player.toString() == currentPlayer.getColour().toString()) {
+                if (player.toString() == currentPlayer.getPlayerData().getColour().toString()) {
 
-                    gameGui.appendTextToPanel(currentPlayer.getColour() + " player ends their turn at "
+                    gameGui.appendTextToPanel(currentPlayer.getPlayerData().getColour() + " player ends their turn at "
                             + "position " + currentPlayer.getPosition().get() + "\n\n");
 
-                    gameGui.appendTextToPanel(currentPlayer.getColour() + " player distance covered: "
+                    gameGui.appendTextToPanel(currentPlayer.getPlayerData().getColour() + " player distance covered: "
                             + (currentPlayer.getPosition().get() - currentPosition) + " squares\n");
 
                     gameGui.appendTextToPanel("|---------------------------------------------------------|\n");
@@ -406,7 +406,7 @@ public class RunGamePanel extends SidePanel implements ActionListener {
             for (int i = 0; i < gamePlayerList.getModel().getSize(); i++) {
                 Object player = gamePlayerList.getModel().getElementAt(i);
                 //Matches player in JList with winning player.
-                if (player.toString() == currentPlayer.getColour().toString()) {
+                if (player.toString() == currentPlayer.getPlayerData().getColour().toString()) {
                     gamePlayerList.setSelectedIndex(i);
                     //Changes background of JList from regular cyan to orange to indicate a win.
                     gamePlayerList.setSelectionBackground(Color.ORANGE);
@@ -415,9 +415,9 @@ public class RunGamePanel extends SidePanel implements ActionListener {
                     //Newgame button allowed to function now.
                     newGameButton.setEnabled(true);
                     saveGameButton.setEnabled(false);
-                    gameGui.appendTextToPanel(currentPlayer.getColour() + " player ends their turn at "
+                    gameGui.appendTextToPanel(currentPlayer.getPlayerData().getColour() + " player ends their turn at "
                             + "position " + currentPlayer.getPosition().get() + "\n\n");
-                    gameGui.appendTextToPanel(currentPlayer.getColour() + " player wins the "
+                    gameGui.appendTextToPanel(currentPlayer.getPlayerData().getColour() + " player wins the "
                             + "game!\n");
                     gameGui.appendTextToPanel("|---------------------------------------------------------|\n");
                     playerPositionResultLabel.setText(currentPlayer.getPosition().get().toString());
@@ -451,11 +451,11 @@ public class RunGamePanel extends SidePanel implements ActionListener {
             //Grabs object from JList.
             Object playerTurn = gamePlayerList.getModel().getElementAt(i);
             //Checks against player colour.
-            if (playerTurn.toString() == currentPlayer.getColour().toString()) {
+            if (playerTurn.toString() == currentPlayer.getPlayerData().getColour().toString()) {
                 gamePlayerList.setSelectedIndex(i);
                 //Visually adds data onto panel relating to position, colour & Jlist visual flair.
                 gamePlayerList.setSelectionBackground(Color.CYAN);
-                playerColourTurnResultLabel.setText(currentPlayer.getColour().toString());
+                playerColourTurnResultLabel.setText(currentPlayer.getPlayerData().getColour().toString());
                 playerPositionResultLabel.setText(position.toString());
             }
         }

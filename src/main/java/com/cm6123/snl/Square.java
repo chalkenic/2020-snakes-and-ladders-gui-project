@@ -18,17 +18,6 @@ public class Square {
    * Is this a boost square?
    */
   private Boolean isBoostSquare = false;
-
-  /**
-   * Does this square start a snake move?
-   */
-  private Boolean isSnakeStart = false;
-
-  /**
-   * Does this square start a ladder move?
-   */
-  private Boolean isLadderStart = false;
-
   /**
    * Construct a Square.
    *

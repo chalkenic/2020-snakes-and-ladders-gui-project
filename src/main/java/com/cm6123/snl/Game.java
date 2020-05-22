@@ -24,6 +24,15 @@ public final class Game {
      * Confirmation of whether winning square is switched on in game.
      */
     private Boolean winningSquareOn;
+    /**
+     * Stores player's roll when taking an action in moveCurrentPlayer roll.
+     */
+    private Integer currentPlayerRoll;
+
+    /**
+     * Stores accumulated player roll when using Boost Square feature.
+     */
+    private Integer accumulatedPlayerRoll = 0;
 
     /**
      * Builds the game.
@@ -44,17 +53,6 @@ public final class Game {
         players = new PlayerList(playerCount, board.start());
 
     }
-
-    /**
-     * Stores player's roll when taking an action in moveCurrentPlayer roll.
-     */
-    private Integer currentPlayerRoll;
-
-    /**
-     * Stores accumulated player roll when using Boost Square feature.
-     */
-    private Integer accumulatedPlayerRoll = 0;
-
     /**
      * get the current roll saved in the game.
      * @return Current integer.
