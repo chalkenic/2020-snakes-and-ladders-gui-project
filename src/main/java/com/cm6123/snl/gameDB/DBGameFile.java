@@ -75,7 +75,7 @@ public class DBGameFile {
     private ArrayList<Integer> gameBoosts;
 
     /**
-     * Instancing object pulls all data from database depending on the gameID give.
+     * Instancing object pulls all data from database depending on the gameID given.
      * @param newID - id of game.
      * @param text - dynamic file name depending on ID parsed in.
      */

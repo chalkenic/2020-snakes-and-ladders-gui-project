@@ -155,7 +155,7 @@ public class GUIFrame extends JFrame {
                 swapPanel(this, currentPanel, runGamePanel.createRunGamePanel(), BorderLayout.WEST);
                 currentPanel = runGamePanel;
                 break;
-            //NavigateTo to RunGamePanel along with creation of Game object.
+//            NavigateTo to RunGamePanel along with creation of Game object.
             case RUNCUSTOMGAME:
                 textPanel.wipeTextBox();
                 getContentPane().remove(currentPanel);
@@ -224,7 +224,6 @@ public class GUIFrame extends JFrame {
                             customGame.getCustomGameData(newGamePanel);
                         } catch (NullPointerException f) {
                             //If custom game not found, game pulls data from current DBGameFile & rebuilds.
-                            System.out.println("test");
                             customGame.getLoadedGameData(dbGameFile);
                             //Frame marked as using loaded game for saving purposes.
                             loaded = true;

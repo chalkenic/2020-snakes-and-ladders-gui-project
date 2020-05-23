@@ -341,7 +341,7 @@ public class RunGamePanel extends SidePanel implements ActionListener {
     /**
      * Initial launch of game that confirms whether new or saved game.
      */
-    public void launchGame() {
+    private void launchGame() {
         //Object that handles any movements made on the Board or Game object.
         boardMovement = new BoardMove(currentGame, gameGui);
         //Accesses board & moves players to predefined positions from database locations.

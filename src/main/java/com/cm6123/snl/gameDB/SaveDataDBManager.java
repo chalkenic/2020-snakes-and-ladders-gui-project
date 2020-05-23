@@ -123,9 +123,7 @@ public class SaveDataDBManager {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-
     }
-
     /**
      * Saves generic game data into Game table in database.
      * @param connection -database connection link.

@@ -18,7 +18,7 @@ public final class CreateDBManager {
 
         try {
     /*
-    Code for accesing third party ScriptRunner class sourced from Benoit Duffez  - ScriptRunner.
+    Code for accessing & actioning third party ScriptRunner class sourced from Benoit Duffez  - ScriptRunner.
     Available at:
     https://github.com/BenoitDuffez/ScriptRunner?fbclid=IwAR2BSaTAjhJQD8YvsFhf3GIepreDGU8SWtaqDNKhtmtcOmjRXyrNu12Ykks
      */
@@ -52,5 +52,4 @@ public final class CreateDBManager {
             }
         }
     }
-
 }

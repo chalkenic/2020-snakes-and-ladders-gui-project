@@ -198,24 +198,24 @@ public class LoadGamePanel extends JPanel implements ActionListener {
      */
     public void actionPerformed(final ActionEvent click) {
         if (click.getSource() == loadGameButton) {
-        //Load file chosen based on JList highlighted choice.
-        DBGameFile loadGameChoice = (DBGameFile) gameList.getSelectedValue();
-        //Checks if formlistener has an entry (should never fail due to first index being highlited at start.
-        //Validation made via if condition which prints to error label if nothing selected.
-        if (formListener != null) {
-            //New object created for handling the chosen game.
-            CreateGame loadedGame = new CreateGame(gameGui);
-            //CreateGame object sources relevant data from DBGameFile object made in method and converts.
-            gameGui.setCreatedGame(loadedGame.getLoadedGameData(loadGameChoice));
-            //GUIFrame notified of game file choice in case a game restart is requested on RunGamePanel.
-            gameGui.setDbGameFile(loadGameChoice);
-            //GUIFrame notified of game id in case of game reload required.
-            gameGui.setID(loadedGame.getGameID());
-            //NavigateTo made to loaded game to parse data into RunGamePanel.
-            gameGui.selectWindow(NavigateTo.RUNLOADEDGAME);
-        } else {
-            setErrorLabel("no list choice made!");
-        }
+            //Load file chosen based on JList highlighted choice.
+            DBGameFile loadGameChoice = (DBGameFile) gameList.getSelectedValue();
+            //Checks if formlistener has an entry (should never fail due to first index being highlighted at start).
+            //Validation made via if condition which prints to error label if nothing selected.
+            if (formListener != null) {
+                //New object created for handling the chosen game.
+                CreateGame loadedGame = new CreateGame(gameGui);
+                //CreateGame object sources relevant data from DBGameFile object made in method and converts.
+                gameGui.setCreatedGame(loadedGame.getLoadedGameData(loadGameChoice));
+                //GUIFrame notified of game file choice in case a game restart is requested on RunGamePanel.
+                gameGui.setDbGameFile(loadGameChoice);
+                //GUIFrame notified of game id in case of game reload required.
+                gameGui.setID(loadedGame.getGameID());
+                //NavigateTo made to loaded game to parse data into RunGamePanel.
+                gameGui.selectWindow(NavigateTo.RUNLOADEDGAME);
+            } else {
+                setErrorLabel("no list choice made!");
+            }
         }
     }
 }
