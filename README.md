@@ -1,4 +1,4 @@
-# Assessment Starter Project
+# Snakes and Ladders Project
 
 Snakes and Ladders project for year 1 Java module. Includes:
 
